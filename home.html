@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Futuro - The Next Generation AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, var(--darker), var(--dark));
+            color: var(--light);
+            overscroll-behavior: none;
+        }
+        
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 100%, rgba(99, 102, 241, 0.15), rgba(15, 23, 42, 0) 50%);
+        }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 
+                        inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .feature-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .glow {
+            filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.5));
+        }
+        
+        .coming-soon-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            transform: rotate(10deg);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-panel fixed w-full z-50 py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 8V4H8"/>
+                        <rect width="16" height="12" x="4" y="8" rx="2"/>
+                        <path d="M2 14h2"/>
+                        <path d="M20 14h2"/>
+                        <path d="M15 13v2"/>
+                        <path d="M9 13v2"/>
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold gradient-text">El Futuro</h1>
+            </div>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-gray-300 hover:text-white transition-colors">Features</a>
+                <a href="#upcoming" class="text-gray-300 hover:text-white transition-colors">Upcoming</a>
+                <a href="#about" class="text-gray-300 hover:text-white transition-colors">About</a>
+                <a href="chat.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">Try Now</a>
+            </div>
+            <button class="md:hidden text-gray-300 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2">
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+                    The Future of <span class="gradient-text">AI Interaction</span> is Here
+                </h1>
+                <p class="text-xl text-gray-300 mb-8">
+                    El Futuro is your next-generation AI assistant, combining cutting-edge technology with intuitive design to revolutionize how you work, create, and learn.
+                </p>
+                <div class="flex gap-4">
+                    <a href="chat.html" class="gradient-bg hover:bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 glow">
+                        Start Chatting <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#features" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2">
+                        <i class="fas fa-star"></i> Explore Features
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 relative">
+                <div class="glass-panel p-6 rounded-2xl overflow-hidden relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 8V4H8"/>
+                                    <rect width="16" height="12" x="4" y="8" rx="2"/>
+                                    <path d="M2 14h2"/>
+                                    <path d="M20 14h2"/>
+                                    <path d="M15 13v2"/>
+                                    <path d="M9 13v2"/>
+                                </svg>
+                            </div>
+                            <div class="text-sm font-medium">El Futuro AI</div>
+                        </div>
+                        <div class="bg-gray-800/60 rounded-xl p-4 mb-3">
+                            <p class="text-gray-200">Hello! I'm El Futuro, your advanced AI assistant. I can help with coding, creative writing, research, and much more. What would you like to explore today? 🚀</p>
+                        </div>
+                        <div class="flex justify-end mb-3">
+                            <div class="bg-indigo-600/20 rounded-xl p-4 max-w-xs">
+                                <p class="text-white">Can you explain neural networks?</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800/60 rounded-xl p-4">
+                            <p class="text-gray-200">Certainly! Neural networks are computing systems inspired by biological neural networks. They consist of interconnected nodes (neurons) that process information using a system of weights and biases...</p>
+                            <div class="mt-3 flex justify-end">
+                                <button class="text-xs px-3 py-1 bg-gray-700 rounded-md flex items-center gap-1">
+                                    <i class="fas fa-thumbs-up text-green-400"></i> Helpful
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -top-10 -left-10 w-32 h-32 rounded-full bg-indigo-500/20 blur-3xl"></div>
+                <div class="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-cyan-400/20 blur-3xl"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Powerful <span class="gradient-text">Features</span></h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">Discover what makes El Futuro the most advanced AI assistant available today</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="feature-icon w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-lightbulb text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Advanced Brainstorming</h3>
+                        <p class="text-gray-400">Generate creative ideas, business strategies, and innovative solutions with our enhanced brainstorming capabilities.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="feature-icon w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-code text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Code Explanation</h3>
+                        <p class="text-gray-400">Understand complex code with detailed explanations, line-by-line breakdowns, and optimization suggestions.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="feature-icon w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-paint-brush text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Creative Assistance</h3>
+                        <p class="text-gray-400">Get help with writing, design concepts, art direction, and creative problem solving.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="feature-icon w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-language text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Multilingual Support</h3>
+                        <p class="text-gray-400">Communicate seamlessly in multiple languages with accurate translations and cultural context.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="feature-icon w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-chart-line text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Data Analysis</h3>
+                        <p class="text-gray-400">Interpret complex data sets, create visualizations, and generate actionable insights.</p>
+                    </div>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="feature-icon w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-4">
+                            <i class="fas fa-robot text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Personalized AI</h3>
+                        <p class="text-gray-400">Adapts to your communication style, preferences, and needs for a tailored experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Features Section -->
+    <section id="upcoming" class="py-20 px-6 bg-gradient-to-b from-gray-900/50 to-gray-900/0">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Coming <span class="gradient-text">Soon</span></h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">A glimpse into the groundbreaking features we're developing</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Upcoming Feature 1 -->
+                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="coming-soon-badge">Q4 2024</div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center">
+                                <i class="fas fa-project-diagram text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold">Interactive Code Canvas</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">A revolutionary visual workspace where you can drag, drop, and connect code blocks to build complex systems with real-time AI assistance and debugging.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">Visual Programming</span>
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">Real-time Collaboration</span>
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">AI Debugging</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Feature 2 -->
+                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="coming-soon-badge">Q1 2025</div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center">
+                                <i class="fas fa-brain text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold">AGI Prototype</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">Our groundbreaking Artificial General Intelligence system that can learn, adapt, and perform any intellectual task that a human can, with continuous self-improvement capabilities.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">Self-Learning</span>
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">Cross-Domain Expertise</span>
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">Adaptive Reasoning</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Feature 3 -->
+                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="coming-soon-badge">Q3 2024</div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-cyan-400/10"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center">
+                                <i class="fas fa-video text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold">Video Interaction</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">Engage with El Futuro through live video calls, with real-time visual analysis, AR overlays, and non-verbal communication understanding.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">Visual Context</span>
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">AR Integration</span>
+                            <span class="text-xs px-3 py-1 bg-gray-800/50 rounded-full">Emotion Recognition</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Feature 4 -->
+                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="coming-soon-badge">Q2 2025</div>
+    
