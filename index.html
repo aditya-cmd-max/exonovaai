@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot - El Futuro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        #chat-window::-webkit-scrollbar {
+            width: 6px;
+        }
+        #chat-window::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #chat-window::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            border: 3px solid transparent;
+        }
+        .code-block {
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #1f2937;
+            color: #9ca3af;
+            border: 1px solid #374151;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            opacity: 1;
+            background-color: #374151;
+        }
+        .copy-btn.copied {
+            background-color: #10b981;
+            color: white;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .feature-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]">
+
+    <div class="w-full max-w-3xl h-[95vh] flex flex-col bg-black/40 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl shadow-blue-900/20 overflow-hidden">
+        
+        <header class="p-4 border-b border-white/10 text-center flex items-center justify-center gap-3">
+             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+            <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">El Futuro</h1>
+        </header>
+
+        <main id="chat-window" class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
+            <div class="flex items-start gap-3 message-fade-in">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center font-bold text-lg shrink-0">🤖</div>
+                <div class="bg-gray-800/60 rounded-xl p-3 max-w-md">
+                    <p class="text-gray-200">Hello there! I'm El Futuro. Try my new AI features below to brainstorm ideas or explain code! How can I help? 😊</p>
+                </div>
+            </div>
+        </main>
+
+        <div class="p-4 border-t border-white/10">
+            <!-- Gemini Feature Buttons -->
+            <div id="feature-buttons" class="flex items-center justify-center gap-2 mb-3">
+                <button id="brainstorm-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-700/50 hover:bg-gray-700/80 rounded-lg transition-all duration-200">✨ Brainstorm Ideas</button>
+                <button id="explain-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-700/50 hover:bg-gray-700/80 rounded-lg transition-all duration-200">✨ Explain Code</button>
+            </div>
+            
+            <form id="chat-form" class="flex items-center gap-3">
+                <textarea id="message-input" rows="1" class="flex-1 bg-gray-800/50 border border-white/20 rounded-lg p-3 resize-none focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200" placeholder="Ask El Futuro..."></textarea>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 transition-colors rounded-full w-12 h-12 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+            </form>
+            <footer class="text-center text-xs text-gray-500 pt-3 px-4">
+                <p>AI can make mistakes please double check your results.</p>
+                <p class="mt-1">Made with ❤️ by Aditya Jha</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+        const brainstormBtn = document.getElementById('brainstorm-btn');
+        const explainBtn = document.getElementById('explain-btn');
+        const featureButtons = [brainstormBtn, explainBtn];
+
+        let currentMode = 'chat'; // 'chat', 'brainstorm', 'explain'
+
+        let chatHistory = [{
+            role: "model",
+            parts: [{ text: "You are El Futuro, a friendly and helpful AI assistant. Your creator is Aditya Jha. If asked who created you, you must say 'I was created by Aditya Jha.' You should always be friendly and use emojis where appropriate to make the conversation more engaging. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested." }]
+        }];
+
+        // --- Event Listeners ---
+        brainstormBtn.addEventListener('click', () => setMode('brainstorm'));
+        explainBtn.addEventListener('click', () => setMode('explain'));
+
+        messageInput.addEventListener('input', () => {
+            messageInput.style.height = 'auto';
+            const newHeight = Math.min(messageInput.scrollHeight, 200);
+            messageInput.style.height = newHeight + 'px';
+        });
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userMessage = messageInput.value.trim();
+            if (userMessage) {
+                displayUserMessage(userMessage);
+                
+                let apiPrompt = userMessage;
+                if (currentMode === 'brainstorm') {
+                    apiPrompt = `Brainstorm a list of creative ideas about: "${userMessage}". Provide a diverse and interesting list.`;
+                } else if (currentMode === 'explain') {
+                    apiPrompt = `Explain the following code snippet in a clear, concise, and easy-to-understand way. Break down what each part does:\n\n\`\`\`\n${userMessage}\n\`\`\``;
+                }
+
+                chatHistory.push({ role: "user", parts: [{ text: apiPrompt }] });
+                getBotResponse();
+                
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+                setMode('chat'); // Reset to default chat mode after sending
+            }
+        });
+
+        // --- Mode Management ---
+        function setMode(newMode) {
+            // If clicking the active mode button, toggle it off
+            if (currentMode === newMode) {
+                currentMode = 'chat';
+            } else {
+                currentMode = newMode;
+            }
+            updateUIForMode();
+        }
+
+        function updateUIForMode() {
+            featureButtons.forEach(btn => btn.classList.remove('active'));
+            switch (currentMode) {
+                case 'brainstorm':
+                    brainstormBtn.classList.add('active');
+                    messageInput.placeholder = 'Enter a topic to brainstorm...';
+                    break;
+                case 'explain':
+                    explainBtn.classList.add('active');
+                    messageInput.placeholder = 'Paste your code here to get an explanation...';
+                    break;
+                default: // 'chat'
+                    messageInput.placeholder = 'Ask El Futuro...';
+                    break;
+            }
+            messageInput.focus();
+        }
+
+        // --- Display Functions ---
+        function displayUserMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'flex items-start gap-3 justify-end message-fade-in';
+            messageElement.innerHTML = `
+                <div class="bg-blue-600 rounded-xl p-3 max-w-md">
+                    <p class="text-white">${escapeHtml(message)}</p>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center font-bold text-sm shrink-0">You</div>
+            `;
+            chatWindow.appendChild(messageElement);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function displayBotMessage(message) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'flex items-start gap-3 message-fade-in';
+            
+            let botMessageContent = '';
+            const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
+            let lastIndex = 0;
+            let match;
+
+            while ((match = codeBlockRegex.exec(message)) !== null) {
+                if (match.index > lastIndex) {
+                    const textPart = message.substring(lastIndex, match.index).trim();
+                    if (textPart) botMessageContent += `<p class="text-gray-200">${textPart.replace(/\n/g, '<br>')}</p>`;
+                }
+                
+                const language = match[1] || 'plaintext';
+                const code = match[2];
+                const uniqueId = `code-${Date.now()}-${Math.random()}`;
+                botMessageContent += `
+                    <div class="code-block bg-gray-900/80 rounded-lg my-2 w-full">
+                        <div class="flex justify-between items-center px-4 py-2 bg-gray-800/50 rounded-t-lg">
+                            <span class="text-xs text-gray-400">${language}</span>
+                            <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
+                                <span class="ml-1">Copy</span>
+                            </button>
+                        </div>
+                        <pre class="p-4 overflow-x-auto text-sm"><code id="${uniqueId}" class="language-${language}">${escapeHtml(code)}</code></pre>
+                    </div>`;
+                lastIndex = match.index + match[0].length;
+            }
+
+            if (lastIndex < message.length) {
+                const textPart = message.substring(lastIndex).trim();
+                if (textPart) botMessageContent += `<p class="text-gray-200">${textPart.replace(/\n/g, '<br>')}</p>`;
+            }
+
+            messageContainer.innerHTML = `
+                <div class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center font-bold text-lg shrink-0">🤖</div>
+                <div class="bg-gray-800/60 rounded-xl p-3 max-w-full w-full">
+                    ${botMessageContent}
+                </div>`;
+            chatWindow.appendChild(messageContainer);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function displayTypingIndicator() {
+            const typingElement = document.createElement('div');
+            typingElement.id = 'typing-indicator';
+            typingElement.className = 'flex items-start gap-3 message-fade-in';
+            typingElement.innerHTML = `
+                <div class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center font-bold text-lg shrink-0">🤖</div>
+                <div class="bg-gray-800/60 rounded-xl p-3 max-w-md">
+                    <div class="flex items-center space-x-1">
+                        <span class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0s;"></span>
+                        <span class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></span>
+                        <span class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></span>
+                    </div>
+                </div>`;
+            chatWindow.appendChild(typingElement);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) typingIndicator.remove();
+        }
+
+        // --- API Call ---
+        async function getBotResponse() {
+            displayTypingIndicator();
+            
+            const apiKey = ""; // Leave empty
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const payload = { contents: chatHistory };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                removeTypingIndicator();
+                
+                if (result.candidates && result.candidates.length > 0) {
+                    const botMessage = result.candidates[0].content.parts[0].text;
+                    displayBotMessage(botMessage);
+                    chatHistory.push({ role: "model", parts: [{ text: botMessage }] });
+                } else {
+                   handleApiError("I received an empty response. Please try again. 🤔");
+                }
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                handleApiError("Sorry, I'm having trouble connecting. Please try again later. 🔌");
+            }
+        }
+        
+        function handleApiError(message) {
+            removeTypingIndicator();
+            displayBotMessage(message);
+        }
+
+        // --- Utility Functions ---
+        function escapeHtml(unsafe) {
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+        
+        window.copyCode = function(elementId, buttonElement) {
+            const codeElement = document.getElementById(elementId);
+            const textToCopy = codeElement.innerText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const buttonSpan = buttonElement.querySelector('span');
+                const originalText = buttonSpan.innerText;
+                buttonElement.classList.add('copied');
+                buttonSpan.innerText = 'Copied!';
+                
+                setTimeout(() => {
+                    buttonSpan.innerText = originalText;
+                    buttonElement.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+      </html>
+  
