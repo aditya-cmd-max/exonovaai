@@ -14,19 +14,25 @@
         body {
             font-family: 'Space Grotesk', sans-serif;
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
         }
         #chat-window::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
         #chat-window::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
         }
         #chat-window::-webkit-scrollbar-thumb {
-            background-color: rgba(236, 72, 153, 0.5);
-            border-radius: 20px;
+            background-color: rgba(236, 72, 153, 0.6);
+            border-radius: 10px;
+        }
+        #chat-window::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(236, 72, 153, 0.8);
         }
         .code-block {
             position: relative;
+            margin: 1rem 0;
         }
         .copy-btn {
             position: absolute;
@@ -50,18 +56,23 @@
         .copy-btn.copied {
             background: #3b82f6;
             color: white;
+            border-color: #3b82f6;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .message-fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .feature-btn {
+            transition: all 0.3s ease;
         }
         .feature-btn.active {
             background: linear-gradient(45deg, #ec4899, #3b82f6);
             color: white;
             box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+            border-color: transparent !important;
         }
         .gradient-text {
             background: linear-gradient(45deg, #ec4899, #3b82f6);
@@ -74,6 +85,7 @@
         }
         .input-glow:focus {
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5), 0 0 15px rgba(236, 72, 153, 0.3);
+            border-color: rgba(59, 130, 246, 0.5) !important;
         }
         .send-btn {
             background: linear-gradient(45deg, #ec4899, #3b82f6);
@@ -93,9 +105,29 @@
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
+        .user-message {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(168, 85, 247, 0.9));
+        }
+        .bot-message {
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        .typing-dot {
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+        }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="flex items-center justify-center p-4">
 
     <div class="w-full max-w-4xl mx-auto min-h-[95vh] flex flex-col bg-gray-900/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-pink-900/30 overflow-hidden">
 
@@ -119,7 +151,7 @@
                 <div class="logo-container shrink-0">
                     <img src="https://aditya-cmd-max.github.io/exonovaai/logo1.png" alt="AI Logo" class="logo-img w-9 h-9">
                 </div>
-                <div class="bg-gray-800/60 rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10 backdrop-blur-sm">
+                <div class="bot-message rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10">
                     <p class="text-gray-200">Hello there! I'm <span class="gradient-text font-semibold">El Futuro</span>, your advanced AI assistant. Try my new features below to brainstorm ideas or get code explanations! How can I help you today? 💡</p>
                 </div>
             </div>
@@ -129,13 +161,13 @@
         <div class="p-4 border-t border-white/10 bg-gray-900/50">
             <!-- Feature Buttons -->
             <div id="feature-buttons" class="flex flex-wrap items-center justify-center gap-2 mb-4">
-                <button id="brainstorm-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-800/50 hover:bg-gray-700/80 rounded-lg transition-all duration-200 border border-white/10">✨ Brainstorm Ideas</button>
-                <button id="explain-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-800/50 hover:bg-gray-700/80 rounded-lg transition-all duration-200 border border-white/10">💻 Explain Code</button>
-                <button id="clear-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-800/50 hover:bg-gray-700/80 rounded-lg transition-all duration-200 border border-white/10">🔄 Clear Chat</button>
+                <button id="brainstorm-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-800/50 hover:bg-gray-700/80 rounded-lg border border-white/10 text-gray-300">✨ Brainstorm Ideas</button>
+                <button id="explain-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-800/50 hover:bg-gray-700/80 rounded-lg border border-white/10 text-gray-300">💻 Explain Code</button>
+                <button id="clear-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-800/50 hover:bg-gray-700/80 rounded-lg border border-white/10 text-gray-300">🔄 Clear Chat</button>
             </div>
 
             <form id="chat-form" class="flex items-center gap-3">
-                <textarea id="message-input" rows="1" class="flex-1 bg-gray-800/50 border border-white/20 rounded-xl p-3 resize-none focus:outline-none transition-all duration-200 placeholder-gray-400 input-glow" placeholder="Message El Futuro..."></textarea>
+                <textarea id="message-input" rows="1" class="flex-1 bg-gray-800/50 border border-white/20 rounded-xl p-3 resize-none focus:outline-none transition-all duration-200 placeholder-gray-400 input-glow text-gray-200" placeholder="Message El Futuro..."></textarea>
                 <button type="submit" class="send-btn rounded-full w-12 h-12 flex items-center justify-center shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
                 </button>
@@ -173,7 +205,7 @@
             messageInput.style.height = newHeight + 'px';
         });
 
-        chatForm.addEventListener('submit', (e) => {
+        chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const userMessage = messageInput.value.trim();
             if (userMessage) {
@@ -185,7 +217,7 @@
                     apiPrompt = `Explain the following code snippet in a clear, concise, and easy-to-understand way. Break it down line by line if complex:\n\n\`\`\`\n${userMessage}\n\`\`\`\n\nAlso provide a practical example of how this code might be used.`;
                 }
                 chatHistory.push({ role: "user", parts: [{ text: apiPrompt }] });
-                getBotResponse();
+                await getBotResponse();
                 messageInput.value = '';
                 messageInput.style.height = 'auto';
                 setMode('chat');
@@ -198,14 +230,20 @@
         }
 
         function updateUIForMode() {
-            featureButtons.forEach(btn => btn.classList.remove('active'));
+            featureButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-300');
+            });
+            
             switch (currentMode) {
                 case 'brainstorm':
                     brainstormBtn.classList.add('active');
+                    brainstormBtn.classList.remove('text-gray-300');
                     messageInput.placeholder = 'What would you like to brainstorm about?';
                     break;
                 case 'explain':
                     explainBtn.classList.add('active');
+                    explainBtn.classList.remove('text-gray-300');
                     messageInput.placeholder = 'Paste your code here for detailed explanation...';
                     break;
                 default:
@@ -221,7 +259,7 @@
                     <div class="logo-container shrink-0">
                         <img src="https://aditya-cmd-max.github.io/exonovaai/logo1.png" alt="AI Logo" class="logo-img w-9 h-9">
                     </div>
-                    <div class="bg-gray-800/60 rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10 backdrop-blur-sm">
+                    <div class="bot-message rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10">
                         <p class="text-gray-200">Hello there! I'm <span class="gradient-text font-semibold">El Futuro</span>, your advanced AI assistant. The chat has been cleared. What would you like to discuss now? 🚀</p>
                     </div>
                 </div>`;
@@ -236,10 +274,10 @@
             const messageElement = document.createElement('div');
             messageElement.className = 'flex items-start gap-3 justify-end message-fade-in';
             messageElement.innerHTML = `
-                <div class="bg-gradient-to-r from-blue-600/90 to-pink-600/90 rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10 backdrop-blur-sm">
+                <div class="user-message rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10 backdrop-blur-sm">
                     <p class="text-white">${escapeHtml(message)}</p>
                 </div>
-                <div class="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center font-bold text-xs shrink-0 border border-white/10">You</div>
+                <div class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-600 to-pink-600 flex items-center justify-center font-bold text-white text-xs shrink-0 border border-white/10">You</div>
             `;
             chatWindow.appendChild(messageElement);
             chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -255,14 +293,14 @@
             while ((match = codeBlockRegex.exec(message)) !== null) {
                 if (match.index > lastIndex) {
                     const textPart = message.substring(lastIndex, match.index).trim();
-                    if (textPart) botMessageContent += `<p class="text-gray-200">${textPart.replace(/\n/g, '<br>')}</p>`;
+                    if (textPart) botMessageContent += `<p class="text-gray-200">${formatTextWithLineBreaks(textPart)}</p>`;
                 }
                 const language = match[1] || 'plaintext';
                 const code = match[2];
-                const uniqueId = `code-${Date.now()}-${Math.random()}`;
+                const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 botMessageContent += `
-                    <div class="code-block bg-gray-900/80 rounded-lg my-3 w-full border border-white/10">
-                        <div class="flex justify-between items-center px-4 py-2 bg-gray-800/50 rounded-t-lg">
+                    <div class="code-block bg-gray-900/80 rounded-lg w-full border border-white/10 overflow-hidden">
+                        <div class="flex justify-between items-center px-4 py-2 bg-gray-800/50 border-b border-white/10">
                             <span class="text-xs text-gray-400">${language}</span>
                             <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">Copy</button>
                         </div>
@@ -273,18 +311,26 @@
 
             if (lastIndex < message.length) {
                 const textPart = message.substring(lastIndex).trim();
-                if (textPart) botMessageContent += `<p class="text-gray-200">${textPart.replace(/\n/g, '<br>')}</p>`;
+                if (textPart) botMessageContent += `<p class="text-gray-200">${formatTextWithLineBreaks(textPart)}</p>`;
             }
 
             messageContainer.innerHTML = `
                 <div class="logo-container shrink-0">
-                    <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="AI Logo" class="logo-img w-9 h-9">
+                    <img src="https://aditya-cmd-max.github.io/exonovaai/logo1.png" alt="AI Logo" class="logo-img w-9 h-9">
                 </div>
-                <div class="bg-gray-800/60 rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10 backdrop-blur-sm">
+                <div class="bot-message rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10">
                     ${botMessageContent}
                 </div>`;
             chatWindow.appendChild(messageContainer);
             chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function formatTextWithLineBreaks(text) {
+            // Replace double newlines with paragraphs
+            let formattedText = text.replace(/\n\n/g, '</p><p class="text-gray-200">');
+            // Replace single newlines with line breaks
+            formattedText = formattedText.replace(/\n/g, '<br>');
+            return formattedText;
         }
 
         function displayTypingIndicator() {
@@ -293,13 +339,13 @@
             typingElement.className = 'flex items-start gap-3 message-fade-in';
             typingElement.innerHTML = `
                 <div class="logo-container shrink-0">
-                    <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="AI Logo" class="logo-img w-9 h-9">
+                    <img src="https://aditya-cmd-max.github.io/exonovaai/logo1.png" alt="AI Logo" class="logo-img w-9 h-9">
                 </div>
-                <div class="bg-gray-800/60 rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10 backdrop-blur-sm">
+                <div class="bot-message rounded-xl p-4 max-w-full md:max-w-2xl border border-white/10">
                     <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></span>
-                        <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></span>
-                        <span class="w-2 h-2 bg-pink-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></span>
+                        <div class="typing-dot w-2 h-2 bg-pink-400 rounded-full"></div>
+                        <div class="typing-dot w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <div class="typing-dot w-2 h-2 bg-pink-400 rounded-full"></div>
                     </div>
                 </div>`;
             chatWindow.appendChild(typingElement);
@@ -324,7 +370,10 @@
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || `API Error: ${response.status}`);
+                }
 
                 const result = await response.json();
                 removeTypingIndicator();
@@ -337,8 +386,8 @@
                     handleApiError("I received an empty response. Please try rephrasing your question. 🤔");
                 }
             } catch (error) {
-                console.error("Fetch Error:", error);
-                handleApiError("Sorry, I'm experiencing technical difficulties. Please try again in a moment. 🔌");
+                console.error("API Error:", error);
+                handleApiError(`Sorry, I'm having trouble responding right now. Please try again later. (Error: ${error.message})`);
             }
         }
 
@@ -365,7 +414,13 @@
                     buttonElement.innerText = "Copy";
                     buttonElement.classList.remove('copied');
                 }, 2000);
-            }).catch(err => console.error('Copy failed:', err));
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                buttonElement.innerText = "Error!";
+                setTimeout(() => {
+                    buttonElement.innerText = "Copy";
+                }, 2000);
+            });
         }
     </script>
 </body>
