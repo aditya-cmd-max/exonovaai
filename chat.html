@@ -73,6 +73,11 @@
             100% { background-position: 1000px 0; }
         }
         
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
         .message-fade-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
@@ -103,6 +108,12 @@
             background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
             background-size: 1000px 100%;
             animation: shimmer 2s infinite;
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 1s steps(40, end);
         }
         
         /* UI Components */
@@ -292,6 +303,54 @@
             fill: rgba(17, 24, 39, 0.8);
         }
         
+        .upload-btn {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .upload-btn input[type="file"] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .message-content p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .message-content ul, .message-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .message-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .web-search-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 10px;
+        }
+        
+        .web-search-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
         @media (max-width: 768px) {
             .message-bubble {
                 max-width: 90%;
@@ -344,20 +403,22 @@
                     <img src="https://aditya-cmd-max.github.io/exonovaai/logo1.png" alt="AI Logo" class="logo-img w-9 h-9">
                 </div>
                 <div class="bot-message-bubble message-bubble">
-                    <p class="text-gray-200">Hello there! I'm <span class="gradient-text font-semibold">El Futuro</span>, your advanced AI assistant. Try my new features below to brainstorm ideas or get code explanations! How can I help you today? <i class="fas fa-lightbulb text-yellow-400"></i></p>
-                    
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        <div class="suggestion-chip" data-prompt="Explain quantum computing in simple terms">
-                            <i class="fas fa-atom text-purple-400"></i>
-                            <span>Explain quantum computing</span>
-                        </div>
-                        <div class="suggestion-chip" data-prompt="How to center a div with CSS?">
-                            <i class="fas fa-code text-blue-400"></i>
-                            <span>CSS help</span>
-                        </div>
-                        <div class="suggestion-chip" data-prompt="What are some creative project ideas for beginners?">
-                            <i class="fas fa-lightbulb text-yellow-400"></i>
-                            <span>Project ideas</span>
+                    <div class="message-content">
+                        <p class="text-gray-200">Hello there! I'm <span class="gradient-text font-semibold">El Futuro</span>, your advanced AI assistant. Try my new features below to brainstorm ideas or get code explanations! How can I help you today? <i class="fas fa-lightbulb text-yellow-400"></i></p>
+                        
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <div class="suggestion-chip" data-prompt="Explain quantum computing in simple terms">
+                                <i class="fas fa-atom text-purple-400"></i>
+                                <span>Explain quantum computing</span>
+                            </div>
+                            <div class="suggestion-chip" data-prompt="How to center a div with CSS?">
+                                <i class="fas fa-code text-blue-400"></i>
+                                <span>CSS help</span>
+                            </div>
+                            <div class="suggestion-chip" data-prompt="What are some creative project ideas for beginners?">
+                                <i class="fas fa-lightbulb text-yellow-400"></i>
+                                <span>Project ideas</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -376,6 +437,10 @@
                     <i class="fas fa-code"></i>
                     <span>Explain Code</span>
                 </button>
+                <button id="web-search-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-800/50 hover:bg-gray-700/80 rounded-lg border border-white/10 text-gray-300">
+                    <i class="fas fa-search"></i>
+                    <span>Web Search</span>
+                </button>
                 <button id="clear-btn" class="feature-btn flex-1 sm:flex-none text-sm py-2 px-4 bg-gray-800/50 hover:bg-gray-700/80 rounded-lg border border-white/10 text-gray-300">
                     <i class="fas fa-broom"></i>
                     <span>Clear Chat</span>
@@ -384,10 +449,16 @@
 
             <form id="chat-form" class="flex items-center gap-3">
                 <div class="flex-1 relative">
-                    <textarea id="message-input" rows="1" class="w-full bg-gray-800/50 border border-white/20 rounded-xl p-3 pr-10 resize-none focus:outline-none transition-all duration-200 placeholder-gray-400 input-glow text-gray-200" placeholder="Message El Futuro..."></textarea>
-                    <button type="button" id="voice-input-btn" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-pink-400 transition-colors">
-                        <i class="fas fa-microphone"></i>
-                    </button>
+                    <textarea id="message-input" rows="1" class="w-full bg-gray-800/50 border border-white/20 rounded-xl p-3 pr-20 resize-none focus:outline-none transition-all duration-200 placeholder-gray-400 input-glow text-gray-200" placeholder="Message El Futuro..."></textarea>
+                    <div class="absolute right-3 top-1/2 transform -translate-y-1/2 flex gap-2">
+                        <button type="button" id="image-upload-btn" class="upload-btn text-gray-400 hover:text-blue-400 transition-colors" title="Upload Image">
+                            <i class="fas fa-image"></i>
+                            <input type="file" id="image-input" accept="image/*" class="hidden">
+                        </button>
+                        <button type="button" id="voice-input-btn" class="text-gray-400 hover:text-pink-400 transition-colors" title="Voice Input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" class="send-btn rounded-full w-12 h-12 flex items-center justify-center shrink-0">
                     <i class="fas fa-paper-plane text-white"></i>
@@ -414,18 +485,22 @@
         const messageInput = document.getElementById('message-input');
         const brainstormBtn = document.getElementById('brainstorm-btn');
         const explainBtn = document.getElementById('explain-btn');
+        const webSearchBtn = document.getElementById('web-search-btn');
         const clearBtn = document.getElementById('clear-btn');
         const voiceInputBtn = document.getElementById('voice-input-btn');
+        const imageUploadBtn = document.getElementById('image-upload-btn');
+        const imageInput = document.getElementById('image-input');
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notification-text');
         const suggestionChips = document.querySelectorAll('.suggestion-chip');
-        const featureButtons = [brainstormBtn, explainBtn, clearBtn];
+        const featureButtons = [brainstormBtn, explainBtn, webSearchBtn, clearBtn];
 
         // State variables
         let currentMode = 'chat';
+        let webSearchEnabled = false;
         let chatHistory = [{
             role: "model",
-            parts: [{ text: "You are El Futuro, an advanced AI assistant created by a company Exonova https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate.D not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tll i was created by a company Exonova By Adiya jha who is very smart and intelligent" }]
+            parts: [{ text:"You are El Futuro, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate.D not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tll i was created by a company Exonova By Adiya jha who is very smart and intelligent" }]
         }];
 
         // Load chat history from localStorage if available
@@ -451,9 +526,11 @@
         // Event Listeners
         brainstormBtn.addEventListener('click', () => setMode('brainstorm'));
         explainBtn.addEventListener('click', () => setMode('explain'));
+        webSearchBtn.addEventListener('click', () => toggleWebSearch());
         clearBtn.addEventListener('click', clearChat);
         
         voiceInputBtn.addEventListener('click', startVoiceInput);
+        imageInput.addEventListener('change', handleImageUpload);
         
         suggestionChips.forEach(chip => {
             chip.addEventListener('click', () => {
@@ -481,11 +558,17 @@
                 } else if (currentMode === 'explain') {
                     apiPrompt = `Explain the following code snippet in a clear, concise, and easy-to-understand way. Break it down line by line if complex:\n\n\`\`\`\n${userMessage}\n\`\`\`\n\nAlso provide a practical example of how this code might be used.`;
                 }
-                chatHistory.push({ role: "user", parts: [{ text: apiPrompt }] });
-                saveChatHistory();
-                await getBotResponse();
+                
+                // Clear the input field immediately after submission
                 messageInput.value = '';
                 messageInput.style.height = 'auto';
+                
+                // Add to chat history
+                chatHistory.push({ role: "user", parts: [{ text: apiPrompt }] });
+                saveChatHistory();
+                
+                // Get response
+                await getBotResponse();
                 setMode('chat');
             }
         });
@@ -496,10 +579,24 @@
             updateUIForMode();
         }
 
+        function toggleWebSearch() {
+            webSearchEnabled = !webSearchEnabled;
+            webSearchBtn.classList.toggle('active', webSearchEnabled);
+            webSearchBtn.classList.toggle('text-gray-300', !webSearchEnabled);
+            
+            if (webSearchEnabled) {
+                showNotification('Web search enabled');
+            } else {
+                showNotification('Web search disabled');
+            }
+        }
+
         function updateUIForMode() {
             featureButtons.forEach(btn => {
-                btn.classList.remove('active');
-                btn.classList.add('text-gray-300');
+                if (btn !== webSearchBtn) {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-gray-300');
+                }
             });
             
             switch (currentMode) {
@@ -540,7 +637,9 @@
                             <img src="https://aditya-cmd-max.github.io/exonovaai/logo1.png" alt="AI Logo" class="logo-img w-9 h-9">
                         </div>
                         <div class="bot-message-bubble message-bubble">
-                            <p class="text-gray-200">Hello there! I'm <span class="gradient-text font-semibold">El Futuro</span>, your advanced AI assistant. The chat has been cleared. What would you like to discuss now? <i class="fas fa-rocket text-blue-400"></i></p>
+                            <div class="message-content">
+                                <p class="text-gray-200">Hello there! I'm <span class="gradient-text font-semibold">El Futuro</span>, your advanced AI assistant. The chat has been cleared. What would you like to discuss now? <i class="fas fa-rocket text-blue-400"></i></p>
+                            </div>
                         </div>
                     </div>`;
                 
@@ -570,9 +669,10 @@
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
 
-        function displayBotMessage(message) {
+        function displayBotMessage(message, typewriterEffect = true) {
             const messageContainer = document.createElement('div');
             messageContainer.className = 'flex items-start gap-3 message-fade-in';
+            
             let botMessageContent = '';
             const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
             let lastIndex = 0, match;
@@ -580,7 +680,7 @@
             while ((match = codeBlockRegex.exec(message)) !== null) {
                 if (match.index > lastIndex) {
                     const textPart = message.substring(lastIndex, match.index).trim();
-                    if (textPart) botMessageContent += `<p class="text-gray-200">${formatTextWithLineBreaks(textPart)}</p>`;
+                    if (textPart) botMessageContent += `<div class="message-content"><p class="text-gray-200">${formatTextWithLineBreaks(textPart)}</p></div>`;
                 }
                 const language = match[1] || 'plaintext';
                 const code = match[2];
@@ -600,7 +700,7 @@
 
             if (lastIndex < message.length) {
                 const textPart = message.substring(lastIndex).trim();
-                if (textPart) botMessageContent += `<p class="text-gray-200">${formatTextWithLineBreaks(textPart)}</p>`;
+                if (textPart) botMessageContent += `<div class="message-content"><p class="text-gray-200">${formatTextWithLineBreaks(textPart)}</p></div>`;
             }
 
             messageContainer.innerHTML = `
@@ -611,17 +711,49 @@
                     ${botMessageContent}
                 </div>`;
             chatWindow.appendChild(messageContainer);
-            chatWindow.scrollTop = chatWindow.scrollHeight;
+            
+            // Scroll to the beginning of the message for better reading experience
+            messageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Apply typewriter effect if enabled
+            if (typewriterEffect) {
+                const messageElements = messageContainer.querySelectorAll('.message-content p');
+                messageElements.forEach((element, index) => {
+                    element.style.overflow = 'hidden';
+                    element.style.width = '0';
+                    element.style.whiteSpace = 'nowrap';
+                    setTimeout(() => {
+                        element.style.transition = `width 1s ease ${index * 0.3}s`;
+                        element.style.width = '100%';
+                        setTimeout(() => {
+                            element.style.whiteSpace = 'normal';
+                        }, 1000 + index * 300);
+                    }, 100);
+                });
+            }
         }
 
         function formatTextWithLineBreaks(text) {
+            // Replace markdown-style bold with HTML tags
+            text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            
+            // Replace markdown-style italic with HTML tags
+            text = text.replace(/\*(.*?)\*/g, '<i>$1</i>');
+            
+            // Replace markdown-style underline with HTML tags
+            text = text.replace(/__(.*?)__/g, '<u>$1</u>');
+            
             // Replace markdown-style bullet points with HTML
-            text = text.replace(/^\s*[\-*]\s+/gm, '● ');
+            text = text.replace(/^\s*[\-*]\s+(.*)$/gm, '⦿ $1<br>');
+            
+            // Replace numbered lists
+            text = text.replace(/^\s*\d+\.\s+(.*)$/gm, '<span style="margin-right: 5px;">●</span> $1<br>');
             
             // Replace double newlines with paragraphs
             let formattedText = text.replace(/\n\n/g, '</p><p class="text-gray-200">');
             // Replace single newlines with line breaks
             formattedText = formattedText.replace(/\n/g, '<br>');
+            
             return formattedText;
         }
 
@@ -657,7 +789,14 @@
             displayTypingIndicator();
             const apiKey = "AIzaSyDumsAxfOETUy3E85Qp_ikVSglQmeoXrJk";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-            const payload = { contents: chatHistory };
+            
+            // If web search is enabled, add search instruction
+            let modifiedHistory = [...chatHistory];
+            if (webSearchEnabled) {
+                modifiedHistory[modifiedHistory.length - 1].parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
+            }
+            
+            const payload = { contents: modifiedHistory };
 
             try {
                 const response = await fetch(apiUrl, {
@@ -690,7 +829,7 @@
 
         function handleApiError(message) {
             removeTypingIndicator();
-            displayBotMessage(message);
+            displayBotMessage(message, false);
         }
 
         function escapeHtml(unsafe) {
@@ -752,6 +891,53 @@
             };
             
             recognition.start();
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.match('image.*')) {
+                showNotification('Please upload an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Display the image in chat
+                const messageElement = document.createElement('div');
+                messageElement.className = 'flex items-start gap-3 justify-end message-fade-in';
+                messageElement.innerHTML = `
+                    <div class="user-message-bubble message-bubble">
+                        <p class="text-white mb-2">Image analysis request:</p>
+                        <img src="${e.target.result}" alt="Uploaded image" class="max-w-xs rounded-lg">
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-600 to-pink-600 flex items-center justify-center font-bold text-white text-xs shrink-0 border border-white/10">
+                        <i class="fas fa-user"></i>
+                    </div>
+                `;
+                chatWindow.appendChild(messageElement);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                
+                // Add to chat history and request analysis
+                chatHistory.push({ 
+                    role: "user", 
+                    parts: [{ 
+                        text: "Please analyze this image and describe what you see.",
+                        inline_data: {
+                            mime_type: file.type,
+                            data: e.target.result.split(',')[1]
+                        }
+                    }] 
+                });
+                
+                saveChatHistory();
+                getBotResponse();
+            };
+            
+            reader.readAsDataURL(file);
+            // Reset the file input
+            event.target.value = '';
         }
 
         window.copyCode = function(elementId, buttonElement) {
