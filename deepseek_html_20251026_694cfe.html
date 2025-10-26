@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clover AI | Advanced AI Assistant by Aditya Jha</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://aditya-cmd-max.github.io/exonovaai/logo.png">
+    
+    <style>
+        /* Material Design 3 Color System */
+        :root {
+            /* Primary Colors */
+            --md-primary: #6750A4;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #EADDFF;
+            --md-on-primary-container: #21005D;
+            
+            /* Secondary Colors */
+            --md-secondary: #625B71;
+            --md-on-secondary: #FFFFFF;
+            --md-secondary-container: #E8DEF8;
+            --md-on-secondary-container: #1D192B;
+            
+            /* Tertiary Colors */
+            --md-tertiary: #7D5260;
+            --md-on-tertiary: #FFFFFF;
+            --md-tertiary-container: #FFD8E4;
+            --md-on-tertiary-container: #31111D;
+            
+            /* Surface Colors */
+            --md-surface: #FEF7FF;
+            --md-on-surface: #1C1B1F;
+            --md-surface-variant: #E7E0EC;
+            --md-on-surface-variant: #49454F;
+            
+            /* Background Colors */
+            --md-background: #FEF7FF;
+            --md-on-background: #1C1B1F;
+            
+            /* Error Colors */
+            --md-error: #B3261E;
+            --md-on-error: #FFFFFF;
+            --md-error-container: #F9DEDC;
+            --md-on-error-container: #410E0B;
+            
+            /* Outline Colors */
+            --md-outline: #79747E;
+            --md-outline-variant: #C4C7C5;
+            
+            /* Shadow Elevations */
+            --md-elevation-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+            --md-elevation-2: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+            --md-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3);
+            --md-elevation-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px rgba(0, 0, 0, 0.3);
+            --md-elevation-5: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.3);
+            
+            /* Animation */
+            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Border Radius */
+            --md-radius-small: 8px;
+            --md-radius-medium: 12px;
+            --md-radius-large: 16px;
+            --md-radius-extra-large: 28px;
+            
+            /* Spacing */
+            --md-spacing-xs: 4px;
+            --md-spacing-sm: 8px;
+            --md-spacing-md: 16px;
+            --md-spacing-lg: 24px;
+            --md-spacing-xl: 32px;
+            
+            /* Typography */
+            --md-font-family: 'Product Sans', sans-serif;
+            --md-font-size-display: 3.5625rem;
+            --md-font-size-headline: 2rem;
+            --md-font-size-title: 1.375rem;
+            --md-font-size-body: 1rem;
+            --md-font-size-label: 0.875rem;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --md-surface: #141218;
+            --md-on-surface: #E6E1E5;
+            --md-surface-variant: #49454F;
+            --md-on-surface-variant: #CAC4D0;
+            --md-background: #141218;
+            --md-on-background: #E6E1E5;
+            --md-primary-container: #4F378B;
+            --md-on-primary-container: #EADDFF;
+            --md-secondary-container: #4A4458;
+            --md-on-secondary-container: #E8DEF8;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--md-font-family);
+            background-color: var(--md-background);
+            color: var(--md-on-surface);
+            line-height: 1.5;
+            overflow-x: hidden;
+            transition: var(--md-transition);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .landing-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--md-spacing-md) var(--md-spacing-xl);
+            background: var(--md-surface);
+            border-bottom: 1px solid var(--md-outline-variant);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--md-primary);
+            border-radius: var(--md-radius-medium);
+            color: var(--md-on-primary);
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: var(--md-radius-medium);
+        }
+
+        .app-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+            letter-spacing: -0.25px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-xl);
+        }
+
+        .nav-link {
+            color: var(--md-on-surface);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--md-transition);
+            position: relative;
+            padding: var(--md-spacing-sm) 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--md-primary);
+            transition: var(--md-transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            border-radius: var(--md-radius-extra-large);
+            border: none;
+            font-family: inherit;
+            font-size: var(--md-font-size-label);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition-fast);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: currentColor;
+            opacity: 0;
+            transition: var(--md-transition-fast);
+        }
+
+        .btn:hover::before {
+            opacity: 0.08;
+        }
+
+        .btn:active::before {
+            opacity: 0.12;
+        }
+
+        .btn-filled {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .btn-filled:hover {
+            box-shadow: var(--md-elevation-2);
+            transform: translateY(-2px);
+        }
+
+        .btn-tonal {
+            background: var(--md-secondary-container);
+            color: var(--md-on-secondary-container);
+        }
+
+        .btn-outlined {
+            background: transparent;
+            color: var(--md-primary);
+            border: 1px solid var(--md-outline);
+        }
+
+        .btn-text {
+            background: transparent;
+            color: var(--md-primary);
+        }
+
+        .btn-icon {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            transition: var(--md-transition);
+        }
+
+        .theme-toggle:hover {
+            background: var(--md-surface-variant);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px var(--md-spacing-xl) var(--md-spacing-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--md-spacing-xl);
+            align-items: center;
+            z-index: 2;
+        }
+
+        .hero-text {
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: var(--md-spacing-lg);
+            background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-tertiary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--md-on-surface-variant);
+            margin-bottom: var(--md-spacing-xl);
+            max-width: 500px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: var(--md-spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-preview {
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--md-radius-large);
+            overflow: hidden;
+            box-shadow: var(--md-elevation-5);
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+            transition: var(--md-transition);
+            position: relative;
+            z-index: 2;
+        }
+
+        .app-preview:hover {
+            transform: perspective(1000px) rotateY(0) rotateX(0);
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: var(--md-radius-medium);
+            box-shadow: var(--md-elevation-2);
+            background: var(--md-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--md-spacing-md);
+            z-index: 1;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            width: 80px;
+            height: 80px;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            width: 60px;
+            height: 60px;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 20%;
+            left: 10%;
+            width: 70px;
+            height: 70px;
+        }
+
+        .floating-element:nth-child(4) {
+            bottom: 10%;
+            right: 5%;
+            width: 90px;
+            height: 90px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            background: var(--md-surface);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--md-spacing-xl);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--md-on-surface-variant);
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--md-spacing-lg);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--md-background);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            box-shadow: var(--md-elevation-1);
+            transition: var(--md-transition);
+            border: 1px solid var(--md-outline-variant);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--md-primary), var(--md-tertiary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--md-transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--md-radius-medium);
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--md-spacing-lg);
+            transition: var(--md-transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+        }
+
+        .feature-description {
+            color: var(--md-on-surface-variant);
+            line-height: 1.6;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            background: var(--md-background);
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-xl);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            width: 2px;
+            background: var(--md-outline-variant);
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: var(--md-spacing-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: var(--md-elevation-1);
+            transition: var(--md-transition);
+        }
+
+        .step:hover .step-number {
+            transform: scale(1.1);
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: var(--md-spacing-sm);
+        }
+
+        .step-title {
+            font-size: 1.375rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-sm);
+            color: var(--md-on-surface);
+        }
+
+        .step-description {
+            color: var(--md-on-surface-variant);
+            line-height: 1.6;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            background: var(--md-surface);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--md-spacing-lg);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: var(--md-background);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            box-shadow: var(--md-elevation-1);
+            border: 1px solid var(--md-outline-variant);
+            position: relative;
+            transition: var(--md-transition);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .testimonial-quote {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-lg);
+            position: relative;
+        }
+
+        .testimonial-quote::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--md-primary-container);
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--md-primary-container);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--md-on-primary-container);
+            font-weight: 600;
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: var(--md-on-surface);
+        }
+
+        .author-role {
+            font-size: var(--md-font-size-label);
+            color: var(--md-on-surface-variant);
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            background: linear-gradient(135deg, var(--md-primary) 0%, var(--md-tertiary) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        .cta-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: var(--md-spacing-xl);
+            opacity: 0.9;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: var(--md-spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-light {
+            background: white;
+            color: var(--md-primary);
+        }
+
+        .btn-light:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .btn-outline-light {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            background: var(--md-surface);
+            border-top: 1px solid var(--md-outline-variant);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--md-spacing-xl);
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .footer-description {
+            color: var(--md-on-surface-variant);
+            line-height: 1.6;
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .footer-heading {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
+        .footer-link {
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            transition: var(--md-transition);
+        }
+
+        .footer-link:hover {
+            color: var(--md-primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: var(--md-spacing-sm);
+            margin-top: var(--md-spacing-md);
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+        }
+
+        .social-link:hover {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: var(--md-spacing-xl) auto 0;
+            padding-top: var(--md-spacing-lg);
+            border-top: 1px solid var(--md-outline-variant);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--md-spacing-md);
+        }
+
+        .copyright {
+            color: var(--md-on-surface-variant);
+            font-size: var(--md-font-size-label);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: var(--md-spacing-lg);
+        }
+
+        .footer-legal-link {
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            font-size: var(--md-font-size-label);
+            transition: var(--md-transition);
+        }
+
+        .footer-legal-link:hover {
+            color: var(--md-primary);
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: var(--md-spacing-lg);
+            right: var(--md-spacing-lg);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--md-elevation-3);
+            transition: var(--md-transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 99;
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--md-elevation-4);
+        }
+
+        /* Background Elements */
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .bg-element-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--md-primary);
+            top: 10%;
+            left: 5%;
+        }
+
+        .bg-element-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--md-tertiary);
+            bottom: 20%;
+            right: 10%;
+        }
+
+        .bg-element-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--md-secondary);
+            top: 50%;
+            left: 70%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Header -->
+    <header class="landing-header">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="Clover AI Logo">
+            </div>
+            <h1 class="app-name">Clover AI</h1>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#testimonials" class="nav-link">Testimonials</a>
+        </nav>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="theme-toggle">
+                <span class="material-icons-round">dark_mode</span>
+            </button>
+            <a href="chat.html" class="btn btn-filled">Try Clover AI</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="bg-element bg-element-1"></div>
+        <div class="bg-element bg-element-2"></div>
+        <div class="bg-element bg-element-3"></div>
+        
+        <div class="hero-content">
+            <div class="hero-text fade-in">
+                <h1 class="hero-title">Transform Your Ideas with AI-Powered Intelligence</h1>
+                <p class="hero-subtitle">Clover AI combines cutting-edge artificial intelligence with intuitive design to help you brainstorm, code, learn, and create like never before.</p>
+                <div class="hero-actions">
+                    <a href="chat.html" class="btn btn-filled">Start Chatting</a>
+                    <a href="#features" class="btn btn-outlined">Learn More</a>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="floating-element">
+                    <span class="material-icons-round" style="font-size: 2rem; color: var(--md-primary);">auto_awesome</span>
+                </div>
+                <div class="floating-element">
+                    <span class="material-icons-round" style="font-size: 1.5rem; color: var(--md-tertiary);">summarize</span>
+                </div>
+                <div class="floating-element">
+                    <span class="material-icons-round" style="font-size: 1.75rem; color: var(--md-secondary);">psychology</span>
+                </div>
+                <div class="floating-element">
+                    <span class="material-icons-round" style="font-size: 2rem; color: var(--md-primary);">edit_note</span>
+                </div>
+                <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="Clover AI App Preview" class="app-preview">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Powerful Features for Modern Thinkers</h2>
+            <p class="section-subtitle">Clover AI is packed with innovative features designed to enhance your creativity, productivity, and learning experience.</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <span class="material-icons-round" style="font-size: 2rem;">auto_awesome</span>
+                </div>
+                <h3 class="feature-title">AI-Powered Assistance</h3>
+                <p class="feature-description">Get intelligent responses, creative brainstorming, code explanations, and more with our advanced AI assistant powered by Google's Gemini.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <span class="material-icons-round" style="font-size: 2rem;">image</span>
+                </div>
+                <h3 class="feature-title">Multi-Modal Understanding</h3>
+                <p class="feature-description">Upload images for analysis, get visual explanations, and enhance your conversations with rich media support.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <span class="material-icons-round" style="font-size: 2rem;">category</span>
+                </div>
+                <h3 class="feature-title">Smart Organization</h3>
+                <p class="feature-description">Keep your conversations organized with intuitive categorization, search, and filtering capabilities.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <span class="material-icons-round" style="font-size: 2rem;">dark_mode</span>
+                </div>
+                <h3 class="feature-title">Dark & Light Themes</h3>
+                <p class="feature-description">Switch between beautiful dark and light themes to match your environment and preferences.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <span class="material-icons-round" style="font-size: 2rem;">download</span>
+                </div>
+                <h3 class="feature-title">Export & Share</h3>
+                <p class="feature-description">Export your conversations in multiple formats and share your insights with others effortlessly.</p>
+            </div>
+            
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <span class="material-icons-round" style="font-size: 2rem;">security</span>
+                </div>
+                <h3 class="feature-title">Privacy First</h3>
+                <p class="feature-description">Your conversations stay private. We don't store your data on our servers without your permission.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header fade-in">
+            <h2 class="section-title">How Clover AI Works</h2>
+            <p class="section-subtitle">Getting started with Clover AI is simple and intuitive. Transform your workflow in just a few steps.</p>
+        </div>
+        
+        <div class="steps-container">
+            <div class="step fade-in">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3 class="step-title">Start a Conversation</h3>
+                    <p class="step-description">Begin by asking a question, sharing an idea, or uploading content you'd like to discuss with Clover AI.</p>
+                </div>
+            </div>
+            
+            <div class="step fade-in">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3 class="step-title">Choose Your Mode</h3>
+                    <p class="step-description">Select from specialized modes like Brainstorm, Code Explanation, Web Search, or Translation for tailored assistance.</p>
+                </div>
+            </div>
+            
+            <div class="step fade-in">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3 class="step-title">Get Intelligent Responses</h3>
+                    <p class="step-description">Receive detailed, context-aware responses with code formatting, examples, and actionable insights.</p>
+                </div>
+            </div>
+            
+            <div class="step fade-in">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3 class="step-title">Refine and Export</h3>
+                    <p class="step-description">Continue the conversation to refine ideas, then export your results to share or save for later.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header fade-in">
+            <h2 class="section-title">What Users Are Saying</h2>
+            <p class="section-subtitle">Discover how Clover AI is helping students, developers, and professionals achieve their goals.</p>
+        </div>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-quote">Clover AI has completely transformed how I approach coding challenges. The code explanation feature is incredibly detailed and helpful!</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">S</div>
+                    <div class="author-info">
+                        <div class="author-name">Sarah Johnson</div>
+                        <div class="author-role">Software Developer</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-quote">As a researcher, I deal with complex information daily. Clover AI helps me organize my thoughts and generate new insights efficiently.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">M</div>
+                    <div class="author-info">
+                        <div class="author-name">Michael Chen</div>
+                        <div class="author-role">Research Scientist</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-quote">The clean interface and powerful features make Clover AI my go-to AI assistant. I've tried them all, and this is by far the best.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">E</div>
+                    <div class="author-info">
+                        <div class="author-name">Emily Rodriguez</div>
+                        <div class="author-role">Product Manager</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2 class="cta-title">Ready to Transform Your Workflow?</h2>
+            <p class="cta-subtitle">Join thousands of users who are already using Clover AI to enhance their creativity, productivity, and learning experience.</p>
+            <div class="cta-actions">
+                <a href="chat.html" class="btn btn-light">Get Started Now</a>
+                <a href="#features" class="btn btn-outline-light">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <div class="logo">
+                        <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="Clover AI Logo">
+                    </div>
+                    <h2 class="app-name">Clover AI</h2>
+                </div>
+                <p class="footer-description">An advanced AI assistant that helps you brainstorm, code, learn, and create with the power of artificial intelligence.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <span class="material-icons-round">twitter</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <span class="material-icons-round">facebook</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <span class="material-icons-round">linkedin</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <span class="material-icons-round">github</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-links-column">
+                <h3 class="footer-heading">Product</h3>
+                <ul class="footer-links">
+                    <li><a href="#features" class="footer-link">Features</a></li>
+                    <li><a href="#how-it-works" class="footer-link">How It Works</a></li>
+                    <li><a href="#" class="footer-link">Pricing</a></li>
+                    <li><a href="#" class="footer-link">Updates</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links-column">
+                <h3 class="footer-heading">Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#" class="footer-link">Documentation</a></li>
+                    <li><a href="#" class="footer-link">Tutorials</a></li>
+                    <li><a href="#" class="footer-link">Blog</a></li>
+                    <li><a href="#" class="footer-link">Support</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links-column">
+                <h3 class="footer-heading">Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#" class="footer-link">About Us</a></li>
+                    <li><a href="#" class="footer-link">Careers</a></li>
+                    <li><a href="#" class="footer-link">Contact</a></li>
+                    <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p class="copyright">© 2023 Clover AI. All rights reserved. Created by Aditya Jha</p>
+            <div class="footer-legal">
+                <a href="#" class="footer-legal-link">Privacy Policy</a>
+                <a href="#" class="footer-legal-link">Terms of Service</a>
+                <a href="#" class="footer-legal-link">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scroll-to-top">
+        <span class="material-icons-round">keyboard_arrow_up</span>
+    </button>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('.material-icons-round');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.textContent = 'light_mode';
+                localStorage.setItem('cloverAITheme', 'dark');
+            } else {
+                themeIcon.textContent = 'dark_mode';
+                localStorage.setItem('cloverAITheme', 'light');
+            }
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('cloverAITheme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.body.classList.remove('light-theme');
+            themeIcon.textContent = 'light_mode';
+        }
+
+        // Scroll to Top Button
+        const scrollToTopBtn = document.getElementById('scroll-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Fade-in Animation on Scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = () => {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', fadeInOnScroll);
+        window.addEventListener('load', fadeInOnScroll);
+        
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Interactive Feature Cards
+        const featureCards = document.querySelectorAll('.feature-card');
+        
+        featureCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Floating Elements Animation with Framer Motion
+        const floatingElements = document.querySelectorAll('.floating-element');
+        
+        floatingElements.forEach((element, index) => {
+            // Create floating animation
+            element.style.animation = `float ${6 + index * 2}s ease-in-out infinite`;
+            element.style.animationDelay = `${index * 1.5}s`;
+        });
+
+        // Add CSS for float animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translateY(0px) rotate(0deg); }
+                50% { transform: translateY(-20px) rotate(5deg); }
+                100% { transform: translateY(0px) rotate(0deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Background elements animation
+        const bgElements = document.querySelectorAll('.bg-element');
+        
+        bgElements.forEach((element, index) => {
+            element.style.animation = `float ${15 + index * 5}s ease-in-out infinite`;
+            element.style.animationDelay = `${index * 2}s`;
+        });
+
+        // Enhanced hero title animation
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+            // Add a subtle glow effect
+            setInterval(() => {
+                heroTitle.style.textShadow = '0 0 20px rgba(103, 80, 164, 0.3)';
+                setTimeout(() => {
+                    heroTitle.style.textShadow = 'none';
+                }, 1000);
+            }, 3000);
+        }
+
+        // Add parallax effect to background elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const bgElement1 = document.querySelector('.bg-element-1');
+            const bgElement2 = document.querySelector('.bg-element-2');
+            const bgElement3 = document.querySelector('.bg-element-3');
+            
+            if (bgElement1) bgElement1.style.transform = `translateY(${scrolled * 0.5}px)`;
+            if (bgElement2) bgElement2.style.transform = `translateY(${scrolled * 0.3}px)`;
+            if (bgElement3) bgElement3.style.transform = `translateY(${scrolled * 0.7}px)`;
+        });
+
+        // Add interactive hover effects to buttons
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add typing effect to hero subtitle
+        const heroSubtitle = document.querySelector('.hero-subtitle');
+        if (heroSubtitle) {
+            const text = heroSubtitle.textContent;
+            heroSubtitle.textContent = '';
+            let i = 0;
+            
+            function typeWriter() {
+                if (i < text.length) {
+                    heroSubtitle.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 30);
+                }
+            }
+            
+            // Start typing after a short delay
+            setTimeout(typeWriter, 1000);
+        }
+    </script>
+</body>
+</html>
