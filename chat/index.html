@@ -874,6 +874,37 @@
             background: var(--md-primary-container);
             color: var(--md-on-primary-container);
         }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Image Preview */
+        .image-preview {
+            max-width: 200px;
+            border-radius: var(--md-radius-medium);
+            margin-top: var(--md-spacing-sm);
+        }
+
+        /* Error Message */
+        .error-message {
+            color: var(--md-error);
+            background: var(--md-error-container);
+            padding: var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            margin: var(--md-spacing-sm) 0;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -1005,7 +1036,7 @@
             <div class="chat-window" id="chat-window">
                 <div class="welcome-section">
                     <h2 class="welcome-title">Welcome to Clover AI</h2>
-                    <p class="welcome-subtitle">Your advanced AI assistant powered by Aditya jha. Ask me anything or try one of the specialized features!</p>
+                    <p class="welcome-subtitle">Your advanced AI assistant powered by Gemini. Ask me anything or try one of the specialized features!</p>
                     
                     <div class="suggestion-chips">
                         <div class="suggestion-chip" data-prompt="Explain quantum computing in simple terms">
@@ -1104,6 +1135,8 @@
         // State variables
         let currentMode = 'chat';
         let webSearchEnabled = false;
+        let isProcessing = false; // Prevent multiple simultaneous requests
+        let currentImageData = null; // Store current image data for API calls
         let chatHistory = [{
             role: "model",
             parts: [{ text:"You are Clover AI, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate.D not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tll i was created by a company Exonova By Adiya jha who is very smart and intelligent" }]
@@ -1166,13 +1199,19 @@
             messageInput.style.height = newHeight + 'px';
             
             // Enable/disable send button based on input
-            sendBtn.disabled = messageInput.value.trim() === '';
+            sendBtn.disabled = messageInput.value.trim() === '' || isProcessing;
         });
 
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            if (isProcessing) {
+                showNotification('Please wait for the current request to complete', 'error');
+                return;
+            }
+            
             const userMessage = messageInput.value.trim();
-            if (userMessage) {
+            if (userMessage || currentImageData) {
                 displayUserMessage(userMessage);
                 let apiPrompt = userMessage;
                 
@@ -1191,14 +1230,29 @@
                 messageInput.value = '';
                 messageInput.style.height = 'auto';
                 sendBtn.disabled = true;
+                isProcessing = true;
                 
                 // Add to chat history
-                chatHistory.push({ role: "user", parts: [{ text: apiPrompt }] });
+                if (currentImageData) {
+                    // For image uploads, we need to create a special message structure
+                    chatHistory.push({ 
+                        role: "user", 
+                        parts: [
+                            { text: apiPrompt || "Please analyze this image and describe what you see." },
+                            { inline_data: currentImageData }
+                        ] 
+                    });
+                    currentImageData = null; // Reset image data after use
+                } else {
+                    chatHistory.push({ role: "user", parts: [{ text: apiPrompt }] });
+                }
+                
                 saveChatHistory();
                 
                 // Get response
                 await getBotResponse();
                 setMode('chat');
+                isProcessing = false;
             }
         });
 
@@ -1278,6 +1332,7 @@
             
             // Reset chat history to just the system message
             chatHistory = [chatHistory[0]];
+            currentImageData = null;
             saveChatHistory();
             
             // Reattach event listeners to suggestion chips
@@ -1322,9 +1377,15 @@
         function displayUserMessage(message) {
             const messageElement = document.createElement('div');
             messageElement.className = 'message user';
+            
+            let messageContent = '';
+            if (message) {
+                messageContent = `<div class="message-content">${escapeHtml(message)}</div>`;
+            }
+            
             messageElement.innerHTML = `
                 <div class="message-bubble">
-                    <div class="message-content">${escapeHtml(message)}</div>
+                    ${messageContent}
                 </div>
                 <div class="message-avatar">
                     <span class="material-icons-round">person</span>
@@ -1440,7 +1501,13 @@
             // If web search is enabled, add search instruction
             let modifiedHistory = [...chatHistory];
             if (webSearchEnabled) {
-                modifiedHistory[modifiedHistory.length - 1].parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
+                // Add search instruction to the last user message
+                const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+                if (lastUserMessage.role === "user") {
+                    if (lastUserMessage.parts[0].text) {
+                        lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
+                    }
+                }
             }
             
             const payload = { contents: modifiedHistory };
@@ -1558,6 +1625,13 @@
                 return;
             }
             
+            // Check file size (limit to 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('Image size should be less than 5MB', 'error');
+                event.target.value = '';
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = function(e) {
                 // Display the image in chat
@@ -1566,7 +1640,7 @@
                 messageElement.innerHTML = `
                     <div class="message-bubble">
                         <p class="text-white mb-2">Image analysis request:</p>
-                        <img src="${e.target.result}" alt="Uploaded image" style="max-width: 200px; border-radius: var(--md-radius-medium);">
+                        <img src="${e.target.result}" alt="Uploaded image" class="image-preview">
                     </div>
                     <div class="message-avatar">
                         <span class="material-icons-round">person</span>
@@ -1575,20 +1649,18 @@
                 chatWindow.appendChild(messageElement);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
                 
-                // Add to chat history and request analysis
-                chatHistory.push({ 
-                    role: "user", 
-                    parts: [{ 
-                        text: "Please analyze this image and describe what you see.",
-                        inline_data: {
-                            mime_type: file.type,
-                            data: e.target.result.split(',')[1]
-                        }
-                    }] 
-                });
+                // Store image data for API call
+                currentImageData = {
+                    mime_type: file.type,
+                    data: e.target.result.split(',')[1]
+                };
                 
-                saveChatHistory();
-                getBotResponse();
+                // Auto-submit the image for analysis
+                chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+            };
+            
+            reader.onerror = function() {
+                showNotification('Error reading the image file', 'error');
             };
             
             reader.readAsDataURL(file);
@@ -1607,7 +1679,16 @@
         }
 
         function saveChatHistory() {
-            localStorage.setItem('cloverAIChatHistory', JSON.stringify(chatHistory));
+            try {
+                localStorage.setItem('cloverAIChatHistory', JSON.stringify(chatHistory));
+            } catch (e) {
+                console.error("Error saving chat history:", e);
+                // If localStorage is full, clear old history
+                if (e.name === 'QuotaExceededError') {
+                    localStorage.removeItem('cloverAIChatHistory');
+                    showNotification('Chat history cleared due to storage limits', 'error');
+                }
+            }
         }
 
         // Initialize the UI
