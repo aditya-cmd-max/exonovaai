@@ -257,6 +257,32 @@
             justify-content: center;
         }
 
+        /* Stop Button Styles */
+        .send-btn.stop-mode {
+            background: var(--md-error);
+            color: var(--md-on-error);
+        }
+
+        .send-btn.stop-mode:hover {
+            background: var(--md-error);
+            box-shadow: var(--md-elevation-2);
+            transform: translateY(-2px);
+        }
+
+        .stop-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Theme Toggle */
         .theme-toggle {
             background: transparent;
@@ -886,10 +912,6 @@
             animation: spin 1s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Image Preview */
         .image-preview {
             max-width: 200px;
@@ -1132,7 +1154,7 @@
                                 <span class="material-icons-round">mic</span>
                             </button>
                             <button type="submit" class="send-btn" id="send-btn">
-                                <span class="material-icons-round">send</span>
+                                <span class="material-icons-round" id="send-icon">send</span>
                             </button>
                         </div>
                     </form>
@@ -1169,6 +1191,7 @@
         const chatForm = document.getElementById('chat-form');
         const messageInput = document.getElementById('message-input');
         const sendBtn = document.getElementById('send-btn');
+        const sendIcon = document.getElementById('send-icon');
         const brainstormBtn = document.getElementById('brainstorm-btn');
         const explainBtn = document.getElementById('explain-btn');
         const webSearchBtn = document.getElementById('web-search-btn');
@@ -1193,6 +1216,7 @@
         let currentMode = 'chat';
         let webSearchEnabled = false;
         let isProcessing = false; // Prevent multiple simultaneous requests
+        let abortController = null; // For stopping requests
         let currentImageData = null; // Store current image data for API calls
         let chatHistory = [{
             role: "model",
@@ -1255,15 +1279,25 @@
             const newHeight = Math.min(messageInput.scrollHeight, 120);
             messageInput.style.height = newHeight + 'px';
             
-            // Enable/disable send button based on input
+            // Enable/disable send button based on input and processing state
             sendBtn.disabled = messageInput.value.trim() === '' || isProcessing;
+        });
+
+        // Update send button click handler for stop functionality
+        sendBtn.addEventListener('click', function(e) {
+            if (isProcessing) {
+                // If currently processing, stop the response
+                stopResponse();
+                e.preventDefault();
+            }
+            // Otherwise, the form submission will handle sending
         });
 
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             if (isProcessing) {
-                showNotification('Please wait for the current request to complete', 'error');
+                // If already processing, do nothing (stop button will handle stopping)
                 return;
             }
             
@@ -1287,7 +1321,6 @@
                 messageInput.value = '';
                 messageInput.style.height = 'auto';
                 sendBtn.disabled = true;
-                isProcessing = true;
                 
                 // Add to chat history
                 if (currentImageData) {
@@ -1309,7 +1342,6 @@
                 // Get response
                 await getBotResponse();
                 setMode('chat');
-                isProcessing = false;
             }
         });
 
@@ -1378,6 +1410,37 @@
                     messageInput.placeholder = 'Message Clover AI...';
                     break;
             }
+        }
+
+        function toggleSendButton(isProcessing) {
+            if (isProcessing) {
+                // Change to stop button
+                sendBtn.classList.add('stop-mode');
+                sendIcon.innerHTML = '<span class="stop-spinner"></span>';
+                sendBtn.title = 'Stop generating';
+            } else {
+                // Change back to send button
+                sendBtn.classList.remove('stop-mode');
+                sendIcon.innerHTML = 'send';
+                sendBtn.title = 'Send message';
+            }
+        }
+
+        function stopResponse() {
+            if (abortController) {
+                abortController.abort();
+                abortController = null;
+            }
+            
+            isProcessing = false;
+            toggleSendButton(false);
+            hideTypingIndicator();
+            
+            // Add a stopped message
+            const stoppedMessage = "Response stopped by user.";
+            displayBotMessage(stoppedMessage, false);
+            
+            showNotification('Response stopped');
         }
 
         function clearChat() {
@@ -1551,250 +1614,182 @@
             return formattedText;
         }
 
-     function applyHighlighting(messageElement) {
-    const messageContents = messageElement.querySelectorAll('.message-content');
-    if (!messageContents.length) return;
+        function applyHighlighting(messageElement) {
+            const messageContents = messageElement.querySelectorAll('.message-content');
+            if (!messageContents.length) return;
 
-    messageContents.forEach(messageContent => {
-        let text = messageContent.textContent || messageContent.innerText;
-        
-        // Skip if text is too short
-        if (text.length < 20) return;
-        
-        // Find and rank important terms, then select only the top 1-2
-        const topTerms = findTopImportantTerms(text);
-        
-        console.log("Top important terms to highlight:", topTerms); // Debug
-        
-        if (topTerms.length > 0) {
-            let html = messageContent.innerHTML;
+            messageContents.forEach(messageContent => {
+                let text = messageContent.textContent || messageContent.innerText;
+                
+                // Skip if text is too short
+                if (text.length < 20) return;
+                
+                // Find and rank important terms, then select only the top 1-2
+                const topTerms = findTopImportantTerms(text);
+                
+                console.log("Top important terms to highlight:", topTerms); // Debug
+                
+                if (topTerms.length > 0) {
+                    let html = messageContent.innerHTML;
+                    
+                    // Highlight only the top 1-2 terms
+                    topTerms.forEach(term => {
+                        const regex = new RegExp(escapeRegExp(term.term), 'gi');
+                        html = html.replace(regex, `<span class="highlight">$&</span>`);
+                    });
+                    
+                    messageContent.innerHTML = html;
+                }
+            });
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function findTopImportantTerms(text) {
+            const allTerms = [];
             
-            // Highlight only the top 1-2 terms
-            topTerms.forEach(term => {
-                const regex = new RegExp(escapeRegExp(term.term), 'gi');
-                html = html.replace(regex, `<span class="highlight">$&</span>`);
+            // Strategy 1: Find proper nouns and capitalized terms
+            const properNounRegex = /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/g;
+            const properNouns = text.match(properNounRegex) || [];
+            
+            properNouns.forEach(term => {
+                if (term.length > 3 && !isCommonWord(term) && !isSentenceStarter(term)) {
+                    // Score based on length and capitalization pattern
+                    let score = term.length;
+                    if (term.split(' ').length > 1) score += 10; // Multi-word terms get bonus
+                    if (/^[A-Z]+$/.test(term)) score += 5; // Acronyms get bonus
+                    
+                    allTerms.push({ term, score, type: 'proper_noun' });
+                }
             });
             
-            messageContent.innerHTML = html;
-        }
-    });
-}
-
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function findTopImportantTerms(text) {
-    const allTerms = [];
-    
-    // Strategy 1: Find proper nouns and capitalized terms
-    const properNounRegex = /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/g;
-    const properNouns = text.match(properNounRegex) || [];
-    
-    properNouns.forEach(term => {
-        if (term.length > 3 && !isCommonWord(term) && !isSentenceStarter(term)) {
-            // Score based on length and capitalization pattern
-            let score = term.length;
-            if (term.split(' ').length > 1) score += 10; // Multi-word terms get bonus
-            if (/^[A-Z]+$/.test(term)) score += 5; // Acronyms get bonus
+            // Strategy 2: Find technical terms
+            const technicalTerms = extractTechnicalTerms(text);
+            technicalTerms.forEach(term => {
+                allTerms.push({ term, score: term.length + 8, type: 'technical' });
+            });
             
-            allTerms.push({ term, score, type: 'proper_noun' });
-        }
-    });
-    
-    // Strategy 2: Find technical terms
-    const technicalTerms = extractTechnicalTerms(text);
-    technicalTerms.forEach(term => {
-        allTerms.push({ term, score: term.length + 8, type: 'technical' });
-    });
-    
-    // Strategy 3: Find quoted phrases (usually important)
-    const quotedTerms = extractQuotedPhrases(text);
-    quotedTerms.forEach(term => {
-        allTerms.push({ term, score: term.length + 15, type: 'quoted' });
-    });
-    
-    // Strategy 4: Find contextually important terms
-    const contextualTerms = extractContextualTerms(text);
-    contextualTerms.forEach(term => {
-        allTerms.push({ term, score: term.length + 12, type: 'contextual' });
-    });
-    
-    // Remove duplicates and sort by score (highest first)
-    const uniqueTerms = [];
-    const seen = new Set();
-    
-    allTerms.forEach(item => {
-        const lowerTerm = item.term.toLowerCase();
-        if (!seen.has(lowerTerm)) {
-            seen.add(lowerTerm);
-            uniqueTerms.push(item);
-        }
-    });
-    
-    // Sort by score (highest first) and take only top 2
-    uniqueTerms.sort((a, b) => b.score - a.score);
-    
-    // Return only the top 1-2 terms
-    return uniqueTerms.slice(0, 2);
-}
-
-function isCommonWord(term) {
-    const commonWords = [
-        'This', 'The', 'That', 'These', 'Those', 'There', 'Their', 'They', 'What',
-        'When', 'Where', 'Why', 'How', 'Which', 'Who', 'Will', 'Would', 'Could',
-        'Should', 'Have', 'Has', 'Had', 'Are', 'Is', 'Was', 'Were', 'And', 'But',
-        'Or', 'Not', 'For', 'With', 'From', 'About', 'Into', 'Through', 'During',
-        'While', 'Since', 'Until', 'Upon', 'Without', 'Within', 'Among', 'Between'
-    ];
-    return commonWords.includes(term);
-}
-
-function isSentenceStarter(term) {
-    const sentenceStarters = [
-        'However', 'Therefore', 'Moreover', 'Furthermore', 'Additionally', 'Consequently',
-        'Nevertheless', 'Nonetheless', 'Meanwhile', 'Similarly', 'Specifically',
-        'Interestingly', 'Importantly', 'Basically', 'Essentially'
-    ];
-    return sentenceStarters.includes(term);
-}
-
-function extractTechnicalTerms(text) {
-    const terms = [];
-    
-    const patterns = [
-        /\b[A-Z]{2,}\b/g, // Acronyms (2+ uppercase letters)
-        /\b\w+-\w+\b/g,   // Hyphenated terms
-        /\b\w+\.\w+\b/g,  // Terms with dots
-        /\b\w+\d+\w*\b/g  // Terms with numbers
-    ];
-    
-    patterns.forEach(pattern => {
-        const matches = text.match(pattern) || [];
-        matches.forEach(match => {
-            if (match.length > 2 && !isCommonAcronym(match)) {
-                terms.push(match);
-            }
-        });
-    });
-    
-    return terms;
-}
-
-function isCommonAcronym(term) {
-    const commonAcronyms = ['AI', 'ML', 'API', 'URL', 'HTML', 'CSS', 'JS', 'HTTP', 'HTTPS'];
-    return commonAcronyms.includes(term.toUpperCase());
-}
-
-function extractQuotedPhrases(text) {
-    const terms = [];
-    
-    const quotePatterns = [
-        /"([^"]+)"/g,    // Double quotes
-        /'([^']+)'/g,    // Single quotes
-        /\(([^)]+)\)/g   // Parentheses
-    ];
-    
-    quotePatterns.forEach(pattern => {
-        const matches = [...text.matchAll(pattern)];
-        matches.forEach(match => {
-            if (match[1].length > 3 && match[1].length < 30) {
-                terms.push(match[1]);
-            }
-        });
-    });
-    
-    return terms;
-}
-
-function extractContextualTerms(text) {
-    const terms = [];
-    
-    const contextPatterns = [
-        /(?:called|named|termed|known as|referred to as)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi,
-        /(?:such as|including|like|especially)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi,
-        /(?:technology|framework|library|language|tool|platform|concept|principle)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi
-    ];
-    
-    contextPatterns.forEach(pattern => {
-        const matches = [...text.matchAll(pattern)];
-        matches.forEach(match => {
-            if (match[1] && match[1].length > 2) {
-                terms.push(match[1]);
-            }
-        });
-    });
-    
-    return terms;
-}
-
-function extractTechnicalTerms(text) {
-    const terms = [];
-    
-    // Common technical patterns
-    const patterns = [
-        /\b[A-Z]{2,}\b/g, // Acronyms (2+ uppercase letters)
-        /\b\w+-\w+\b/g,   // Hyphenated terms
-        /\b\w+\.\w+\b/g,  // Terms with dots (like version numbers)
-        /\b\w+\d+\w*\b/g  // Terms with numbers (like Python3, HTML5)
-    ];
-    
-    patterns.forEach(pattern => {
-        const matches = text.match(pattern) || [];
-        matches.forEach(match => {
-            if (match.length > 2) {
-                terms.push(match);
-            }
-        });
-    });
-    
-    return terms;
-}
-
-function extractQuotedPhrases(text) {
-    const terms = [];
-    
-    // Find phrases in quotes, parentheses, or between specific markers
-    const quotePatterns = [
-        /"([^"]+)"/g,    // Double quotes
-        /'([^']+)'/g,    // Single quotes
-        /\(([^)]+)\)/g   // Parentheses
-    ];
-    
-    quotePatterns.forEach(pattern => {
-        const matches = [...text.matchAll(pattern)];
-        matches.forEach(match => {
-            if (match[1].length > 3 && match[1].length < 50) {
-                terms.push(match[1]);
-            }
-        });
-    });
-    
-    return terms;
-}
-
-function extractContextualTerms(text) {
-    const terms = [];
-    
-    // Look for terms that appear after specific context words
-    const contextPatterns = [
-        /(?:called|named|termed|known as|referred to as)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi,
-        /(?:such as|including|like|especially)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi,
-        /(?:technology|framework|library|language|tool|platform)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi
-    ];
-    
-    contextPatterns.forEach(pattern => {
-        const matches = [...text.matchAll(pattern)];
-        matches.forEach(match => {
-            if (match[1] && match[1].length > 2) {
-                terms.push(match[1]);
-            }
-        });
-    });
-    
-    return terms;
-}     
+            // Strategy 3: Find quoted phrases (usually important)
+            const quotedTerms = extractQuotedPhrases(text);
+            quotedTerms.forEach(term => {
+                allTerms.push({ term, score: term.length + 15, type: 'quoted' });
+            });
             
+            // Strategy 4: Find contextually important terms
+            const contextualTerms = extractContextualTerms(text);
+            contextualTerms.forEach(term => {
+                allTerms.push({ term, score: term.length + 12, type: 'contextual' });
+            });
+            
+            // Remove duplicates and sort by score (highest first)
+            const uniqueTerms = [];
+            const seen = new Set();
+            
+            allTerms.forEach(item => {
+                const lowerTerm = item.term.toLowerCase();
+                if (!seen.has(lowerTerm)) {
+                    seen.add(lowerTerm);
+                    uniqueTerms.push(item);
+                }
+            });
+            
+            // Sort by score (highest first) and take only top 2
+            uniqueTerms.sort((a, b) => b.score - a.score);
+            
+            // Return only the top 1-2 terms
+            return uniqueTerms.slice(0, 2);
+        }
+
+        function isCommonWord(term) {
+            const commonWords = [
+                'This', 'The', 'That', 'These', 'Those', 'There', 'Their', 'They', 'What',
+                'When', 'Where', 'Why', 'How', 'Which', 'Who', 'Will', 'Would', 'Could',
+                'Should', 'Have', 'Has', 'Had', 'Are', 'Is', 'Was', 'Were', 'And', 'But',
+                'Or', 'Not', 'For', 'With', 'From', 'About', 'Into', 'Through', 'During',
+                'While', 'Since', 'Until', 'Upon', 'Without', 'Within', 'Among', 'Between'
+            ];
+            return commonWords.includes(term);
+        }
+
+        function isSentenceStarter(term) {
+            const sentenceStarters = [
+                'However', 'Therefore', 'Moreover', 'Furthermore', 'Additionally', 'Consequently',
+                'Nevertheless', 'Nonetheless', 'Meanwhile', 'Similarly', 'Specifically',
+                'Interestingly', 'Importantly', 'Basically', 'Essentially'
+            ];
+            return sentenceStarters.includes(term);
+        }
+
+        function extractTechnicalTerms(text) {
+            const terms = [];
+            
+            const patterns = [
+                /\b[A-Z]{2,}\b/g, // Acronyms (2+ uppercase letters)
+                /\b\w+-\w+\b/g,   // Hyphenated terms
+                /\b\w+\.\w+\b/g,  // Terms with dots
+                /\b\w+\d+\w*\b/g  // Terms with numbers
+            ];
+            
+            patterns.forEach(pattern => {
+                const matches = text.match(pattern) || [];
+                matches.forEach(match => {
+                    if (match.length > 2 && !isCommonAcronym(match)) {
+                        terms.push(match);
+                    }
+                });
+            });
+            
+            return terms;
+        }
+
+        function isCommonAcronym(term) {
+            const commonAcronyms = ['AI', 'ML', 'API', 'URL', 'HTML', 'CSS', 'JS', 'HTTP', 'HTTPS'];
+            return commonAcronyms.includes(term.toUpperCase());
+        }
+
+        function extractQuotedPhrases(text) {
+            const terms = [];
+            
+            const quotePatterns = [
+                /"([^"]+)"/g,    // Double quotes
+                /'([^']+)'/g,    // Single quotes
+                /\(([^)]+)\)/g   // Parentheses
+            ];
+            
+            quotePatterns.forEach(pattern => {
+                const matches = [...text.matchAll(pattern)];
+                matches.forEach(match => {
+                    if (match[1].length > 3 && match[1].length < 30) {
+                        terms.push(match[1]);
+                    }
+                });
+            });
+            
+            return terms;
+        }
+
+        function extractContextualTerms(text) {
+            const terms = [];
+            
+            const contextPatterns = [
+                /(?:called|named|termed|known as|referred to as)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi,
+                /(?:such as|including|like|especially)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi,
+                /(?:technology|framework|library|language|tool|platform|concept|principle)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)/gi
+            ];
+            
+            contextPatterns.forEach(pattern => {
+                const matches = [...text.matchAll(pattern)];
+                matches.forEach(match => {
+                    if (match[1] && match[1].length > 2) {
+                        terms.push(match[1]);
+                    }
+                });
+            });
+            
+            return terms;
+        }
 
         function showTypingIndicator() {
             const typingElement = document.createElement('div');
@@ -1823,6 +1818,9 @@ function extractContextualTerms(text) {
 
         async function getBotResponse() {
             showTypingIndicator();
+            isProcessing = true;
+            toggleSendButton(true);
+            
             const apiKey = "AIzaSyDumsAxfOETUy3E85Qp_ikVSglQmeoXrJk";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
             
@@ -1840,11 +1838,15 @@ function extractContextualTerms(text) {
             
             const payload = { contents: modifiedHistory };
 
+            // Create abort controller for stopping requests
+            abortController = new AbortController();
+
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    signal: abortController.signal
                 });
 
                 if (!response.ok) {
@@ -1854,6 +1856,8 @@ function extractContextualTerms(text) {
 
                 const result = await response.json();
                 hideTypingIndicator();
+                isProcessing = false;
+                toggleSendButton(false);
 
                 if (result.candidates?.length > 0) {
                     const botMessage = result.candidates[0].content.parts[0].text;
@@ -1864,13 +1868,25 @@ function extractContextualTerms(text) {
                     handleApiError("I received an empty response. Please try rephrasing your question. 🤔");
                 }
             } catch (error) {
+                // Don't show error if it was due to abort
+                if (error.name === 'AbortError') {
+                    console.log('Request was cancelled');
+                    return;
+                }
+                
                 console.error("API Error:", error);
                 handleApiError(`Sorry, I'm having trouble responding right now. Please try again later. (Error: ${error.message})`);
+            } finally {
+                isProcessing = false;
+                toggleSendButton(false);
+                abortController = null;
             }
         }
 
         function handleApiError(message) {
             hideTypingIndicator();
+            isProcessing = false;
+            toggleSendButton(false);
             displayBotMessage(message, false);
         }
 
