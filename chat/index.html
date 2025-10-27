@@ -181,6 +181,123 @@
             gap: var(--md-spacing-sm);
         }
 
+        /* Mobile Menu Button - Hidden on Desktop */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            transition: var(--md-transition);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--md-surface-variant);
+        }
+
+        .mobile-menu-btn .bar {
+            width: 24px;
+            height: 2px;
+            background: var(--md-on-surface);
+            margin: 2px 0;
+            transition: var(--md-transition);
+            border-radius: 1px;
+        }
+
+        .mobile-menu-btn.active .bar:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-btn.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active .bar:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Mobile Sidebar Overlay */
+        .mobile-sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--md-transition);
+        }
+
+        .mobile-sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Mobile Sidebar */
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100%;
+            background: var(--md-surface);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: var(--md-transition);
+            display: flex;
+            flex-direction: column;
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            box-shadow: var(--md-elevation-5);
+            border-right: 1px solid var(--md-outline-variant);
+        }
+
+        .mobile-sidebar.active {
+            left: 0;
+        }
+
+        .mobile-sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--md-spacing-xl);
+            padding-bottom: var(--md-spacing-md);
+            border-bottom: 1px solid var(--md-outline-variant);
+        }
+
+        .mobile-sidebar-close {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+        }
+
+        .mobile-sidebar-close:hover {
+            background: var(--md-surface-variant);
+        }
+
+        .mobile-sidebar-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-xl);
+        }
+
         /* Buttons */
         .btn {
             display: inline-flex;
@@ -334,6 +451,68 @@
             gap: var(--md-spacing-md);
         }
 
+        /* Chat Sessions with Separate Scroll */
+        .chat-sessions-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--md-outline-variant);
+            border-radius: var(--md-radius-medium);
+            padding: var(--md-spacing-sm);
+            background: var(--md-surface);
+        }
+
+        .chat-sessions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+            flex: 1;
+        }
+
+        /* Mobile sidebar specific styles */
+        .mobile-sidebar .chat-sessions-container {
+            max-height: 180px;
+        }
+
+        /* Scrollbar Styling */
+        .chat-sessions-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-sessions-container::-webkit-scrollbar-track {
+            background: var(--md-surface-variant);
+            border-radius: 3px;
+        }
+
+        .chat-sessions-container::-webkit-scrollbar-thumb {
+            background: var(--md-outline-variant);
+            border-radius: 3px;
+        }
+
+        .chat-sessions-container::-webkit-scrollbar-thumb:hover {
+            background: var(--md-primary);
+        }
+
+        /* Adjust sidebar sections spacing */
+        .sidebar-section:first-child {
+            flex: 0 0 auto;
+        }
+
+        .sidebar-section:not(:first-child) {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section:not(:first-child) .feature-buttons,
+        .sidebar-section:not(:first-child) .quick-actions {
+            flex: 1;
+            overflow-y: auto;
+            max-height: none;
+        }
+
         .sidebar-title {
             font-size: var(--md-font-size-label);
             font-weight: 600;
@@ -345,15 +524,7 @@
             align-items: center;
         }
 
-        /* Chat Sessions */
-        .chat-sessions {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-sm);
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
+        /* Chat Session Items */
         .chat-session {
             display: flex;
             align-items: center;
@@ -1067,9 +1238,7 @@
             }
             
             .sidebar {
-                width: 100%;
-                order: 2;
-                max-height: 300px;
+                display: none; /* Hide desktop sidebar on mobile */
             }
             
             .main-content {
@@ -1109,6 +1278,18 @@
                 font-size: 1.25rem;
             }
             
+            .mobile-menu-btn {
+                display: flex; /* Show mobile menu button on mobile */
+            }
+            
+            .chat-sessions-container {
+                max-height: 150px;
+            }
+            
+            .mobile-sidebar .chat-sessions-container {
+                max-height: 120px;
+            }
+            
             .feedback-buttons {
                 gap: var(--md-spacing-xs);
                 justify-content: space-between;
@@ -1127,10 +1308,6 @@
             
             .feedback-btn span:not(.material-icons-round) {
                 font-size: 0.7rem;
-            }
-            
-            .chat-sessions {
-                max-height: 150px;
             }
         }
 
@@ -1268,6 +1445,102 @@
         }
     </style>
 
+    <!-- Mobile Sidebar Overlay -->
+    <div class="mobile-sidebar-overlay" id="mobile-sidebar-overlay"></div>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobile-sidebar">
+        <div class="mobile-sidebar-header">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="Clover AI Logo">
+                </div>
+                <h1 class="app-name">Clover AI</h1>
+            </div>
+            <button class="mobile-sidebar-close" id="mobile-sidebar-close">
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+        
+        <div class="mobile-sidebar-content">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">
+                    Chat Sessions
+                    <button id="mobile-new-chat-btn" class="btn-icon btn-text" title="New Chat">
+                        <span class="material-icons-round">add</span>
+                    </button>
+                </h3>
+                <div class="chat-sessions-container">
+                    <div class="chat-sessions" id="mobile-chat-sessions">
+                        <!-- Chat sessions will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">AI Features</h3>
+                <div class="feature-buttons">
+                    <button id="mobile-brainstorm-btn" class="feature-btn">
+                        <span class="material-icons-round">lightbulb</span>
+                        <span>Brainstorm Ideas</span>
+                    </button>
+                    <button id="mobile-explain-btn" class="feature-btn">
+                        <span class="material-icons-round">code</span>
+                        <span>Explain Code</span>
+                    </button>
+                    <button id="mobile-web-search-btn" class="feature-btn">
+                        <span class="material-icons-round">search</span>
+                        <span>Web Search</span>
+                    </button>
+                    <button id="mobile-summarize-btn" class="feature-btn">
+                        <span class="material-icons-round">summarize</span>
+                        <span>Summarize Text</span>
+                    </button>
+                    <button id="mobile-translate-btn" class="feature-btn">
+                        <span class="material-icons-round">translate</span>
+                        <span>Translate</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Quick Actions</h3>
+                <div class="quick-actions">
+                    <button class="quick-action" data-prompt="Create a study schedule for exam preparation">
+                        <span class="material-icons-round">schedule</span>
+                        <span>Study Schedule</span>
+                    </button>
+                    <button class="quick-action" data-prompt="Write a professional email template">
+                        <span class="material-icons-round">email</span>
+                        <span>Email Template</span>
+                    </button>
+                    <button class="quick-action" data-prompt="Explain machine learning in simple terms">
+                        <span class="material-icons-round">psychology</span>
+                        <span>ML Explanation</span>
+                    </button>
+                    <button class="quick-action" data-prompt="Create a workout plan for beginners">
+                        <span class="material-icons-round">fitness_center</span>
+                        <span>Workout Plan</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Tools</h3>
+                <div class="feature-buttons">
+                    <button id="mobile-clear-btn" class="feature-btn">
+                        <span class="material-icons-round">delete</span>
+                        <span>Clear Chat</span>
+                    </button>
+                    <button id="mobile-export-btn" class="feature-btn">
+                        <span class="material-icons-round">download</span>
+                        <span>Export Chat</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main App -->
     <header class="app-header">
         <div class="logo-container">
@@ -1278,6 +1551,11 @@
         </div>
         
         <div class="header-actions">
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </button>
             <button class="theme-toggle" id="theme-toggle">
                 <span class="material-icons-round">dark_mode</span>
             </button>
@@ -1285,7 +1563,7 @@
     </header>
 
     <div class="app-container">
-        <!-- Sidebar -->
+        <!-- Sidebar - Desktop Only -->
         <aside class="sidebar">
             <div class="sidebar-section">
                 <h3 class="sidebar-title">
@@ -1294,8 +1572,10 @@
                         <span class="material-icons-round">add</span>
                     </button>
                 </h3>
-                <div class="chat-sessions" id="chat-sessions">
-                    <!-- Chat sessions will be dynamically added here -->
+                <div class="chat-sessions-container">
+                    <div class="chat-sessions" id="chat-sessions">
+                        <!-- Chat sessions will be dynamically added here -->
+                    </div>
                 </div>
             </div>
 
@@ -1457,16 +1737,25 @@
         const sendBtn = document.getElementById('send-btn');
         const sendIcon = document.getElementById('send-icon');
         const chatSessionsContainer = document.getElementById('chat-sessions');
+        const mobileChatSessionsContainer = document.getElementById('mobile-chat-sessions');
         const currentChatTitle = document.getElementById('current-chat-title');
         const newChatBtn = document.getElementById('new-chat-btn');
+        const mobileNewChatBtn = document.getElementById('mobile-new-chat-btn');
         const renameChatBtn = document.getElementById('rename-chat-btn');
         const brainstormBtn = document.getElementById('brainstorm-btn');
+        const mobileBrainstormBtn = document.getElementById('mobile-brainstorm-btn');
         const explainBtn = document.getElementById('explain-btn');
+        const mobileExplainBtn = document.getElementById('mobile-explain-btn');
         const webSearchBtn = document.getElementById('web-search-btn');
+        const mobileWebSearchBtn = document.getElementById('mobile-web-search-btn');
         const summarizeBtn = document.getElementById('summarize-btn');
+        const mobileSummarizeBtn = document.getElementById('mobile-summarize-btn');
         const translateBtn = document.getElementById('translate-btn');
+        const mobileTranslateBtn = document.getElementById('mobile-translate-btn');
         const clearBtn = document.getElementById('clear-btn');
+        const mobileClearBtn = document.getElementById('mobile-clear-btn');
         const exportBtn = document.getElementById('export-btn');
+        const mobileExportBtn = document.getElementById('mobile-export-btn');
         const voiceInputBtn = document.getElementById('voice-input-btn');
         const imageUploadBtn = document.getElementById('image-upload-btn');
         const imageInput = document.getElementById('image-input');
@@ -1475,8 +1764,15 @@
         const suggestionChips = document.querySelectorAll('.suggestion-chip');
         const quickActions = document.querySelectorAll('.quick-action');
         const featureButtons = [brainstormBtn, explainBtn, webSearchBtn, summarizeBtn, translateBtn];
+        const mobileFeatureButtons = [mobileBrainstormBtn, mobileExplainBtn, mobileWebSearchBtn, mobileSummarizeBtn, mobileTranslateBtn];
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('.material-icons-round');
+        
+        // Mobile Menu Elements
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
+        const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 
         // State variables
         let currentMode = 'chat';
@@ -1531,6 +1827,9 @@
             renderChatSessions();
             loadChat(chatId);
             showNotification('New chat created');
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
         }
 
         // Load a specific chat
@@ -1573,42 +1872,48 @@
             });
             
             chatWindow.scrollTop = chatWindow.scrollHeight;
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
         }
 
         // Render chat sessions in sidebar
         function renderChatSessions() {
             chatSessionsContainer.innerHTML = '';
+            mobileChatSessionsContainer.innerHTML = '';
             
             Object.values(chatSessions)
                 .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
                 .forEach(chat => {
-                    const sessionElement = document.createElement('div');
-                    sessionElement.className = `chat-session ${chat.id === currentChatId ? 'active' : ''}`;
-                    sessionElement.innerHTML = `
-                        <span class="material-icons-round">chat</span>
-                        <span class="chat-session-title" style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${chat.title}</span>
-                        <button class="chat-session-delete" data-chat-id="${chat.id}" title="Delete chat">
-                            <span class="material-icons-round">close</span>
-                        </button>
-                    `;
-                    
-                    sessionElement.addEventListener('click', () => {
-                        if (chat.id !== currentChatId) {
-                            loadChat(chat.id);
-                        }
-                    });
-                    
+                    // Desktop sidebar
+                    const sessionElement = createChatSessionElement(chat);
                     chatSessionsContainer.appendChild(sessionElement);
+                    
+                    // Mobile sidebar
+                    const mobileSessionElement = createChatSessionElement(chat);
+                    mobileChatSessionsContainer.appendChild(mobileSessionElement);
                 });
-                
-            // Add delete event listeners
-            document.querySelectorAll('.chat-session-delete').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const chatId = btn.getAttribute('data-chat-id');
-                    deleteChat(chatId);
-                });
+        }
+
+        // Create a chat session element
+        function createChatSessionElement(chat) {
+            const sessionElement = document.createElement('div');
+            sessionElement.className = `chat-session ${chat.id === currentChatId ? 'active' : ''}`;
+            sessionElement.innerHTML = `
+                <span class="material-icons-round">chat</span>
+                <span class="chat-session-title" style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${chat.title}</span>
+                <button class="chat-session-delete" data-chat-id="${chat.id}" title="Delete chat">
+                    <span class="material-icons-round">close</span>
+                </button>
+            `;
+            
+            sessionElement.addEventListener('click', () => {
+                if (chat.id !== currentChatId) {
+                    loadChat(chat.id);
+                }
             });
+            
+            return sessionElement;
         }
 
         // Delete a chat session
@@ -1658,19 +1963,47 @@
             }
         }
 
+        // Mobile Menu Functions
+        function openMobileSidebar() {
+            mobileSidebar.classList.add('active');
+            mobileSidebarOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileSidebar() {
+            mobileSidebar.classList.remove('active');
+            mobileSidebarOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
         // Event Listeners
         newChatBtn.addEventListener('click', createNewChat);
+        mobileNewChatBtn.addEventListener('click', createNewChat);
         renameChatBtn.addEventListener('click', renameCurrentChat);
         brainstormBtn.addEventListener('click', () => setMode('brainstorm'));
+        mobileBrainstormBtn.addEventListener('click', () => setMode('brainstorm'));
         explainBtn.addEventListener('click', () => setMode('explain'));
+        mobileExplainBtn.addEventListener('click', () => setMode('explain'));
         webSearchBtn.addEventListener('click', () => toggleWebSearch());
+        mobileWebSearchBtn.addEventListener('click', () => toggleWebSearch());
         summarizeBtn.addEventListener('click', () => setMode('summarize'));
+        mobileSummarizeBtn.addEventListener('click', () => setMode('summarize'));
         translateBtn.addEventListener('click', () => setMode('translate'));
+        mobileTranslateBtn.addEventListener('click', () => setMode('translate'));
         clearBtn.addEventListener('click', clearCurrentChat);
+        mobileClearBtn.addEventListener('click', clearCurrentChat);
         exportBtn.addEventListener('click', exportCurrentChat);
+        mobileExportBtn.addEventListener('click', exportCurrentChat);
         
         voiceInputBtn.addEventListener('click', startVoiceInput);
         imageInput.addEventListener('change', handleImageUpload);
+        
+        // Mobile menu event listeners
+        mobileMenuBtn.addEventListener('click', openMobileSidebar);
+        mobileSidebarClose.addEventListener('click', closeMobileSidebar);
+        mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
         
         suggestionChips.forEach(chip => {
             chip.addEventListener('click', () => {
@@ -1817,17 +2150,24 @@
         function setMode(newMode) {
             currentMode = currentMode === newMode ? 'chat' : newMode;
             updateUIForMode();
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
         }
 
         function toggleWebSearch() {
             webSearchEnabled = !webSearchEnabled;
             webSearchBtn.classList.toggle('active', webSearchEnabled);
+            mobileWebSearchBtn.classList.toggle('active', webSearchEnabled);
             
             if (webSearchEnabled) {
                 showNotification('Web search enabled - I will search for up-to-date information');
             } else {
                 showNotification('Web search disabled');
             }
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
         }
 
         function updateUIForMode() {
@@ -1835,21 +2175,29 @@
                 btn.classList.remove('active');
             });
             
+            mobileFeatureButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
             switch (currentMode) {
                 case 'brainstorm':
                     brainstormBtn.classList.add('active');
+                    mobileBrainstormBtn.classList.add('active');
                     messageInput.placeholder = 'What would you like to brainstorm about?';
                     break;
                 case 'explain':
                     explainBtn.classList.add('active');
+                    mobileExplainBtn.classList.add('active');
                     messageInput.placeholder = 'Paste your code here for detailed explanation...';
                     break;
                 case 'summarize':
                     summarizeBtn.classList.add('active');
+                    mobileSummarizeBtn.classList.add('active');
                     messageInput.placeholder = 'Paste text to summarize...';
                     break;
                 case 'translate':
                     translateBtn.classList.add('active');
+                    mobileTranslateBtn.classList.add('active');
                     messageInput.placeholder = 'Enter text to translate...';
                     break;
                 default:
@@ -1912,6 +2260,9 @@
             });
             
             showNotification('Chat cleared successfully');
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
         }
 
         function exportCurrentChat() {
@@ -1936,6 +2287,9 @@
             URL.revokeObjectURL(url);
             
             showNotification('Chat exported successfully');
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
         }
 
         function displayUserMessage(message) {
