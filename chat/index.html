@@ -922,6 +922,46 @@
             color: #64b5f6;
             box-shadow: 0 1px 2px rgba(25, 118, 210, 0.3);
         }
+
+        /* Feedback Buttons */
+        .feedback-buttons {
+            display: flex;
+            gap: var(--md-spacing-sm);
+            margin-top: var(--md-spacing-md);
+            padding-top: var(--md-spacing-sm);
+            border-top: 1px solid var(--md-outline-variant);
+        }
+
+        .feedback-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--md-spacing-xs);
+            padding: var(--md-spacing-xs) var(--md-spacing-sm);
+            background: transparent;
+            color: var(--md-on-surface-variant);
+            border: 1px solid var(--md-outline-variant);
+            border-radius: var(--md-radius-small);
+            font-size: var(--md-font-size-label);
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .feedback-btn:hover {
+            background: var(--md-surface-variant);
+            transform: translateY(-1px);
+        }
+
+        .feedback-btn.liked {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .feedback-btn.disliked {
+            background: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+            border-color: #F44336;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -1447,6 +1487,27 @@
                 if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
             }
 
+            // Generate a unique ID for this message to track feedback
+            const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Add feedback buttons
+            botMessageContent += `
+                <div class="feedback-buttons" id="feedback-${messageId}">
+                    <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
+                        <span class="material-icons-round">thumb_up</span>
+                        <span>Like</span>
+                    </button>
+                    <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
+                        <span class="material-icons-round">thumb_down</span>
+                        <span>Dislike</span>
+                    </button>
+                    <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
+                        <span class="material-icons-round">refresh</span>
+                        <span>Retry</span>
+                    </button>
+                </div>
+            `;
+
             messageElement.innerHTML = `
                 <div class="message-avatar">
                     <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="AI Logo">
@@ -1956,6 +2017,63 @@ function extractContextualTerms(text) {
                     showNotification('Chat history cleared due to storage limits', 'error');
                 }
             }
+        }
+
+        // Feedback handling function
+        function handleFeedback(messageId, action) {
+            const feedbackContainer = document.getElementById(`feedback-${messageId}`);
+            const likeBtn = feedbackContainer.querySelector('.like-btn');
+            const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
+            
+            // Reset all buttons first
+            likeBtn.classList.remove('liked');
+            dislikeBtn.classList.remove('disliked');
+            
+            // Apply the selected action
+            if (action === 'like') {
+                likeBtn.classList.add('liked');
+                showNotification('Thanks for your feedback! 👍');
+            } else if (action === 'dislike') {
+                dislikeBtn.classList.add('disliked');
+                showNotification('Thanks for your feedback! We\'ll try to improve. 👎');
+            } else if (action === 'retry') {
+                // Find the user message that prompted this response
+                const messageElements = document.querySelectorAll('.message');
+                let userMessage = '';
+                
+                // Find the message element with this ID
+                for (let i = 0; i < messageElements.length; i++) {
+                    if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
+                        // The previous message should be the user's message
+                        if (i > 0 && messageElements[i-1].classList.contains('user')) {
+                            const userBubble = messageElements[i-1].querySelector('.message-bubble');
+                            if (userBubble) {
+                                userMessage = userBubble.textContent || userBubble.innerText;
+                            }
+                        }
+                        break;
+                    }
+                }
+                
+                if (userMessage) {
+                    // Set the message input to the user's previous message and submit
+                    messageInput.value = userMessage;
+                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+                } else {
+                    showNotification('Could not find the original message to retry', 'error');
+                }
+            }
+            
+            // Save feedback to localStorage for analytics
+            const feedbackData = {
+                messageId,
+                action,
+                timestamp: new Date().toISOString()
+            };
+            
+            let feedbackHistory = JSON.parse(localStorage.getItem('cloverAIFeedback') || '[]');
+            feedbackHistory.push(feedbackData);
+            localStorage.setItem('cloverAIFeedback', JSON.stringify(feedbackHistory));
         }
 
         // Initialize the UI
