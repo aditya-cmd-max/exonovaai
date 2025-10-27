@@ -374,6 +374,88 @@
             justify-content: center;
         }
 
+        /* Search Chat Section */
+        .search-chat-container {
+            position: relative;
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        .search-chat-input {
+            width: 100%;
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            padding-left: 40px;
+            background: var(--md-surface-variant);
+            border: 1px solid var(--md-outline-variant);
+            border-radius: var(--md-radius-medium);
+            font-family: inherit;
+            font-size: var(--md-font-size-body);
+            color: var(--md-on-surface);
+            transition: var(--md-transition);
+            outline: none;
+        }
+
+        .search-chat-input:focus {
+            border-color: var(--md-primary);
+            box-shadow: 0 0 0 2px rgba(103, 80, 164, 0.1);
+        }
+
+        .search-chat-input::placeholder {
+            color: var(--md-on-surface-variant);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--md-spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--md-on-surface-variant);
+            pointer-events: none;
+        }
+
+        .clear-search-btn {
+            position: absolute;
+            right: var(--md-spacing-sm);
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            opacity: 0;
+        }
+
+        .clear-search-btn:hover {
+            background: var(--md-surface);
+            color: var(--md-error);
+        }
+
+        .clear-search-btn.visible {
+            opacity: 1;
+        }
+
+        /* No results message */
+        .no-chats-found {
+            text-align: center;
+            padding: var(--md-spacing-lg);
+            color: var(--md-on-surface-variant);
+            font-style: italic;
+        }
+
+        /* Highlight matching text in search results */
+        .highlight-match {
+            background-color: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            padding: 1px 2px;
+            border-radius: 2px;
+        }
+
         /* Stop Button Styles */
         .send-btn.stop-mode {
             background: var(--md-error);
@@ -1470,9 +1552,22 @@
                         <span class="material-icons-round">add</span>
                     </button>
                 </h3>
+                
+                <!-- Search Chat Input -->
+                <div class="search-chat-container">
+                    <span class="material-icons-round search-icon">search</span>
+                    <input type="text" id="mobile-search-chat-input" class="search-chat-input" placeholder="Search chats...">
+                    <button id="mobile-clear-search-btn" class="clear-search-btn" title="Clear search">
+                        <span class="material-icons-round">close</span>
+                    </button>
+                </div>
+                
                 <div class="chat-sessions-container">
                     <div class="chat-sessions" id="mobile-chat-sessions">
                         <!-- Chat sessions will be dynamically added here -->
+                    </div>
+                    <div id="mobile-no-chats-found" class="no-chats-found" style="display: none;">
+                        No chats found matching your search
                     </div>
                 </div>
             </div>
@@ -1572,9 +1667,22 @@
                         <span class="material-icons-round">add</span>
                     </button>
                 </h3>
+                
+                <!-- Search Chat Input -->
+                <div class="search-chat-container">
+                    <span class="material-icons-round search-icon">search</span>
+                    <input type="text" id="search-chat-input" class="search-chat-input" placeholder="Search chats...">
+                    <button id="clear-search-btn" class="clear-search-btn" title="Clear search">
+                        <span class="material-icons-round">close</span>
+                    </button>
+                </div>
+                
                 <div class="chat-sessions-container">
                     <div class="chat-sessions" id="chat-sessions">
                         <!-- Chat sessions will be dynamically added here -->
+                    </div>
+                    <div id="no-chats-found" class="no-chats-found" style="display: none;">
+                        No chats found matching your search
                     </div>
                 </div>
             </div>
@@ -1774,6 +1882,14 @@
         const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
         const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 
+        // Search Elements
+        const searchChatInput = document.getElementById('search-chat-input');
+        const mobileSearchChatInput = document.getElementById('mobile-search-chat-input');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+        const mobileClearSearchBtn = document.getElementById('mobile-clear-search-btn');
+        const noChatsFound = document.getElementById('no-chats-found');
+        const mobileNoChatsFound = document.getElementById('mobile-no-chats-found');
+
         // State variables
         let currentMode = 'chat';
         let webSearchEnabled = false;
@@ -1782,6 +1898,7 @@
         let currentImageData = null;
         let currentChatId = null;
         let chatSessions = {};
+        let searchTerm = '';
 
         // System message template
         const systemMessage = {
@@ -1879,29 +1996,25 @@
 
         // Render chat sessions in sidebar
         function renderChatSessions() {
-            chatSessionsContainer.innerHTML = '';
-            mobileChatSessionsContainer.innerHTML = '';
-            
-            Object.values(chatSessions)
-                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-                .forEach(chat => {
-                    // Desktop sidebar
-                    const sessionElement = createChatSessionElement(chat);
-                    chatSessionsContainer.appendChild(sessionElement);
-                    
-                    // Mobile sidebar
-                    const mobileSessionElement = createChatSessionElement(chat);
-                    mobileChatSessionsContainer.appendChild(mobileSessionElement);
-                });
+            filterChatSessions();
         }
 
-        // Create a chat session element
-        function createChatSessionElement(chat) {
+        // Create chat session element with search highlighting
+        function createChatSessionElement(chat, highlightTerm = '') {
             const sessionElement = document.createElement('div');
             sessionElement.className = `chat-session ${chat.id === currentChatId ? 'active' : ''}`;
+            
+            let titleHTML = chat.title;
+            
+            // Highlight matching text if search term exists
+            if (highlightTerm && highlightTerm.length > 0) {
+                const regex = new RegExp(`(${escapeRegExp(highlightTerm)})`, 'gi');
+                titleHTML = chat.title.replace(regex, '<span class="highlight-match">$1</span>');
+            }
+            
             sessionElement.innerHTML = `
                 <span class="material-icons-round">chat</span>
-                <span class="chat-session-title" style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${chat.title}</span>
+                <span class="chat-session-title" style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${titleHTML}</span>
                 <button class="chat-session-delete" data-chat-id="${chat.id}" title="Delete chat">
                     <span class="material-icons-round">close</span>
                 </button>
@@ -1976,6 +2089,87 @@
             mobileSidebarOverlay.classList.remove('active');
             mobileMenuBtn.classList.remove('active');
             document.body.style.overflow = '';
+        }
+
+        // Search functionality
+        function initializeSearch() {
+            // Desktop search
+            searchChatInput.addEventListener('input', (e) => {
+                searchTerm = e.target.value.trim().toLowerCase();
+                updateClearButtonVisibility();
+                filterChatSessions();
+            });
+
+            // Mobile search
+            mobileSearchChatInput.addEventListener('input', (e) => {
+                searchTerm = e.target.value.trim().toLowerCase();
+                updateClearButtonVisibility();
+                filterChatSessions();
+            });
+
+            // Clear search buttons
+            clearSearchBtn.addEventListener('click', clearSearch);
+            mobileClearSearchBtn.addEventListener('click', clearSearch);
+
+            // Close mobile sidebar when searching (optional)
+            searchChatInput.addEventListener('focus', () => {
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+            });
+        }
+
+        // Update clear button visibility
+        function updateClearButtonVisibility() {
+            const hasSearchTerm = searchTerm.length > 0;
+            clearSearchBtn.classList.toggle('visible', hasSearchTerm);
+            mobileClearSearchBtn.classList.toggle('visible', hasSearchTerm);
+        }
+
+        // Clear search
+        function clearSearch() {
+            searchTerm = '';
+            searchChatInput.value = '';
+            mobileSearchChatInput.value = '';
+            updateClearButtonVisibility();
+            filterChatSessions();
+        }
+
+        // Filter chat sessions based on search term
+        function filterChatSessions() {
+            const allChats = Object.values(chatSessions);
+            let filteredChats = allChats;
+
+            if (searchTerm) {
+                filteredChats = allChats.filter(chat => 
+                    chat.title.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Update desktop sidebar
+            renderFilteredChatSessions(filteredChats, chatSessionsContainer, noChatsFound);
+            
+            // Update mobile sidebar
+            renderFilteredChatSessions(filteredChats, mobileChatSessionsContainer, mobileNoChatsFound);
+        }
+
+        // Render filtered chat sessions
+        function renderFilteredChatSessions(filteredChats, container, noResultsElement) {
+            container.innerHTML = '';
+            
+            if (filteredChats.length === 0) {
+                noResultsElement.style.display = 'block';
+                return;
+            }
+            
+            noResultsElement.style.display = 'none';
+            
+            filteredChats
+                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                .forEach(chat => {
+                    const sessionElement = createChatSessionElement(chat, searchTerm);
+                    container.appendChild(sessionElement);
+                });
         }
 
         // Event Listeners
@@ -2854,6 +3048,7 @@
 
         // Initialize the app
         initializeChatSessions();
+        initializeSearch();
         updateUIForMode();
         sendBtn.disabled = true;
 
