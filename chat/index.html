@@ -1052,6 +1052,39 @@
     }
     
 }
+
+
+/* Input area focus states */
+.message-input:focus {
+    outline: none;
+    border-color: transparent;
+}
+
+.input-container:focus-within .message-input {
+    border-color: transparent;
+}
+
+/* Enter key hint */
+.input-hint {
+    position: absolute;
+    right: 70px;
+    bottom: 10px;
+    font-size: 0.75rem;
+    color: var(--md-on-surface-variant);
+    opacity: 0.7;
+    pointer-events: none;
+    transition: var(--md-transition);
+}
+
+.input-hint.show {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .input-hint {
+        display: none; /* Hide on mobile for cleaner UI */
+    }
+}
     </style>
 </head>
 <body class="light-theme">
@@ -2169,5 +2202,76 @@
             btn.style.color = 'var(--md-on-surface-variant)';
         });
     </script>
+  <script>
+// Enhanced Enter key functionality with visual feedback
+messageInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        if (e.shiftKey) {
+            // Shift + Enter: Insert new line (default behavior)
+            // Allow the textarea to expand naturally
+            setTimeout(() => {
+                const newHeight = Math.min(messageInput.scrollHeight, 120);
+                messageInput.style.height = 'auto';
+                messageInput.style.height = newHeight + 'px';
+            }, 0);
+        } else {
+            // Enter alone: Send message
+            e.preventDefault();
+            
+            // Only send if not processing and message is not empty
+            if (!isProcessing && messageInput.value.trim() !== '') {
+                // Add visual feedback
+                const originalBorderColor = document.querySelector('.input-container').style.borderColor;
+                document.querySelector('.input-container').style.borderColor = 'var(--md-primary)';
+                
+                // Send message
+                chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+                
+                // Reset border color after a delay
+                setTimeout(() => {
+                    document.querySelector('.input-container').style.borderColor = originalBorderColor;
+                }, 300);
+            } else if (messageInput.value.trim() === '') {
+                // Show warning for empty message
+                showNotification('Please enter a message before sending', 'error');
+            }
+        }
+    }
+});
+
+// Auto-resize textarea (existing code - keep this)
+messageInput.addEventListener('input', () => {
+    messageInput.style.height = 'auto';
+    const newHeight = Math.min(messageInput.scrollHeight, 120);
+    messageInput.style.height = newHeight + 'px';
+    
+    // Enable/disable send button based on input and processing state
+    sendBtn.disabled = messageInput.value.trim() === '' || isProcessing;
+});
+
+// Show/hide Enter key hint based on focus
+messageInput.addEventListener('focus', () => {
+    // You can add a hint element if needed
+    const inputContainer = document.querySelector('.input-container');
+    let hint = inputContainer.querySelector('.input-hint');
+    if (!hint) {
+        hint = document.createElement('div');
+        hint.className = 'input-hint';
+        hint.textContent = 'Enter to send • Shift+Enter for new line';
+        inputContainer.appendChild(hint);
+    }
+    hint.classList.add('show');
+});
+
+messageInput.addEventListener('blur', () => {
+    const hint = document.querySelector('.input-hint');
+    if (hint) {
+        hint.classList.remove('show');
+    }
+});
+    
+  </script>
+  
+  
 </body>
 </html>
