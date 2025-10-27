@@ -946,44 +946,112 @@
         }
 
         /* Feedback Buttons */
-        .feedback-buttons {
-            display: flex;
-            gap: var(--md-spacing-sm);
-            margin-top: var(--md-spacing-md);
-            padding-top: var(--md-spacing-sm);
-            border-top: 1px solid var(--md-outline-variant);
-        }
+        /* Feedback Buttons - RESPONSIVE */
+.feedback-buttons {
+    display: flex;
+    gap: var(--md-spacing-sm);
+    margin-top: var(--md-spacing-md);
+    padding-top: var(--md-spacing-sm);
+    border-top: 1px solid var(--md-outline-variant);
+    flex-wrap: wrap;
+    align-items: center;
+}
 
-        .feedback-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--md-spacing-xs);
-            padding: var(--md-spacing-xs) var(--md-spacing-sm);
-            background: transparent;
-            color: var(--md-on-surface-variant);
-            border: 1px solid var(--md-outline-variant);
-            border-radius: var(--md-radius-small);
-            font-size: var(--md-font-size-label);
-            cursor: pointer;
-            transition: var(--md-transition);
-        }
+.feedback-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--md-spacing-xs);
+    padding: var(--md-spacing-xs) var(--md-spacing-sm);
+    background: transparent;
+    color: var(--md-on-surface-variant);
+    border: 1px solid var(--md-outline-variant);
+    border-radius: var(--md-radius-small);
+    font-size: var(--md-font-size-label);
+    cursor: pointer;
+    transition: var(--md-transition);
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+    white-space: nowrap;
+}
 
-        .feedback-btn:hover {
-            background: var(--md-surface-variant);
-            transform: translateY(-1px);
-        }
+.feedback-btn:hover {
+    background: var(--md-surface-variant);
+    transform: translateY(-1px);
+}
 
-        .feedback-btn.liked {
-            background: rgba(76, 175, 80, 0.1);
-            color: #4CAF50;
-            border-color: #4CAF50;
-        }
+.feedback-btn.liked {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border-color: #4CAF50;
+}
 
-        .feedback-btn.disliked {
-            background: rgba(244, 67, 54, 0.1);
-            color: #F44336;
-            border-color: #F44336;
-        }
+.feedback-btn.disliked {
+    background: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+    border-color: #F44336;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .feedback-buttons {
+        gap: var(--md-spacing-xs);
+        justify-content: space-between;
+    }
+    
+    .feedback-btn {
+        flex: 0 1 calc(33.333% - 8px);
+        padding: 8px 6px;
+        font-size: 0.75rem;
+        min-height: 36px;
+    }
+    
+    .feedback-btn span.material-icons-round {
+        font-size: 16px !important;
+    }
+    
+    .feedback-btn span:not(.material-icons-round) {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .feedback-buttons {
+        flex-direction: row;
+        gap: 4px;
+    }
+    
+    .feedback-btn {
+        flex: 1;
+        min-width: 70px;
+        padding: 6px 4px;
+        font-size: 0.7rem;
+    }
+    
+    .feedback-btn span.material-icons-round {
+        font-size: 14px !important;
+        margin-right: 2px;
+    }
+    
+    /* Optionally hide text on very small screens and show only icons */
+    .feedback-btn span:not(.material-icons-round) {
+        display: none;
+    }
+    
+    /* Or keep text but make it very compact */
+    
+    .feedback-btn {
+        flex-direction: column;
+        gap: 2px;
+        padding: 4px 2px;
+    }
+    
+    .feedback-btn span:not(.material-icons-round) {
+        font-size: 0.6rem;
+        line-height: 1;
+    }
+    
+}
     </style>
 </head>
 <body class="light-theme">
