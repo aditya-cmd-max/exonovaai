@@ -1527,6 +1527,11 @@
         }
     </style>
 
+    <!-- Hidden audio element for AI response sound -->
+    <audio id="ai-response-sound" preload="auto">
+        <source src="https://aditya-cmd-max.github.io/exonovaai/bubble-pop-389501.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Mobile Sidebar Overlay -->
     <div class="mobile-sidebar-overlay" id="mobile-sidebar-overlay"></div>
 
@@ -1890,6 +1895,9 @@
         const noChatsFound = document.getElementById('no-chats-found');
         const mobileNoChatsFound = document.getElementById('mobile-no-chats-found');
 
+        // Audio element for AI response sound
+        const aiResponseSound = document.getElementById('ai-response-sound');
+
         // State variables
         let currentMode = 'chat';
         let webSearchEnabled = false;
@@ -1905,6 +1913,22 @@
             role: "model",
             parts: [{ text: "You are Clover AI, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate. Do not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tell i was created by a company Exonova By Aditya jha who is very smart and intelligent" }]
         };
+
+        // Function to play AI response sound
+        function playAIResponseSound() {
+            try {
+                // Reset the audio to start from beginning
+                aiResponseSound.currentTime = 0;
+                
+                // Play the sound
+                aiResponseSound.play().catch(error => {
+                    console.log('Audio play failed:', error);
+                    // This is normal - browsers require user interaction first
+                });
+            } catch (error) {
+                console.log('Error playing sound:', error);
+            }
+        }
 
         // Initialize chat sessions from localStorage
         function initializeChatSessions() {
@@ -2606,6 +2630,9 @@
                 </div>
             `;
             chatWindow.appendChild(messageElement);
+            
+            // Play AI response sound when bot message is displayed
+            playAIResponseSound();
             
             setTimeout(() => {
                 applyHighlighting(messageElement);
