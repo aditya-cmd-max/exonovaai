@@ -1999,7 +1999,7 @@
             filterChatSessions();
         }
 
-        // Create chat session element with search highlighting
+        // Create chat session element with search highlighting and delete functionality
         function createChatSessionElement(chat, highlightTerm = '') {
             const sessionElement = document.createElement('div');
             sessionElement.className = `chat-session ${chat.id === currentChatId ? 'active' : ''}`;
@@ -2020,10 +2020,18 @@
                 </button>
             `;
             
+            // Chat click event
             sessionElement.addEventListener('click', () => {
                 if (chat.id !== currentChatId) {
                     loadChat(chat.id);
                 }
+            });
+            
+            // Delete button event - attach directly to prevent the issue
+            const deleteBtn = sessionElement.querySelector('.chat-session-delete');
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteChat(chat.id);
             });
             
             return sessionElement;
@@ -2031,23 +2039,51 @@
 
         // Delete a chat session
         function deleteChat(chatId) {
+            // Check if chat exists
+            if (!chatSessions[chatId]) {
+                showNotification('Chat not found', 'error');
+                return;
+            }
+            
+            // Prevent deleting the only chat
             if (Object.keys(chatSessions).length <= 1) {
                 showNotification('Cannot delete the only chat', 'error');
                 return;
             }
             
-            delete chatSessions[chatId];
-            saveChatSessions();
+            const chatTitle = chatSessions[chatId].title;
             
-            if (currentChatId === chatId) {
-                // Switch to another chat
-                const remainingChats = Object.keys(chatSessions);
-                currentChatId = remainingChats[0];
-                loadChat(currentChatId);
+            // Confirmation dialog
+            if (!confirm(`Are you sure you want to delete "${chatTitle}"?\n\nThis action cannot be undone.`)) {
+                return;
             }
             
-            renderChatSessions();
-            showNotification('Chat deleted');
+            try {
+                const wasCurrentChat = currentChatId === chatId;
+                
+                // Delete the chat
+                delete chatSessions[chatId];
+                saveChatSessions();
+                
+                // Handle current chat deletion
+                if (wasCurrentChat) {
+                    const remainingChats = Object.keys(chatSessions);
+                    // Switch to the most recent chat (last in the array after sorting)
+                    const sortedChats = remainingChats.sort((a, b) => 
+                        new Date(chatSessions[b].updatedAt) - new Date(chatSessions[a].updatedAt)
+                    );
+                    currentChatId = sortedChats[0];
+                    loadChat(currentChatId);
+                }
+                
+                // Update UI
+                renderChatSessions();
+                showNotification(`"${chatTitle}" has been deleted`);
+                
+            } catch (error) {
+                console.error('Error deleting chat:', error);
+                showNotification('Error deleting chat. Please try again.', 'error');
+            }
         }
 
         // Rename current chat
