@@ -906,6 +906,31 @@
             border-color: var(--md-primary);
         }
 
+        /* Pin Chat Button Styles */
+        .chat-session-pin {
+            position: absolute;
+            right: 40px;
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--md-transition);
+        }
+
+        .chat-session:hover .chat-session-pin {
+            opacity: 1;
+        }
+
+        .chat-session-pin.pinned {
+            opacity: 1;
+            color: var(--md-primary);
+        }
+
+        .chat-session-pin:hover {
+            color: var(--md-primary);
+        }
+
         .chat-session-delete {
             position: absolute;
             right: var(--md-spacing-md);
@@ -923,6 +948,30 @@
 
         .chat-session-delete:hover {
             color: var(--md-error);
+        }
+
+        /* Pin Filter Button */
+        .pin-filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+        }
+
+        .pin-filter-btn:hover {
+            background: var(--md-surface-variant);
+        }
+
+        .pin-filter-btn.active {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
         }
 
         /* Feature Buttons */
@@ -1581,6 +1630,147 @@
             border-color: #F44336;
         }
 
+        /* Custom Modal Styles */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--md-transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--md-spacing-md);
+        }
+
+        .custom-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-modal {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            box-shadow: var(--md-elevation-5);
+            border: 1px solid var(--md-outline-variant);
+            max-width: 400px;
+            width: 100%;
+            transform: translateY(20px);
+            transition: var(--md-transition);
+            opacity: 0;
+        }
+
+        .custom-modal-overlay.active .custom-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--md-spacing-lg);
+            padding-bottom: var(--md-spacing-md);
+            border-bottom: 1px solid var(--md-outline-variant);
+        }
+
+        .modal-title {
+            font-size: var(--md-font-size-title);
+            font-weight: 600;
+            color: var(--md-on-surface);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+        }
+
+        .modal-close:hover {
+            background: var(--md-surface-variant);
+        }
+
+        .modal-content {
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: var(--md-spacing-md);
+            background: var(--md-surface-variant);
+            border: 1px solid var(--md-outline-variant);
+            border-radius: var(--md-radius-medium);
+            font-family: inherit;
+            font-size: var(--md-font-size-body);
+            color: var(--md-on-surface);
+            transition: var(--md-transition);
+            outline: none;
+        }
+
+        .modal-input:focus {
+            border-color: var(--md-primary);
+            box-shadow: 0 0 0 2px rgba(103, 80, 164, 0.1);
+        }
+
+        .modal-message {
+            font-size: var(--md-font-size-body);
+            color: var(--md-on-surface-variant);
+            margin-bottom: var(--md-spacing-md);
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: var(--md-spacing-md);
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: var(--md-spacing-sm) var(--md-spacing-lg);
+            border-radius: var(--md-radius-extra-large);
+            border: none;
+            font-family: inherit;
+            font-size: var(--md-font-size-label);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            min-width: 80px;
+        }
+
+        .modal-btn-primary {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+        }
+
+        .modal-btn-secondary {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+        }
+
+        .modal-btn-danger {
+            background: var(--md-error);
+            color: var(--md-on-error);
+        }
+
+        .modal-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
         /* Mobile-specific adjustments */
         @media (max-width: 768px) {
             .app-container {
@@ -1921,9 +2111,14 @@
             <div class="sidebar-section">
                 <h3 class="sidebar-title">
                     Chat Sessions
-                    <button id="mobile-new-chat-btn" class="btn-icon btn-text" title="New Chat">
-                        <span class="material-icons-round">add</span>
-                    </button>
+                    <div style="display: flex; gap: 4px;">
+                        <button id="mobile-pin-filter-btn" class="pin-filter-btn" title="Show pinned chats only">
+                            <span class="material-icons-round">push_pin</span>
+                        </button>
+                        <button id="mobile-new-chat-btn" class="btn-icon btn-text" title="New Chat">
+                            <span class="material-icons-round">add</span>
+                        </button>
+                    </div>
                 </h3>
                 
                 <!-- Search Chat Input -->
@@ -2013,6 +2208,44 @@
         </div>
     </div>
 
+    <!-- Custom Modal for Rename Chat -->
+    <div id="rename-modal" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Rename Chat</h3>
+                <button class="modal-close" id="rename-modal-close">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-content">
+                <input type="text" id="rename-chat-input" class="modal-input" placeholder="Enter new chat title">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" id="rename-cancel-btn">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="rename-confirm-btn">Rename</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Delete Confirmation -->
+    <div id="delete-modal" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Delete Chat</h3>
+                <button class="modal-close" id="delete-modal-close">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-content">
+                <p class="modal-message" id="delete-modal-message">Are you sure you want to delete this chat? This action cannot be undone.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" id="delete-cancel-btn">Cancel</button>
+                <button class="modal-btn modal-btn-danger" id="delete-confirm-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main App -->
     <header class="app-header">
         <div class="logo-container">
@@ -2043,9 +2276,14 @@
             <div class="sidebar-section">
                 <h3 class="sidebar-title">
                     Chat Sessions
-                    <button id="new-chat-btn" class="btn-icon btn-text" title="New Chat">
-                        <span class="material-icons-round">add</span>
-                    </button>
+                    <div style="display: flex; gap: 4px;">
+                        <button id="pin-filter-btn" class="pin-filter-btn" title="Show pinned chats only">
+                            <span class="material-icons-round">push_pin</span>
+                        </button>
+                        <button id="new-chat-btn" class="btn-icon btn-text" title="New Chat">
+                            <span class="material-icons-round">add</span>
+                        </button>
+                    </div>
                 </h3>
                 
                 <!-- Search Chat Input -->
@@ -2288,6 +2526,23 @@
         const noChatsFound = document.getElementById('no-chats-found');
         const mobileNoChatsFound = document.getElementById('mobile-no-chats-found');
 
+        // Pin Filter Elements
+        const pinFilterBtn = document.getElementById('pin-filter-btn');
+        const mobilePinFilterBtn = document.getElementById('mobile-pin-filter-btn');
+
+        // Modal Elements
+        const renameModal = document.getElementById('rename-modal');
+        const renameModalClose = document.getElementById('rename-modal-close');
+        const renameChatInput = document.getElementById('rename-chat-input');
+        const renameCancelBtn = document.getElementById('rename-cancel-btn');
+        const renameConfirmBtn = document.getElementById('rename-confirm-btn');
+
+        const deleteModal = document.getElementById('delete-modal');
+        const deleteModalClose = document.getElementById('delete-modal-close');
+        const deleteModalMessage = document.getElementById('delete-modal-message');
+        const deleteCancelBtn = document.getElementById('delete-cancel-btn');
+        const deleteConfirmBtn = document.getElementById('delete-confirm-btn');
+
         // Audio element for AI response sound
         const aiResponseSound = document.getElementById('ai-response-sound');
 
@@ -2300,6 +2555,8 @@
         let currentChatId = null;
         let chatSessions = {};
         let searchTerm = '';
+        let showPinnedOnly = false;
+        let chatToDelete = null;
         
         // Customization state
         let userSettings = {
@@ -2423,7 +2680,8 @@
                 title: chatTitle,
                 history: [systemMessage],
                 createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
+                pinned: false
             };
             
             currentChatId = chatId;
@@ -2486,7 +2744,7 @@
             filterChatSessions();
         }
 
-        // Create chat session element with search highlighting and delete functionality
+        // Create chat session element with search highlighting, pin and delete functionality
         function createChatSessionElement(chat, highlightTerm = '') {
             const sessionElement = document.createElement('div');
             sessionElement.className = `chat-session ${chat.id === currentChatId ? 'active' : ''}`;
@@ -2499,9 +2757,14 @@
                 titleHTML = chat.title.replace(regex, '<span class="highlight-match">$1</span>');
             }
             
+            const isPinned = chat.pinned || false;
+            
             sessionElement.innerHTML = `
                 <span class="material-icons-round">chat</span>
                 <span class="chat-session-title" style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${titleHTML}</span>
+                <button class="chat-session-pin ${isPinned ? 'pinned' : ''}" data-chat-id="${chat.id}" title="${isPinned ? 'Unpin chat' : 'Pin chat'}">
+                    <span class="material-icons-round">push_pin</span>
+                </button>
                 <button class="chat-session-delete" data-chat-id="${chat.id}" title="Delete chat">
                     <span class="material-icons-round">close</span>
                 </button>
@@ -2514,18 +2777,46 @@
                 }
             });
             
-            // Delete button event - attach directly to prevent the issue
+            // Pin button event
+            const pinBtn = sessionElement.querySelector('.chat-session-pin');
+            pinBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                togglePinChat(chat.id);
+            });
+            
+            // Delete button event
             const deleteBtn = sessionElement.querySelector('.chat-session-delete');
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                deleteChat(chat.id);
+                openDeleteModal(chat.id);
             });
             
             return sessionElement;
         }
 
+        // Toggle pin status for a chat
+        function togglePinChat(chatId) {
+            const chat = chatSessions[chatId];
+            if (chat) {
+                chat.pinned = !chat.pinned;
+                chat.updatedAt = new Date().toISOString();
+                saveChatSessions();
+                renderChatSessions();
+                showNotification(chat.pinned ? 'Chat pinned' : 'Chat unpinned');
+            }
+        }
+
+        // Filter to show only pinned chats
+        function togglePinnedFilter() {
+            showPinnedOnly = !showPinnedOnly;
+            pinFilterBtn.classList.toggle('active', showPinnedOnly);
+            mobilePinFilterBtn.classList.toggle('active', showPinnedOnly);
+            renderChatSessions();
+            showNotification(showPinnedOnly ? 'Showing pinned chats only' : 'Showing all chats');
+        }
+
         // Delete a chat session
-        function deleteChat(chatId) {
+        function deleteChatConfirmed(chatId) {
             // Check if chat exists
             if (!chatSessions[chatId]) {
                 showNotification('Chat not found', 'error');
@@ -2539,11 +2830,6 @@
             }
             
             const chatTitle = chatSessions[chatId].title;
-            
-            // Confirmation dialog
-            if (!confirm(`Are you sure you want to delete "${chatTitle}"?\n\nThis action cannot be undone.`)) {
-                return;
-            }
             
             try {
                 const wasCurrentChat = currentChatId === chatId;
@@ -2570,20 +2856,6 @@
             } catch (error) {
                 console.error('Error deleting chat:', error);
                 showNotification('Error deleting chat. Please try again.', 'error');
-            }
-        }
-
-        // Rename current chat
-        function renameCurrentChat() {
-            const chat = chatSessions[currentChatId];
-            const newTitle = prompt('Enter new chat title:', chat.title);
-            if (newTitle && newTitle.trim() !== '') {
-                chat.title = newTitle.trim();
-                chat.updatedAt = new Date().toISOString();
-                currentChatTitle.textContent = chat.title;
-                saveChatSessions();
-                renderChatSessions();
-                showNotification('Chat renamed');
             }
         }
 
@@ -2687,13 +2959,19 @@
             filterChatSessions();
         }
 
-        // Filter chat sessions based on search term
+        // Filter chat sessions based on search term and pin filter
         function filterChatSessions() {
             const allChats = Object.values(chatSessions);
             let filteredChats = allChats;
 
+            // Apply pin filter
+            if (showPinnedOnly) {
+                filteredChats = filteredChats.filter(chat => chat.pinned);
+            }
+
+            // Apply search filter
             if (searchTerm) {
-                filteredChats = allChats.filter(chat => 
+                filteredChats = filteredChats.filter(chat => 
                     chat.title.toLowerCase().includes(searchTerm)
                 );
             }
@@ -2724,10 +3002,59 @@
                 });
         }
 
+        // Modal Functions
+        function openRenameModal() {
+            const chat = chatSessions[currentChatId];
+            if (chat) {
+                renameChatInput.value = chat.title;
+                renameModal.classList.add('active');
+                setTimeout(() => renameChatInput.focus(), 300);
+            }
+        }
+
+        function closeRenameModal() {
+            renameModal.classList.remove('active');
+        }
+
+        function openDeleteModal(chatId) {
+            const chat = chatSessions[chatId];
+            if (chat) {
+                chatToDelete = chatId;
+                deleteModalMessage.textContent = `Are you sure you want to delete "${chat.title}"? This action cannot be undone.`;
+                deleteModal.classList.add('active');
+            }
+        }
+
+        function closeDeleteModal() {
+            deleteModal.classList.remove('active');
+            chatToDelete = null;
+        }
+
+        function handleRenameConfirm() {
+            const newTitle = renameChatInput.value.trim();
+            if (newTitle && newTitle !== '') {
+                const chat = chatSessions[currentChatId];
+                chat.title = newTitle;
+                chat.updatedAt = new Date().toISOString();
+                currentChatTitle.textContent = chat.title;
+                saveChatSessions();
+                renderChatSessions();
+                showNotification('Chat renamed');
+                closeRenameModal();
+            }
+        }
+
+        function handleDeleteConfirm() {
+            if (chatToDelete) {
+                deleteChatConfirmed(chatToDelete);
+                closeDeleteModal();
+            }
+        }
+
         // Event Listeners
         newChatBtn.addEventListener('click', createNewChat);
         mobileNewChatBtn.addEventListener('click', createNewChat);
-        renameChatBtn.addEventListener('click', renameCurrentChat);
+        renameChatBtn.addEventListener('click', openRenameModal);
         brainstormBtn.addEventListener('click', () => setMode('brainstorm'));
         mobileBrainstormBtn.addEventListener('click', () => setMode('brainstorm'));
         explainBtn.addEventListener('click', () => setMode('explain'));
@@ -2796,6 +3123,39 @@
         mobileMenuBtn.addEventListener('click', openMobileSidebar);
         mobileSidebarClose.addEventListener('click', closeMobileSidebar);
         mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
+        
+        // Pin filter event listeners
+        pinFilterBtn.addEventListener('click', togglePinnedFilter);
+        mobilePinFilterBtn.addEventListener('click', togglePinnedFilter);
+        
+        // Modal Event Listeners
+        renameModalClose.addEventListener('click', closeRenameModal);
+        renameCancelBtn.addEventListener('click', closeRenameModal);
+        renameConfirmBtn.addEventListener('click', handleRenameConfirm);
+
+        deleteModalClose.addEventListener('click', closeDeleteModal);
+        deleteCancelBtn.addEventListener('click', closeDeleteModal);
+        deleteConfirmBtn.addEventListener('click', handleDeleteConfirm);
+
+        // Close modal when clicking on overlay
+        renameModal.addEventListener('click', (e) => {
+            if (e.target === renameModal) {
+                closeRenameModal();
+            }
+        });
+
+        deleteModal.addEventListener('click', (e) => {
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
+
+        // Handle Enter key in rename modal
+        renameChatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleRenameConfirm();
+            }
+        });
         
         suggestionChips.forEach(chip => {
             chip.addEventListener('click', () => {
