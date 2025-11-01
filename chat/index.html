@@ -2489,7 +2489,7 @@
             <!-- Chat Window -->
             <div class="chat-window" id="chat-window">
                 <div class="welcome-section">
-                    <h2 class="welcome-title">Welcome to Clover AI</h2>
+                    <h2 class="welcome-title" id="dynamic-welcome-title">Welcome to Clover AI</h2>
                     <p class="welcome-subtitle">Your advanced AI assistant powered by Aditya Jha. Ask me anything or try one of the specialized features!</p>
                     
                     <div class="suggestion-chips">
@@ -2599,6 +2599,7 @@
         const mobileFeatureButtons = [mobileBrainstormBtn, mobileExplainBtn, mobileWebSearchBtn, mobileSummarizeBtn, mobileTranslateBtn];
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('.material-icons-round');
+        const dynamicWelcomeTitle = document.getElementById('dynamic-welcome-title');
         
         // Customization Elements
         const customizationBtn = document.getElementById('customization-btn');
@@ -2676,6 +2677,42 @@
             typingAnimation: true,
             timestamps: false
         };
+
+        // Dynamic Welcome Messages
+        const welcomeMessages = [
+            "Welcome {username}",
+            "I am Ready. Tell yours.",
+            "Where should we start {username}",
+            "Hello {username}, what's on your mind?",
+            "Hey {username}, ready to explore ideas?",
+            "Good to see you {username}, what shall we create today?",
+            "Hi {username}, what can I help you with?",
+            "Welcome back {username}, let's continue our conversation"
+        ];
+
+        // Function to get a random welcome message
+        function getRandomWelcomeMessage() {
+            const randomIndex = Math.floor(Math.random() * welcomeMessages.length);
+            let message = welcomeMessages[randomIndex];
+            
+            // Replace {username} with actual username or default text
+            if (userSettings.userName && userSettings.userName.trim() !== '') {
+                message = message.replace(/{username}/g, userSettings.userName);
+            } else {
+                message = message.replace(/{username}/g, '');
+                // Clean up any awkward spacing if username is empty
+                message = message.replace('  ', ' ').trim();
+            }
+            
+            return message;
+        }
+
+        // Function to update welcome message
+        function updateWelcomeMessage() {
+            if (dynamicWelcomeTitle) {
+                dynamicWelcomeTitle.textContent = getRandomWelcomeMessage();
+            }
+        }
 
         // System message template - will be updated with user name
         let systemMessage = {
@@ -2756,6 +2793,9 @@
                 
                 // Update system message with user name
                 updateSystemMessage();
+                
+                // Update welcome message
+                updateWelcomeMessage();
             }
         }
 
@@ -2804,6 +2844,9 @@
             loadChat(chatId);
             showNotification('New chat created');
             
+            // Update welcome message for new chat
+            updateWelcomeMessage();
+            
             // Close mobile sidebar if open
             closeMobileSidebar();
         }
@@ -2824,6 +2867,8 @@
             if (chat.history.length <= 1) {
                 if (welcomeSection) {
                     chatWindow.appendChild(welcomeSection.cloneNode(true));
+                    // Update welcome message when loading chat
+                    updateWelcomeMessage();
                 }
             } else {
                 // Recreate messages from history (excluding system message)
@@ -3043,6 +3088,9 @@
             
             // Update system message with new user name
             updateSystemMessage();
+            
+            // Update welcome message
+            updateWelcomeMessage();
             
             // Show notification
             showNotification('Customization settings saved');
@@ -3548,6 +3596,8 @@
             
             if (welcomeSection) {
                 chatWindow.appendChild(welcomeSection);
+                // Update welcome message when clearing chat
+                updateWelcomeMessage();
             }
             
             // Reset chat history to just system message
