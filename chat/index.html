@@ -476,6 +476,75 @@
             border-top: 1px solid var(--md-outline-variant);
         }
 
+        /* Profile Picture Section */
+        .profile-picture-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-md);
+        }
+
+        .profile-picture-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .profile-picture-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--md-surface-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid var(--md-outline-variant);
+            transition: var(--md-transition);
+        }
+
+        .profile-picture-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture-preview .material-icons-round {
+            font-size: 40px;
+            color: var(--md-on-surface-variant);
+        }
+
+        .profile-picture-actions {
+            display: flex;
+            gap: var(--md-spacing-sm);
+        }
+
+        .profile-picture-btn {
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            border: none;
+            font-family: inherit;
+            font-size: var(--md-font-size-label);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .profile-picture-btn.primary {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+        }
+
+        .profile-picture-btn.secondary {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+        }
+
+        .profile-picture-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
         /* Mobile Sidebar Overlay */
         .mobile-sidebar-overlay {
             position: fixed;
@@ -908,7 +977,7 @@
             border-color: var(--md-primary);
         }
 
-        /* Pin Chat Button Styles */
+        /* Pin Chat Button Styles - Updated to Pill Shape */
         .chat-session-pin {
             position: absolute;
             right: 40px;
@@ -918,6 +987,12 @@
             cursor: pointer;
             opacity: 0;
             transition: var(--md-transition);
+            width: 28px;
+            height: 28px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .chat-session:hover .chat-session-pin {
@@ -927,10 +1002,12 @@
         .chat-session-pin.pinned {
             opacity: 1;
             color: var(--md-primary);
+            background: var(--md-primary-container);
         }
 
         .chat-session-pin:hover {
             color: var(--md-primary);
+            background: var(--md-surface-variant);
         }
 
         .chat-session-delete {
@@ -960,7 +1037,7 @@
             cursor: pointer;
             width: 32px;
             height: 32px;
-            border-radius: 50%;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1484,7 +1561,7 @@
             40% { transform: translateY(-6px); }
         }
 
-        /* Google-like Blue Highlighting with Animation */
+        /* Google-like Blue Highlighting with Animation - UPDATED */
         .highlight {
             background-color: #e3f2fd;
             color: #1976d2;
@@ -2025,6 +2102,29 @@
                 </div>
             </div>
             
+            <div class="customization-section profile-picture-section">
+                <h3 class="section-title">Profile Picture</h3>
+                <div class="profile-picture-container">
+                    <div class="profile-picture-preview" id="profile-picture-preview">
+                        <span class="material-icons-round">person</span>
+                    </div>
+                    <div class="profile-picture-actions">
+                        <button class="profile-picture-btn primary" id="upload-profile-picture-btn">
+                            <span class="material-icons-round">add_photo_alternate</span>
+                            <span>Upload</span>
+                        </button>
+                        <button class="profile-picture-btn secondary" id="remove-profile-picture-btn">
+                            <span class="material-icons-round">delete</span>
+                            <span>Remove</span>
+                        </button>
+                    </div>
+                    <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+                    <p style="font-size: 0.875rem; color: var(--md-on-surface-variant); text-align: center;">
+                        Your profile picture will appear next to your messages
+                    </p>
+                </div>
+            </div>
+            
             <div class="customization-section">
                 <h3 class="section-title">Theme Color</h3>
                 <div class="theme-colors">
@@ -2514,6 +2614,12 @@
         const timestampToggle = document.getElementById('timestamp-toggle');
         const saveCustomizationBtn = document.getElementById('save-customization-btn');
         
+        // Profile Picture Elements
+        const profilePicturePreview = document.getElementById('profile-picture-preview');
+        const uploadProfilePictureBtn = document.getElementById('upload-profile-picture-btn');
+        const removeProfilePictureBtn = document.getElementById('remove-profile-picture-btn');
+        const profilePictureInput = document.getElementById('profile-picture-input');
+        
         // Mobile Menu Elements
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileSidebar = document.getElementById('mobile-sidebar');
@@ -2563,6 +2669,7 @@
         // Customization state
         let userSettings = {
             userName: '',
+            profilePicture: null,
             theme: 'default',
             darkMode: false,
             soundEnabled: true,
@@ -2609,6 +2716,11 @@
                 
                 // Apply settings to UI
                 userNameInput.value = userSettings.userName || '';
+                
+                // Set profile picture
+                if (userSettings.profilePicture) {
+                    profilePicturePreview.innerHTML = `<img src="${userSettings.profilePicture}" alt="Profile Picture">`;
+                }
                 
                 // Set theme
                 document.body.classList.remove('theme-blue', 'theme-green', 'theme-orange', 'theme-pink', 'theme-teal');
@@ -2873,6 +2985,43 @@
             }
         }
 
+        // Profile Picture Functions
+        function handleProfilePictureUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.match('image.*')) {
+                showNotification('Please upload an image file');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('Image size should be less than 5MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                userSettings.profilePicture = e.target.result;
+                profilePicturePreview.innerHTML = `<img src="${e.target.result}" alt="Profile Picture">`;
+                saveUserSettings();
+                showNotification('Profile picture updated');
+            };
+            
+            reader.onerror = function() {
+                showNotification('Error reading the image file', 'error');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function removeProfilePicture() {
+            userSettings.profilePicture = null;
+            profilePicturePreview.innerHTML = '<span class="material-icons-round">person</span>';
+            saveUserSettings();
+            showNotification('Profile picture removed');
+        }
+
         // Customization Panel Functions
         function openCustomizationPanel() {
             customizationPanel.classList.add('active');
@@ -3074,6 +3223,14 @@
         
         voiceInputBtn.addEventListener('click', startVoiceInput);
         imageInput.addEventListener('change', handleImageUpload);
+        
+        // Profile Picture Event Listeners
+        uploadProfilePictureBtn.addEventListener('click', () => {
+            profilePictureInput.click();
+        });
+        
+        profilePictureInput.addEventListener('change', handleProfilePictureUpload);
+        removeProfilePictureBtn.addEventListener('click', removeProfilePicture);
         
         // Customization event listeners
         customizationBtn.addEventListener('click', openCustomizationPanel);
@@ -3451,12 +3608,20 @@
                 messageContent = `<div class="message-content">${escapeHtml(message)}</div>`;
             }
             
+            // Use profile picture if available, otherwise use default avatar
+            let avatarHTML = '';
+            if (userSettings.profilePicture) {
+                avatarHTML = `<img src="${userSettings.profilePicture}" alt="User Profile">`;
+            } else {
+                avatarHTML = '<span class="material-icons-round">person</span>';
+            }
+            
             messageElement.innerHTML = `
                 <div class="message-bubble">
                     ${messageContent}
                 </div>
                 <div class="message-avatar">
-                    <span class="material-icons-round">person</span>
+                    ${avatarHTML}
                 </div>
             `;
             chatWindow.appendChild(messageElement);
