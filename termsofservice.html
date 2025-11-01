@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | Clover AI</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://aditya-cmd-max.github.io/exonovaai/logo.png">
+
+    <style>
+        /* Material Design 3 Color System - Default Purple Theme */
+        :root {
+            /* Primary Colors */
+            --md-primary: #6750A4;
+            --md-on-primary: #FFFFFF;
+            --md-primary-container: #EADDFF;
+            --md-on-primary-container: #21005D;
+            
+            /* Secondary Colors */
+            --md-secondary: #625B71;
+            --md-on-secondary: #FFFFFF;
+            --md-secondary-container: #E8DEF8;
+            --md-on-secondary-container: #1D192B;
+            
+            /* Tertiary Colors */
+            --md-tertiary: #7D5260;
+            --md-on-tertiary: #FFFFFF;
+            --md-tertiary-container: #FFD8E4;
+            --md-on-tertiary-container: #31111D;
+            
+            /* Surface Colors */
+            --md-surface: #FEF7FF;
+            --md-on-surface: #1C1B1F;
+            --md-surface-variant: #E7E0EC;
+            --md-on-surface-variant: #49454F;
+            
+            /* Background Colors */
+            --md-background: #FEF7FF;
+            --md-on-background: #1C1B1F;
+            
+            /* Error Colors */
+            --md-error: #B3261E;
+            --md-on-error: #FFFFFF;
+            --md-error-container: #F9DEDC;
+            --md-on-error-container: #410E0B;
+            
+            /* Outline Colors */
+            --md-outline: #79747E;
+            --md-outline-variant: #C4C7C5;
+            
+            /* Shadow Elevations */
+            --md-elevation-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+            --md-elevation-2: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+            --md-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3);
+            --md-elevation-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px rgba(0, 0, 0, 0.3);
+            --md-elevation-5: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.3);
+            
+            /* Animation */
+            --md-transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            --md-transition-fast: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Border Radius */
+            --md-radius-small: 8px;
+            --md-radius-medium: 12px;
+            --md-radius-large: 16px;
+            --md-radius-extra-large: 28px;
+            
+            /* Spacing */
+            --md-spacing-xs: 4px;
+            --md-spacing-sm: 8px;
+            --md-spacing-md: 16px;
+            --md-spacing-lg: 24px;
+            --md-spacing-xl: 32px;
+            
+            /* Typography */
+            --md-font-family: 'Product Sans', sans-serif;
+            --md-font-size-display: 3.5625rem;
+            --md-font-size-headline: 2rem;
+            --md-font-size-title: 1.375rem;
+            --md-font-size-body: 1rem;
+            --md-font-size-label: 0.875rem;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --md-surface: #141218;
+            --md-on-surface: #E6E1E5;
+            --md-surface-variant: #49454F;
+            --md-on-surface-variant: #CAC4D0;
+            --md-background: #141218;
+            --md-on-background: #E6E1E5;
+            --md-primary-container: #4F378B;
+            --md-on-primary-container: #EADDFF;
+            --md-secondary-container: #4A4458;
+            --md-on-secondary-container: #E8DEF8;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--md-font-family);
+            background-color: var(--md-background);
+            color: var(--md-on-surface);
+            line-height: 1.5;
+            overflow-x: hidden;
+            transition: var(--md-transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--md-spacing-md) var(--md-spacing-xl);
+            background: var(--md-surface);
+            border-bottom: 1px solid var(--md-outline-variant);
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--md-primary);
+            border-radius: var(--md-radius-medium);
+            color: var(--md-on-primary);
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: var(--md-radius-medium);
+        }
+
+        .app-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+            letter-spacing: -0.25px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            transition: var(--md-transition);
+        }
+
+        .theme-toggle:hover {
+            background: var(--md-surface-variant);
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            border-radius: var(--md-radius-extra-large);
+            border: none;
+            font-family: inherit;
+            font-size: var(--md-font-size-label);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            text-decoration: none;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .back-btn:hover {
+            box-shadow: var(--md-elevation-2);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: var(--md-spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-xl);
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            padding: var(--md-spacing-xl) 0;
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            box-shadow: var(--md-elevation-1);
+            border: 1px solid var(--md-outline-variant);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+        }
+
+        .page-subtitle {
+            font-size: var(--md-font-size-body);
+            color: var(--md-on-surface-variant);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Terms Content */
+        .terms-content {
+            background: var(--md-surface);
+            border-radius: var(--md-radius-large);
+            padding: var(--md-spacing-xl);
+            box-shadow: var(--md-elevation-1);
+            border: 1px solid var(--md-outline-variant);
+        }
+
+        .terms-section {
+            margin-bottom: var(--md-spacing-xl);
+        }
+
+        .terms-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: var(--md-font-size-title);
+            font-weight: 600;
+            color: var(--md-on-surface);
+            margin-bottom: var(--md-spacing-md);
+            padding-bottom: var(--md-spacing-sm);
+            border-bottom: 1px solid var(--md-outline-variant);
+        }
+
+        .section-content {
+            color: var(--md-on-surface-variant);
+            line-height: 1.7;
+        }
+
+        .section-content p {
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        .section-content ul, .section-content ol {
+            margin-left: var(--md-spacing-xl);
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        .section-content li {
+            margin-bottom: var(--md-spacing-sm);
+        }
+
+        .highlight {
+            background-color: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            padding: var(--md-spacing-lg);
+            color: var(--md-on-surface-variant);
+            font-size: var(--md-font-size-body);
+            border-top: 1px solid var(--md-outline-variant);
+            background: var(--md-surface);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: var(--md-spacing-md);
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .terms-content {
+                padding: var(--md-spacing-lg);
+            }
+            
+            .app-header {
+                padding: var(--md-spacing-md);
+            }
+            
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .app-name {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: var(--md-spacing-lg) 0;
+            }
+            
+            .page-title {
+                font-size: 1.75rem;
+            }
+            
+            .terms-content {
+                padding: var(--md-spacing-md);
+            }
+            
+            .section-content ul, .section-content ol {
+                margin-left: var(--md-spacing-lg);
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Header -->
+    <header class="app-header">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="Clover AI Logo">
+            </div>
+            <h1 class="app-name">Clover AI</h1>
+        </div>
+        
+        <div class="header-actions">
+            <a href="index.html" class="back-btn">
+                <span class="material-icons-round">arrow_back</span>
+                <span>Back to App</span>
+            </a>
+            <button class="theme-toggle" id="theme-toggle">
+                <span class="material-icons-round">dark_mode</span>
+            </button>
+        </div>
+    </header>
+  
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Terms of Service</h1>
+            <p class="page-subtitle">Last updated: November 1, 2025</p>
+            <p class="page-subtitle">Please read these terms carefully before using Clover AI</p>
+        </div>
+
+        <!-- Terms Content -->
+        <div class="terms-content">
+            <div class="terms-section">
+                <h2 class="section-title">1. Acceptance of Terms</h2>
+                <div class="section-content">
+                    <p>By accessing or using Clover AI ("the Service"), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this Service.</p>
+                    <p>The materials contained in this Service are protected by applicable copyright and trademark law.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">2. Use License</h2>
+                <div class="section-content">
+                    <p>Permission is granted to temporarily use Clover AI for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+                    <ul>
+                        <li>Modify or copy the materials;</li>
+                        <li>Use the materials for any commercial purpose or for any public display (commercial or non-commercial);</li>
+                        <li>Attempt to reverse engineer any software contained in Clover AI;</li>
+                        <li>Remove any copyright or other proprietary notations from the materials; or</li>
+                        <li>Transfer the materials to another person or "mirror" the materials on any other server.</li>
+                    </ul>
+                    <p>This license shall automatically terminate if you violate any of these restrictions and may be terminated by Clover AI at any time.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">3. User Accounts</h2>
+                <div class="section-content">
+                    <p>When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.</p>
+                    <p>You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password.</p>
+                    <p>You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">4. User Content</h2>
+                <div class="section-content">
+                    <p>Our Service allows you to post, link, store, share and otherwise make available certain information, text, graphics, videos, or other material ("Content"). You are responsible for the Content that you post on or through the Service, including its legality, reliability, and appropriateness.</p>
+                    <p>By posting Content on or through the Service, You represent and warrant that: (i) the Content is yours (you own it) and/or you have the right to use it and the right to grant us the rights and license as provided in these Terms, and (ii) that the posting of your Content on or through the Service does not violate the privacy rights, publicity rights, copyrights, contract rights or any other rights of any person.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">5. AI-Generated Content</h2>
+                <div class="section-content">
+                    <p>Clover AI uses artificial intelligence to generate responses and content. You acknowledge and agree that:</p>
+                    <ul>
+                        <li>AI-generated content may not always be accurate, complete, or reliable</li>
+                        <li>You should not rely exclusively on AI-generated content for critical decisions</li>
+                        <li>We do not guarantee the accuracy, completeness, or usefulness of any AI-generated content</li>
+                        <li>You are solely responsible for evaluating the accuracy and appropriateness of AI-generated content for your purposes</li>
+                    </ul>
+                    <p><span class="highlight">AI may produce inaccurate information about people, places, or facts. You should verify important information from independent sources.</span></p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">6. Prohibited Uses</h2>
+                <div class="section-content">
+                    <p>You may use the Service only for lawful purposes and in accordance with these Terms. You agree not to use the Service:</p>
+                    <ul>
+                        <li>In any way that violates any applicable national or international law or regulation</li>
+                        <li>For the purpose of exploiting, harming, or attempting to exploit or harm minors in any way</li>
+                        <li>To generate, transmit, or store any content that is illegal, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, or otherwise objectionable</li>
+                        <li>To impersonate or attempt to impersonate the Company, a Company employee, another user, or any other person or entity</li>
+                        <li>In any way that infringes upon the rights of others, or in any way is illegal, threatening, fraudulent, or harmful</li>
+                        <li>To engage in any other conduct that restricts or inhibits anyone's use or enjoyment of the Service, or which may harm the Company or users of the Service</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">7. Intellectual Property</h2>
+                <div class="section-content">
+                    <p>The Service and its original content (excluding Content provided by users), features and functionality are and will remain the exclusive property of Clover AI and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Clover AI.</p>
+                    <p>You retain your rights to any Content you submit, post or display on or through the Service. By submitting, posting or displaying Content on or through the Service, you grant us a worldwide, non-exclusive, royalty-free license to use, copy, reproduce, process, adapt, modify, publish, transmit, display and distribute such Content for the purpose of providing and improving the Service.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">8. Privacy</h2>
+                <div class="section-content">
+                    <p>Your privacy is important to us. Please read our Privacy Policy, which explains how we collect, use, and protect your personal information. By using the Service, you agree to the collection and use of information in accordance with our Privacy Policy.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">9. Links to Other Websites</h2>
+                <div class="section-content">
+                    <p>Our Service may contain links to third-party web sites or services that are not owned or controlled by Clover AI.</p>
+                    <p>Clover AI has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that Clover AI shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">10. Termination</h2>
+                <div class="section-content">
+                    <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+                    <p>Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">11. Limitation of Liability</h2>
+                <div class="section-content">
+                    <p>In no event shall Clover AI, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from:</p>
+                    <ul>
+                        <li>Your access to or use of or inability to access or use the Service</li>
+                        <li>Any conduct or content of any third party on the Service</li>
+                        <li>Any content obtained from the Service</li>
+                        <li>Unauthorized access, use or alteration of your transmissions or content</li>
+                    </ul>
+                    <p>Whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">12. Disclaimer</h2>
+                <div class="section-content">
+                    <p>Your use of the Service is at your sole risk. The Service is provided on an "AS IS" and "AS AVAILABLE" basis. The Service is provided without warranties of any kind, whether express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, non-infringement or course of performance.</p>
+                    <p>Clover AI, its subsidiaries, affiliates, and its licensors do not warrant that a) the Service will function uninterrupted, secure or available at any particular time or location; b) any errors or defects will be corrected; c) the Service is free of viruses or other harmful components; or d) the results of using the Service will meet your requirements.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">13. Governing Law</h2>
+                <div class="section-content">
+                    <p>These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions.</p>
+                    <p>Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">14. Changes to Terms</h2>
+                <div class="section-content">
+                    <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
+                    <p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.</p>
+                </div>
+            </div>
+
+            <div class="terms-section">
+                <h2 class="section-title">15. Contact Information</h2>
+                <div class="section-content">
+                    <p>If you have any questions about these Terms, please contact us:</p>
+                    <ul>
+                        <li>By email: exonova1104@gmail.com</li>
+                        <li>Through our website: https://aditya-cmd-max.github.io/exonovaai/</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>© 2025 Clover AI. All rights reserved.</p>
+        <p>Made with <span class="material-icons-round" style="color: #F48FB1; font-size: 16px; vertical-align: middle;">favorite</span> by <span style="color: var(--md-primary); font-weight: 500;">Aditya Jha</span> • Powered by Exonova</p>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('.material-icons-round');
+        
+        // Load theme preference from localStorage
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('cloverAITheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+                themeIcon.textContent = 'light_mode';
+            } else {
+                document.body.classList.remove('dark-theme');
+                document.body.classList.add('light-theme');
+                themeIcon.textContent = 'dark_mode';
+            }
+        }
+        
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.textContent = 'light_mode';
+                localStorage.setItem('cloverAITheme', 'dark');
+            } else {
+                themeIcon.textContent = 'dark_mode';
+                localStorage.setItem('cloverAITheme', 'light');
+            }
+        });
+        
+        // Initialize theme
+        loadThemePreference();
+    </script>
+</body>
+</html>
