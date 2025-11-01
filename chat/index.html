@@ -1444,11 +1444,11 @@
             transform: translateY(-2px);
         }
 
-        /* Input Area */
+        /* Input Area - Optimized for Mobile */
         .input-area {
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-xl);
+            padding: var(--md-spacing-md);
             box-shadow: var(--md-elevation-2);
             border: 1px solid var(--md-outline-variant);
         }
@@ -1459,7 +1459,7 @@
             border-radius: var(--md-radius-large);
             border: 2px solid var(--md-outline-variant);
             transition: var(--md-transition);
-            padding: var(--md-spacing-md);
+            padding: var(--md-spacing-sm);
         }
 
         .input-container:focus-within {
@@ -1469,13 +1469,14 @@
 
         .input-form {
             display: flex;
-            gap: var(--md-spacing-md);
+            gap: var(--md-spacing-sm);
             align-items: flex-end;
         }
 
         .input-wrapper {
             flex: 1;
             position: relative;
+            min-height: 70px;
         }
 
         .message-input {
@@ -1488,8 +1489,8 @@
             font-family: inherit;
             font-size: var(--md-font-size-body);
             resize: none;
-            min-height: 60px;
-            max-height: 120px;
+            min-height: 70px;
+            max-height: 150px;
             transition: var(--md-transition);
             outline: none;
             line-height: 1.5;
@@ -1502,9 +1503,10 @@
 
         .input-actions {
             display: flex;
-            gap: var(--md-spacing-sm);
-            align-items: center;
-            padding: var(--md-spacing-sm);
+            gap: 4px;
+            align-items: flex-end;
+            padding: var(--md-spacing-xs);
+            flex-shrink: 0;
         }
 
         .action-btn {
@@ -1512,13 +1514,14 @@
             border: none;
             color: var(--md-on-surface-variant);
             cursor: pointer;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: var(--md-transition);
+            flex-shrink: 0;
         }
 
         .action-btn:hover {
@@ -1531,8 +1534,8 @@
             color: var(--md-on-primary);
             border: none;
             border-radius: 50%;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2038,6 +2041,56 @@
             .theme-colors {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            /* Mobile-specific input optimizations */
+            .input-area {
+                padding: var(--md-spacing-sm);
+                margin-bottom: env(safe-area-inset-bottom, 0);
+            }
+            
+            .input-container {
+                padding: var(--md-spacing-sm);
+            }
+            
+            .input-form {
+                gap: 6px;
+            }
+            
+            .input-wrapper {
+                min-height: 80px;
+            }
+            
+            .message-input {
+                min-height: 80px;
+                max-height: 200px;
+                padding: var(--md-spacing-md);
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .input-actions {
+                gap: 2px;
+                padding: var(--md-spacing-xs);
+                align-self: flex-end;
+                margin-bottom: 8px;
+            }
+            
+            .action-btn {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .action-btn .material-icons-round {
+                font-size: 20px;
+            }
+            
+            .send-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .send-btn .material-icons-round {
+                font-size: 20px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -2068,6 +2121,31 @@
             
             .chat-title {
                 font-size: var(--md-font-size-body);
+            }
+
+            /* Extra small screen optimizations */
+            .input-wrapper {
+                min-height: 90px;
+            }
+            
+            .message-input {
+                min-height: 90px;
+                padding: var(--md-spacing-md) var(--md-spacing-sm);
+            }
+            
+            .input-actions {
+                flex-direction: column;
+                gap: 2px;
+            }
+            
+            .action-btn {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .send-btn {
+                width: 36px;
+                height: 36px;
             }
         }
 
@@ -3570,7 +3648,7 @@
                 if (e.shiftKey) {
                     // Shift + Enter: Insert new line
                     setTimeout(() => {
-                        const newHeight = Math.min(messageInput.scrollHeight, 120);
+                        const newHeight = Math.min(messageInput.scrollHeight, window.innerWidth <= 768 ? 200 : 120);
                         messageInput.style.height = 'auto';
                         messageInput.style.height = newHeight + 'px';
                     }, 0);
@@ -3596,12 +3674,26 @@
             }
         });
 
-        messageInput.addEventListener('input', () => {
-            messageInput.style.height = 'auto';
-            const newHeight = Math.min(messageInput.scrollHeight, 120);
-            messageInput.style.height = newHeight + 'px';
+        // Improved mobile input handling
+        messageInput.addEventListener('focus', function() {
+            if (window.innerWidth <= 768) {
+                // Add a small delay to ensure keyboard is fully open
+                setTimeout(() => {
+                    const inputArea = document.querySelector('.input-area');
+                    if (inputArea) {
+                        inputArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 300);
+            }
+        });
+
+        // Auto-expand textarea more aggressively on mobile
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            const newHeight = Math.min(this.scrollHeight, window.innerWidth <= 768 ? 200 : 120);
+            this.style.height = newHeight + 'px';
             
-            sendBtn.disabled = messageInput.value.trim() === '' || isProcessing;
+            sendBtn.disabled = this.value.trim() === '' || isProcessing;
         });
 
         // Send button click handler for stop functionality
