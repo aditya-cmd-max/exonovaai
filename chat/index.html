@@ -878,11 +878,11 @@
             height: calc(100vh - 80px);
         }
 
-        /* Sidebar - FIXED LAYOUT */
+        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             min-width: var(--sidebar-min-width);
-            max-width: 400px;
+            max-width: 500px;
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
             padding: var(--md-spacing-xl);
@@ -890,13 +890,12 @@
             border: 1px solid var(--md-outline-variant);
             display: flex;
             flex-direction: column;
-            gap: var(--md-spacing-lg);
+            gap: var(--md-spacing-xl);
             overflow-y: auto;
             transition: var(--md-transition);
             resize: horizontal;
             position: relative;
-            min-height: 500px;
-            max-height: calc(100vh - 120px);
+            min-height: 400px; /* Minimum sidebar height */
         }
 
         /* Resize Handle */
@@ -906,12 +905,12 @@
             right: -4px;
             top: 50%;
             bottom: 50%;
-            height: 60px;
-            width: 6px;
+            height: 40px;
+            width: 8px;
             cursor: col-resize;
             z-index: 10;
             background: var(--md-outline-variant);
-            border-radius: 3px;
+            border-radius: 4px;
             opacity: 0;
             transition: var(--md-transition);
         }
@@ -920,12 +919,12 @@
             opacity: 1;
         }
 
-        /* Collapsed Sidebar */
+        /* Collapsed Sidebar Styles - Improved */
         .sidebar.collapsed {
             width: var(--sidebar-min-width) !important;
             padding: var(--md-spacing-md);
             min-width: var(--sidebar-min-width) !important;
-            resize: none;
+            resize: none; /* Disable resize when collapsed */
         }
 
         .sidebar.collapsed .sidebar-section {
@@ -951,16 +950,17 @@
         .sidebar.collapsed .chat-session {
             justify-content: center;
             padding: var(--md-spacing-md);
+            min-width: auto;
         }
 
         .sidebar.collapsed .chat-sessions-container {
-            height: 120px;
+            max-height: 150px;
+            min-height: 120px;
         }
 
-        /* Prevent extreme resizing */
+        /* Prevent sidebar from becoming too small during resize */
         .sidebar:not(.collapsed) {
-            min-width: 280px !important;
-            max-width: 400px !important;
+            min-width: 200px !important; /* Minimum usable width */
         }
 
         /* Toggle Sidebar Button */
@@ -986,57 +986,46 @@
             background: var(--md-surface-variant);
         }
 
-        /* Sidebar Sections - FIXED HEIGHTS */
+        /* Sidebar Sections - Fixed Layout */
         .sidebar-section {
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-md);
-            flex-shrink: 0;
+            min-height: 0; /* Prevent flex overflow */
         }
 
-        /* Chat Sessions - Fixed height */
         .sidebar-section:first-child {
-            flex: 0 0 auto;
-            min-height: 220px;
-            max-height: 280px;
+            flex: 0 0 auto; /* Chat sessions - fixed height */
         }
 
-        /* AI Features - Limited height */
-        .sidebar-section:nth-child(2) {
-            flex: 0 1 auto;
-            min-height: 180px;
-            max-height: 220px;
+        .sidebar-section:not(:first-child) {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* Prevent flex overflow */
         }
 
-        /* Quick Actions - Fixed height */
-        .sidebar-section:nth-child(3) {
-            flex: 0 0 auto;
-            min-height: 150px;
-            max-height: 180px;
+        .sidebar-section:not(:first-child) .feature-buttons,
+        .sidebar-section:not(:first-child) .quick-actions {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0; /* Prevent flex overflow */
+            max-height: none;
         }
 
-        /* Tools - Fixed at bottom */
-        .sidebar-section:last-child {
-            flex: 0 0 auto;
-            min-height: 120px;
-            max-height: 140px;
-            margin-top: auto;
-        }
-
-        /* Chat Sessions Container */
+        /* Chat Sessions with Separate Scroll */
         .chat-sessions-container {
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-sm);
-            height: 150px;
-            min-height: 150px;
-            max-height: 150px;
+            max-height: 200px;
+            min-height: 150px; /* Minimum height */
             overflow-y: auto;
             border: 1px solid var(--md-outline-variant);
             border-radius: var(--md-radius-medium);
             padding: var(--md-spacing-sm);
             background: var(--md-surface);
-            flex-shrink: 0;
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .chat-sessions {
@@ -1046,12 +1035,12 @@
             flex: 1;
         }
 
-        /* Mobile sidebar */
+        /* Mobile sidebar specific styles */
         .mobile-sidebar .chat-sessions-container {
-            max-height: 150px;
+            max-height: 180px;
         }
 
-        /* Scrollbar Styling */
+        /* Improved Scrollbar Styling */
         .sidebar::-webkit-scrollbar,
         .chat-sessions-container::-webkit-scrollbar,
         .feature-buttons::-webkit-scrollbar,
@@ -1093,28 +1082,6 @@
             align-items: center;
         }
 
-        /* Feature Buttons */
-        .feature-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-sm);
-            overflow-y: auto;
-            min-height: 140px;
-            max-height: 180px;
-            flex-shrink: 0;
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-sm);
-            min-height: 120px;
-            max-height: 150px;
-            overflow-y: auto;
-            flex-shrink: 0;
-        }
-
         /* Chat Session Items */
         .chat-session {
             display: flex;
@@ -1144,7 +1111,7 @@
             border-color: var(--md-primary);
         }
 
-        /* Pin Chat Button */
+        /* Pin Chat Button Styles - Updated to Pill Shape */
         .chat-session-pin {
             position: absolute;
             right: 40px;
@@ -1221,6 +1188,12 @@
         }
 
         /* Feature Buttons */
+        .feature-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
         .feature-btn {
             display: flex;
             align-items: center;
@@ -1252,6 +1225,12 @@
         }
 
         /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
         .quick-action {
             display: flex;
             align-items: center;
@@ -1280,7 +1259,7 @@
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-xl);
-            min-width: 0;
+            min-width: 0; /* Prevent flex overflow */
         }
 
         /* Chat Header */
@@ -1546,7 +1525,7 @@
             transform: translateY(-2px);
         }
 
-        /* Input Area */
+        /* Input Area - Optimized for Mobile */
         .input-area {
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
@@ -2063,7 +2042,7 @@
             }
             
             .sidebar {
-                display: none;
+                display: none; /* Hide desktop sidebar on mobile */
             }
             
             .main-content {
@@ -2104,7 +2083,7 @@
             }
             
             .mobile-menu-btn {
-                display: flex;
+                display: flex; /* Show mobile menu button on mobile */
             }
             
             .chat-sessions-container {
@@ -2166,7 +2145,7 @@
                 min-height: 80px;
                 max-height: 200px;
                 padding: var(--md-spacing-md);
-                font-size: 16px;
+                font-size: 16px; /* Prevents zoom on iOS */
             }
             
             .input-actions {
@@ -3783,7 +3762,7 @@
             }
         }
 
-        // Sidebar Resize and Toggle Functions - SIMPLIFIED AND STABLE
+        // Sidebar Resize and Toggle Functions - Improved
         function initializeSidebarResize() {
             const sidebar = document.getElementById('sidebar');
             let isResizing = false;
@@ -3795,7 +3774,7 @@
                 
                 // Check if click is near the right edge
                 const rect = sidebar.getBoundingClientRect();
-                if (e.clientX > rect.right - 10) {
+                if (e.clientX > rect.right - 15) {
                     isResizing = true;
                     document.body.style.cursor = 'col-resize';
                     document.body.style.userSelect = 'none';
@@ -3804,9 +3783,9 @@
                         if (!isResizing) return;
                         
                         const newWidth = Math.max(
-                            280, // Minimum usable width
+                            200, // Minimum usable width
                             Math.min(
-                                400, // Maximum width
+                                500, // Maximum width
                                 e.clientX - rect.left
                             )
                         );
@@ -3821,6 +3800,10 @@
                         document.body.style.userSelect = '';
                         document.removeEventListener('mousemove', onMouseMove);
                         document.removeEventListener('mouseup', onMouseUp);
+                        
+                        // Save sidebar width
+                        const currentWidth = parseInt(getComputedStyle(sidebar).width);
+                        localStorage.setItem('cloverAISidebarWidth', currentWidth);
                     }
                     
                     document.addEventListener('mousemove', onMouseMove);
@@ -3828,20 +3811,23 @@
                 }
             });
 
-            // Toggle sidebar collapse/expand - SIMPLE AND RELIABLE
+            // Toggle sidebar collapse/expand
             sidebarToggle.addEventListener('click', function() {
                 isSidebarCollapsed = !isSidebarCollapsed;
                 
                 if (isSidebarCollapsed) {
                     sidebar.classList.add('collapsed');
                     sidebarToggleIcon.textContent = 'chevron_right';
-                    sidebar.style.width = '72px';
-                    sidebar.style.resize = 'none';
+                    sidebar.style.width = 'var(--sidebar-min-width)';
+                    document.documentElement.style.setProperty('--sidebar-width', 'var(--sidebar-min-width)');
                 } else {
                     sidebar.classList.remove('collapsed');
                     sidebarToggleIcon.textContent = 'chevron_left';
-                    sidebar.style.width = '320px';
-                    sidebar.style.resize = 'horizontal';
+                    // Restore previous width or use default
+                    const savedWidth = localStorage.getItem('cloverAISidebarWidth');
+                    const width = savedWidth ? savedWidth + 'px' : '320px';
+                    sidebar.style.width = width;
+                    document.documentElement.style.setProperty('--sidebar-width', width);
                 }
                 
                 // Save sidebar state
@@ -3850,12 +3836,18 @@
 
             // Load sidebar state
             const savedSidebarState = localStorage.getItem('cloverAISidebarCollapsed');
+            const savedSidebarWidth = localStorage.getItem('cloverAISidebarWidth');
+            
             if (savedSidebarState === 'true') {
                 isSidebarCollapsed = true;
                 sidebar.classList.add('collapsed');
                 sidebarToggleIcon.textContent = 'chevron_right';
-                sidebar.style.width = '72px';
-                sidebar.style.resize = 'none';
+                sidebar.style.width = 'var(--sidebar-min-width)';
+                document.documentElement.style.setProperty('--sidebar-width', 'var(--sidebar-min-width)');
+            } else if (savedSidebarWidth) {
+                // Apply saved width if not collapsed
+                sidebar.style.width = savedSidebarWidth + 'px';
+                document.documentElement.style.setProperty('--sidebar-width', savedSidebarWidth + 'px');
             }
         }
 
