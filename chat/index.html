@@ -1363,6 +1363,51 @@
             margin-bottom: var(--md-spacing-xs);
         }
 
+        /* Message Timestamps */
+        .message-timestamp {
+            font-size: 0.75rem;
+            color: var(--md-on-surface-variant);
+            opacity: 0.7;
+            margin-top: var(--md-spacing-xs);
+            text-align: right;
+        }
+
+        .message.bot .message-timestamp {
+            text-align: left;
+        }
+
+        /* Date Separator */
+        .date-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: var(--md-spacing-lg) 0;
+            position: relative;
+        }
+
+        .date-separator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--md-outline-variant);
+            z-index: 1;
+        }
+
+        .date-pill {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            padding: var(--md-spacing-sm) var(--md-spacing-lg);
+            border-radius: var(--md-radius-extra-large);
+            font-size: var(--md-font-size-label);
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+            box-shadow: var(--md-elevation-1);
+        }
+
         /* Code Block */
         .code-block {
             position: relative;
@@ -2241,13 +2286,21 @@
     </style>
 </head>
 <body class="light-theme">
-    <!-- Splash Screen -->
-    <div id="splash-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background-color:#141218; display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:9999; color:#fff; font-family:'Product Sans', sans-serif;">
-        <div class="logo" style="width:120px; height:120px; margin-bottom:20px; animation: spinZoom 1s ease-out forwards;">
-            <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="Clover AI Logo">
+    <!-- Enhanced Splash Screen -->
+    <div id="splash-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background-color:#000000; display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:9999; color:#fff; font-family:'Product Sans', sans-serif;">
+        <div class="logo-container" style="position: relative; display: flex; align-items: center; justify-content: center;">
+            <div class="logo-glow" style="position: absolute; width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(135deg, #6750A4, #1a73e8, #0a7e07); filter: blur(20px); opacity: 0.7; animation: pulseGlow 2s ease-in-out infinite alternate;"></div>
+            <div class="logo" style="width:120px; height:120px; margin-bottom:20px; animation: spinZoom 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; position: relative; z-index: 2;">
+                <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="Clover AI Logo" style="filter: drop-shadow(0 0 20px rgba(103, 80, 164, 0.5));">
+            </div>
         </div>
-        <h1 style="font-size:2.5em; letter-spacing:2px; margin:0;">Clover AI</h1>
-        <p style="margin-top:10px; opacity:0.8;">Advanced AI Assistant</p>
+        <h1 style="font-size:2.5em; letter-spacing:2px; margin:0; background: linear-gradient(135deg, #fff, #EADDFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: textGlow 2s ease-in-out infinite alternate;">Clover AI</h1>
+        <p style="margin-top:10px; opacity:0.8; animation: fadeInOut 2s ease-in-out infinite;">Advanced AI Assistant</p>
+        <div class="loading-dots" style="margin-top: 20px; display: flex; gap: 8px;">
+            <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: #6750A4; animation: bounce 1.4s infinite ease-in-out;"></div>
+            <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: #1a73e8; animation: bounce 1.4s infinite ease-in-out 0.2s;"></div>
+            <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: #0a7e07; animation: bounce 1.4s infinite ease-in-out 0.4s;"></div>
+        </div>
     </div>
 
     <style>
@@ -2266,14 +2319,53 @@
             }
         }
 
+        @keyframes pulseGlow {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes textGlow {
+            0% {
+                filter: drop-shadow(0 0 5px rgba(103, 80, 164, 0.3));
+            }
+            100% {
+                filter: drop-shadow(0 0 20px rgba(103, 80, 164, 0.7));
+            }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+        }
+
         #splash-screen {
-            animation: fadeOut 2.5s forwards;
+            animation: fadeOut 3s ease-in-out forwards;
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
         }
 
         @keyframes fadeOut {
             0% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; display: none; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; display: none; }
         }
     </style>
 
@@ -2380,7 +2472,7 @@
                     <div class="toggle-option">
                         <span class="toggle-label">Message Timestamps</span>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="timestamp-toggle">
+                            <input type="checkbox" id="timestamp-toggle" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -2759,7 +2851,7 @@
     </div>
 
     <script>
-        // Hide splash screen after 2.5 seconds
+        // Hide splash screen after 3 seconds
         setTimeout(() => {
             const splash = document.getElementById('splash-screen');
             if(splash) {
@@ -2768,7 +2860,7 @@
                     splash.style.display = 'none';
                 }, 500);
             }
-        }, 2500);
+        }, 3000);
 
         // DOM Elements
         const chatWindow = document.getElementById('chat-window');
@@ -2887,7 +2979,7 @@
             darkMode: false,
             soundEnabled: true,
             typingAnimation: true,
-            timestamps: false
+            timestamps: true
         };
 
         // Dynamic Welcome Messages
@@ -2977,6 +3069,68 @@
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Date management functions
+        function getFormattedDate(date) {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) {
+                return 'Today';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday';
+            } else {
+                return date.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            }
+        }
+
+        function checkAndAddDateSeparator() {
+            const messages = chatWindow.querySelectorAll('.message');
+            const dateSeparators = chatWindow.querySelectorAll('.date-separator');
+            
+            // Remove existing date separators
+            dateSeparators.forEach(separator => separator.remove());
+            
+            let lastDate = null;
+            
+            messages.forEach((message, index) => {
+                // Skip if it's a date separator
+                if (message.classList.contains('date-separator')) return;
+                
+                // Get message timestamp from data attribute or use current time
+                const messageTime = message.getAttribute('data-timestamp') ? 
+                    new Date(message.getAttribute('data-timestamp')) : new Date();
+                const messageDate = messageTime.toDateString();
+                
+                if (messageDate !== lastDate) {
+                    lastDate = messageDate;
+                    const dateSeparator = createDateSeparator(messageTime);
+                    
+                    // Insert date separator before the current message
+                    if (message.parentNode) {
+                        message.parentNode.insertBefore(dateSeparator, message);
+                    }
+                }
+            });
+        }
+
+        function createDateSeparator(date) {
+            const separator = document.createElement('div');
+            separator.className = 'date-separator';
+            separator.innerHTML = `<div class="date-pill">${getFormattedDate(date)}</div>`;
+            return separator;
+        }
+
+        // Update message elements to include timestamp data
+        function addTimestampToMessage(messageElement, timestamp = new Date()) {
+            messageElement.setAttribute('data-timestamp', timestamp.toISOString());
         }
 
         // Load user settings from localStorage
@@ -3115,6 +3269,11 @@
                     }
                 }
             }
+            
+            // Check and add date separators after loading chat
+            setTimeout(() => {
+                checkAndAddDateSeparator();
+            }, 100);
             
             // Reattach event listeners to suggestion chips
             document.querySelectorAll('.suggestion-chip').forEach(chip => {
@@ -3351,14 +3510,21 @@
                 messageElement.innerHTML = `
                     <div class="message-bubble">
                         ${fileContent}
+                        ${userSettings.timestamps ? `<div class="message-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>` : ''}
                     </div>
                     <div class="message-avatar">
                         <span class="material-icons-round">person</span>
                     </div>
                 `;
                 
+                // Add timestamp to message element
+                addTimestampToMessage(messageElement);
+                
                 chatWindow.appendChild(messageElement);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
+                
+                // Check and add date separators
+                checkAndAddDateSeparator();
                 
                 // Auto-submit the form for AI processing
                 chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
@@ -3396,6 +3562,11 @@
             
             // Update welcome message
             updateWelcomeMessage();
+            
+            // Refresh timestamps if setting changed
+            if (userSettings.timestamps) {
+                checkAndAddDateSeparator();
+            }
             
             // Show notification
             showNotification('Customization settings saved');
@@ -4050,6 +4221,9 @@
                 messageContent = `<div class="message-content">${escapeHtml(message)}</div>`;
             }
             
+            // Add timestamp
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
             // Use profile picture if available, otherwise use default avatar
             let avatarHTML = '';
             if (userSettings.profilePicture) {
@@ -4061,13 +4235,21 @@
             messageElement.innerHTML = `
                 <div class="message-bubble">
                     ${messageContent}
+                    ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
                 </div>
                 <div class="message-avatar">
                     ${avatarHTML}
                 </div>
             `;
+            
+            // Add timestamp to message element
+            addTimestampToMessage(messageElement);
+            
             chatWindow.appendChild(messageElement);
             chatWindow.scrollTop = chatWindow.scrollHeight;
+            
+            // Check and add date separators
+            checkAndAddDateSeparator();
         }
 
         function displayBotMessage(message, typewriterEffect = true) {
@@ -4107,6 +4289,9 @@
 
             const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
             
+            // Add timestamp
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
             botMessageContent += `
                 <div class="feedback-buttons" id="feedback-${messageId}">
                     <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
@@ -4122,6 +4307,7 @@
                         <span class="feedback-text">Retry</span>
                     </button>
                 </div>
+                ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
             `;
 
             messageElement.innerHTML = `
@@ -4132,6 +4318,10 @@
                     ${botMessageContent}
                 </div>
             `;
+            
+            // Add timestamp to message element
+            addTimestampToMessage(messageElement);
+            
             chatWindow.appendChild(messageElement);
             
             // Play AI response sound when bot message is displayed
@@ -4140,6 +4330,9 @@
             setTimeout(() => {
                 applyHighlighting(messageElement);
             }, 100);
+            
+            // Check and add date separators
+            checkAndAddDateSeparator();
             
             messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -4412,6 +4605,11 @@
                     currentChat.updatedAt = new Date().toISOString();
                     saveChatSessions();
                     renderChatSessions();
+                    
+                    // Check and add date separators
+                    setTimeout(() => {
+                        checkAndAddDateSeparator();
+                    }, 100);
                 } else {
                     handleApiError("I received an empty response. Please try rephrasing your question. 🤔");
                 }
