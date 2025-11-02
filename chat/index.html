@@ -4187,14 +4187,20 @@
 
         function exportCurrentChat() {
             const currentChat = chatSessions[currentChatId];
-            const chatText = currentChat.history.map(entry => {
-                if (entry.role === 'user') {
-                    return `You: ${entry.parts[0].text}`;
-                } else if (entry.role === 'model') {
-                    return `Clover AI: ${entry.parts[0].text}`;
-                }
-                return '';
-            }).filter(text => text !== '').join('\n\n');
+            
+            // Filter out the system message (first message in history)
+            const chatText = currentChat.history
+                .filter((entry, index) => index > 0) // Skip the first message (system message)
+                .map(entry => {
+                    if (entry.role === 'user') {
+                        return `You: ${entry.parts[0].text}`;
+                    } else if (entry.role === 'model') {
+                        return `Clover AI: ${entry.parts[0].text}`;
+                    }
+                    return '';
+                })
+                .filter(text => text !== '')
+                .join('\n\n');
             
             const blob = new Blob([chatText], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
