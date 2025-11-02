@@ -895,6 +895,7 @@
             transition: var(--md-transition);
             resize: horizontal;
             position: relative;
+            min-height: 400px; /* Minimum sidebar height */
         }
 
         /* Resize Handle */
@@ -902,17 +903,28 @@
             content: '';
             position: absolute;
             right: -4px;
-            top: 0;
-            bottom: 0;
+            top: 50%;
+            bottom: 50%;
+            height: 40px;
             width: 8px;
             cursor: col-resize;
             z-index: 10;
+            background: var(--md-outline-variant);
+            border-radius: 4px;
+            opacity: 0;
+            transition: var(--md-transition);
         }
 
-        /* Collapsed Sidebar Styles */
+        .sidebar:hover::after {
+            opacity: 1;
+        }
+
+        /* Collapsed Sidebar Styles - Improved */
         .sidebar.collapsed {
-            width: var(--sidebar-min-width);
+            width: var(--sidebar-min-width) !important;
             padding: var(--md-spacing-md);
+            min-width: var(--sidebar-min-width) !important;
+            resize: none; /* Disable resize when collapsed */
         }
 
         .sidebar.collapsed .sidebar-section {
@@ -938,10 +950,17 @@
         .sidebar.collapsed .chat-session {
             justify-content: center;
             padding: var(--md-spacing-md);
+            min-width: auto;
         }
 
         .sidebar.collapsed .chat-sessions-container {
             max-height: 150px;
+            min-height: 120px;
+        }
+
+        /* Prevent sidebar from becoming too small during resize */
+        .sidebar:not(.collapsed) {
+            min-width: 200px !important; /* Minimum usable width */
         }
 
         /* Toggle Sidebar Button */
@@ -967,10 +986,31 @@
             background: var(--md-surface-variant);
         }
 
+        /* Sidebar Sections - Fixed Layout */
         .sidebar-section {
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-md);
+            min-height: 0; /* Prevent flex overflow */
+        }
+
+        .sidebar-section:first-child {
+            flex: 0 0 auto; /* Chat sessions - fixed height */
+        }
+
+        .sidebar-section:not(:first-child) {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* Prevent flex overflow */
+        }
+
+        .sidebar-section:not(:first-child) .feature-buttons,
+        .sidebar-section:not(:first-child) .quick-actions {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0; /* Prevent flex overflow */
+            max-height: none;
         }
 
         /* Chat Sessions with Separate Scroll */
@@ -979,11 +1019,13 @@
             flex-direction: column;
             gap: var(--md-spacing-sm);
             max-height: 200px;
+            min-height: 150px; /* Minimum height */
             overflow-y: auto;
             border: 1px solid var(--md-outline-variant);
             border-radius: var(--md-radius-medium);
             padding: var(--md-spacing-sm);
             background: var(--md-surface);
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .chat-sessions {
@@ -998,41 +1040,35 @@
             max-height: 180px;
         }
 
-        /* Scrollbar Styling */
-        .chat-sessions-container::-webkit-scrollbar {
+        /* Improved Scrollbar Styling */
+        .sidebar::-webkit-scrollbar,
+        .chat-sessions-container::-webkit-scrollbar,
+        .feature-buttons::-webkit-scrollbar,
+        .quick-actions::-webkit-scrollbar {
             width: 6px;
         }
 
-        .chat-sessions-container::-webkit-scrollbar-track {
+        .sidebar::-webkit-scrollbar-track,
+        .chat-sessions-container::-webkit-scrollbar-track,
+        .feature-buttons::-webkit-scrollbar-track,
+        .quick-actions::-webkit-scrollbar-track {
             background: var(--md-surface-variant);
             border-radius: 3px;
         }
 
-        .chat-sessions-container::-webkit-scrollbar-thumb {
+        .sidebar::-webkit-scrollbar-thumb,
+        .chat-sessions-container::-webkit-scrollbar-thumb,
+        .feature-buttons::-webkit-scrollbar-thumb,
+        .quick-actions::-webkit-scrollbar-thumb {
             background: var(--md-outline-variant);
             border-radius: 3px;
         }
 
-        .chat-sessions-container::-webkit-scrollbar-thumb:hover {
+        .sidebar::-webkit-scrollbar-thumb:hover,
+        .chat-sessions-container::-webkit-scrollbar-thumb:hover,
+        .feature-buttons::-webkit-scrollbar-thumb:hover,
+        .quick-actions::-webkit-scrollbar-thumb:hover {
             background: var(--md-primary);
-        }
-
-        /* Adjust sidebar sections spacing */
-        .sidebar-section:first-child {
-            flex: 0 0 auto;
-        }
-
-        .sidebar-section:not(:first-child) {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-section:not(:first-child) .feature-buttons,
-        .sidebar-section:not(:first-child) .quick-actions {
-            flex: 1;
-            overflow-y: auto;
-            max-height: none;
         }
 
         .sidebar-title {
@@ -3726,16 +3762,19 @@
             }
         }
 
-        // Sidebar Resize and Toggle Functions
+        // Sidebar Resize and Toggle Functions - Improved
         function initializeSidebarResize() {
             const sidebar = document.getElementById('sidebar');
             let isResizing = false;
 
             // Add resize handle functionality
             sidebar.addEventListener('mousedown', function(e) {
+                // Don't allow resize if sidebar is collapsed
+                if (isSidebarCollapsed) return;
+                
                 // Check if click is near the right edge
                 const rect = sidebar.getBoundingClientRect();
-                if (e.clientX > rect.right - 10) {
+                if (e.clientX > rect.right - 15) {
                     isResizing = true;
                     document.body.style.cursor = 'col-resize';
                     document.body.style.userSelect = 'none';
@@ -3744,9 +3783,9 @@
                         if (!isResizing) return;
                         
                         const newWidth = Math.max(
-                            parseFloat(getComputedStyle(sidebar).minWidth),
+                            200, // Minimum usable width
                             Math.min(
-                                parseFloat(getComputedStyle(sidebar).maxWidth),
+                                500, // Maximum width
                                 e.clientX - rect.left
                             )
                         );
@@ -3761,6 +3800,10 @@
                         document.body.style.userSelect = '';
                         document.removeEventListener('mousemove', onMouseMove);
                         document.removeEventListener('mouseup', onMouseUp);
+                        
+                        // Save sidebar width
+                        const currentWidth = parseInt(getComputedStyle(sidebar).width);
+                        localStorage.setItem('cloverAISidebarWidth', currentWidth);
                     }
                     
                     document.addEventListener('mousemove', onMouseMove);
@@ -3780,8 +3823,11 @@
                 } else {
                     sidebar.classList.remove('collapsed');
                     sidebarToggleIcon.textContent = 'chevron_left';
-                    sidebar.style.width = '320px';
-                    document.documentElement.style.setProperty('--sidebar-width', '320px');
+                    // Restore previous width or use default
+                    const savedWidth = localStorage.getItem('cloverAISidebarWidth');
+                    const width = savedWidth ? savedWidth + 'px' : '320px';
+                    sidebar.style.width = width;
+                    document.documentElement.style.setProperty('--sidebar-width', width);
                 }
                 
                 // Save sidebar state
@@ -3790,12 +3836,18 @@
 
             // Load sidebar state
             const savedSidebarState = localStorage.getItem('cloverAISidebarCollapsed');
+            const savedSidebarWidth = localStorage.getItem('cloverAISidebarWidth');
+            
             if (savedSidebarState === 'true') {
                 isSidebarCollapsed = true;
                 sidebar.classList.add('collapsed');
                 sidebarToggleIcon.textContent = 'chevron_right';
                 sidebar.style.width = 'var(--sidebar-min-width)';
                 document.documentElement.style.setProperty('--sidebar-width', 'var(--sidebar-min-width)');
+            } else if (savedSidebarWidth) {
+                // Apply saved width if not collapsed
+                sidebar.style.width = savedSidebarWidth + 'px';
+                document.documentElement.style.setProperty('--sidebar-width', savedSidebarWidth + 'px');
             }
         }
 
