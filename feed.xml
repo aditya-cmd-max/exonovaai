@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+    xmlns:atom="http://www.w3.org/2005/Atom">
+
+  <channel>
+    <title>Clover AI – Updates & News</title>
+    <link>https://aditya-cmd-max.github.io/exonovaai/</link>
+    <description>Official updates, features, and improvements for Clover AI by Aditya Jha.</description>
+    <language>en</language>
+
+    <!-- Self link for validation -->
+    <atom:link href="https://aditya-cmd-max.github.io/exonovaai/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <!-- Last updated time -->
+    <lastBuildDate>Sun, 16 Nov 2025 07:30:44 GMT</lastBuildDate>
+    <pubDate>Sun, 16 Nov 2025 07:30:44 GMT</pubDate>
+
+    <!-- Item 1: Home Page -->
+    <item>
+      <title>Homepage Updated</title>
+      <link>https://aditya-cmd-max.github.io/exonovaai/</link>
+      <guid>https://aditya-cmd-max.github.io/exonovaai/</guid>
+      <pubDate>Sun, 16 Nov 2025 07:30:44 GMT</pubDate>
+      <description><![CDATA[
+        The homepage of Clover AI has been updated with new features and design improvements.
+      ]]></description>
+    </item>
+
+    <!-- Item 2: Chat Page -->
+    <item>
+      <title>Clover AI Chat Improved</title>
+      <link>https://aditya-cmd-max.github.io/exonovaai/chat/</link>
+      <guid>https://aditya-cmd-max.github.io/exonovaai/chat/</guid>
+      <pubDate>Sun, 16 Nov 2025 07:30:44 GMT</pubDate>
+      <description><![CDATA[
+        The chat interface has been enhanced and optimized for better performance and speed.
+      ]]></description>
+    </item>
+
+  </channel>
+
+</rss>
