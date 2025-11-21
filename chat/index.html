@@ -3455,11 +3455,11 @@
                 "AIzaSyBpPOW2JW1Lco6LHsEBt8BtmofmkTiT8lg", // Replace with actual key 5
                 "AIzaSyDE_6TFDcn3tChPr2fjJWncFDIOZnQI95w"  // Replace with actual key 6
             ],
-            endpoints: [
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent",
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
-            ],
+           endpoints: [
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent"
+]
             currentKeyIndex: 0,
             currentEndpointIndex: 0
         };
@@ -5132,7 +5132,7 @@
             const sentenceStarters = [
                 'However', 'Therefore', 'Moreover', 'Furthermore', 'Additionally', 'Consequently',
                 'Nevertheless', 'Nonetheless', 'Meanwhile', 'Similarly', 'Specifically',
-                'Interestingly', 'Importantly', 'Basically', 'Essentially'
+                'Interestingly', 'Importantly', 'Basically', 'Essentially' , 'Mr.'
             ];
             return sentenceStarters.includes(term);
         }
