@@ -76,52 +76,42 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-
     <!-- SITEMAP DISCOVERY -->
-<link rel="sitemap" type="application/xml" title="Sitemap" href="https://aditya-cmd-max.github.io/exonovaai/sitemap.xml">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://aditya-cmd-max.github.io/exonovaai/sitemap.xml">
 
-<!-- SEARCH ENGINE DIRECTIVES -->
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1, noarchive">
-<meta name="bingbot" content="index, follow">
+    <!-- SEARCH ENGINE DIRECTIVES -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1, noarchive">
+    <meta name="bingbot" content="index, follow">
 
-<!-- CRAWL RATE & PRIORITY SIGNALS -->
-<meta name="revisit-after" content="1 days">
-<meta name="rating" content="General">
-<meta name="coverage" content="Worldwide">
-<meta name="distribution" content="Global">
+    <!-- CRAWL RATE & PRIORITY SIGNALS -->
+    <meta name="revisit-after" content="1 days">
+    <meta name="rating" content="General">
+    <meta name="coverage" content="Worldwide">
+    <meta name="distribution" content="Global">
 
-<!-- GOOGLE FAST DISCOVERY (HINT TAGS) -->
-<link rel="dns-prefetch" href="https://aditya-cmd-max.github.io/exonovaai/">
-<link rel="preconnect" href="https://aditya-cmd-max.github.io/exonovaai/">
-<link rel="prefetch" href="https://aditya-cmd-max.github.io/exonovaai/sitemap.xml">
-<link rel="prerender" href="https://aditya-cmd-max.github.io/exonovaai/">
+    <!-- GOOGLE FAST DISCOVERY (HINT TAGS) -->
+    <link rel="dns-prefetch" href="https://aditya-cmd-max.github.io/exonovaai/">
+    <link rel="preconnect" href="https://aditya-cmd-max.github.io/exonovaai/">
+    <link rel="prefetch" href="https://aditya-cmd-max.github.io/exonovaai/sitemap.xml">
+    <link rel="prerender" href="https://aditya-cmd-max.github.io/exonovaai/">
 
+    <!-- ADVANCED SEO SIGNALS -->
+    <meta property="og:updated_time" content="2025-01-01T00:00:00+00:00">
+    <meta http-equiv="last-modified" content="Wed, 01 Jan 2025 00:00:00 GMT">
 
-
-<!-- ADVANCED SEO SIGNALS -->
-<meta property="og:updated_time" content="2025-01-01T00:00:00+00:00">
-<meta http-equiv="last-modified" content="Wed, 01 Jan 2025 00:00:00 GMT">
-
-<!-- XML DISCOVERY BOOST -->
-
+    <!-- XML DISCOVERY BOOST -->
     <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://aditya-cmd-max.github.io/exonovaai/feed.xml">
-
-<link rel="alternate" type="application/xml" href="https://aditya-cmd-max.github.io/exonovaai/sitemap.xml">
-    
-    <!-- Framer Motion -->
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <link rel="alternate" type="application/xml" href="https://aditya-cmd-max.github.io/exonovaai/sitemap.xml">
     
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XD9D0YDW6L"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XD9D0YDW6L');
-</script>
-
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XD9D0YDW6L"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XD9D0YDW6L');
+    </script>
     
     <style>
         /* Material Design 3 Color System */
@@ -692,10 +682,82 @@
             line-height: 1.6;
         }
 
+        /* Video Section */
+        .video-section {
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            background: var(--md-surface);
+            position: relative;
+        }
+
+        .video-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .video-wrapper {
+            position: relative;
+            border-radius: var(--md-radius-large);
+            overflow: hidden;
+            box-shadow: var(--md-elevation-4);
+            background: var(--md-background);
+            transform: perspective(1000px) rotateX(2deg);
+            transition: var(--md-transition);
+        }
+
+        .video-wrapper:hover {
+            transform: perspective(1000px) rotateX(0);
+            box-shadow: var(--md-elevation-5);
+        }
+
+        .video-frame {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: var(--md-radius-large);
+            background: #000;
+        }
+
+        .video-content {
+            text-align: center;
+            margin-top: var(--md-spacing-xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .video-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--md-spacing-md);
+            color: var(--md-on-surface);
+        }
+
+        .video-description {
+            font-size: 1.125rem;
+            color: var(--md-on-surface-variant);
+            line-height: 1.6;
+            margin-bottom: var(--md-spacing-lg);
+        }
+
+        .video-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            color: var(--md-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--md-transition);
+        }
+
+        .video-cta:hover {
+            transform: translateX(5px);
+        }
+
         /* Testimonials Section */
         .testimonials {
             padding: var(--md-spacing-xl) var(--md-spacing-lg);
-            background: var(--md-surface);
+            background: var(--md-background);
         }
 
         .testimonials-grid {
@@ -707,7 +769,7 @@
         }
 
         .testimonial-card {
-            background: var(--md-background);
+            background: var(--md-surface);
             border-radius: var(--md-radius-large);
             padding: var(--md-spacing-xl);
             box-shadow: var(--md-elevation-1);
@@ -1038,6 +1100,10 @@
             .footer-content {
                 grid-template-columns: 1fr 1fr;
             }
+            
+            .video-frame {
+                height: 400px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1052,6 +1118,10 @@
             .section-title {
                 font-size: 2rem;
             }
+            
+            .video-title {
+                font-size: 2rem;
+            }
 
             .features-grid {
                 grid-template-columns: 1fr;
@@ -1064,6 +1134,20 @@
             .footer-bottom {
                 flex-direction: column;
                 text-align: center;
+            }
+            
+            .video-frame {
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .video-frame {
+                height: 250px;
             }
         }
     </style>
@@ -1081,6 +1165,7 @@
         <nav class="nav-links">
             <a href="#features" class="nav-link">Features</a>
             <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#video" class="nav-link">Video</a>
             <a href="#testimonials" class="nav-link">Testimonials</a>
         </nav>
         
@@ -1226,6 +1311,38 @@
         </div>
     </section>
 
+    <!-- Video Section -->
+    <section class="video-section" id="video">
+        <div class="section-header fade-in">
+            <h2 class="section-title">See Clover AI in Action</h2>
+            <p class="section-subtitle">Watch how Clover AI transforms complex tasks into simple, elegant solutions.</p>
+        </div>
+        
+        <div class="video-container">
+            <div class="video-wrapper fade-in">
+                <iframe 
+                    class="video-frame"
+                    src="https://youtu.be/3utWbjcBeiY" 
+                    title="Clover AI Demo Video"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            
+            <div class="video-content fade-in">
+                <h3 class="video-title">Experience the Future of AI Assistance</h3>
+                <p class="video-description">
+                    This demo showcases how Clover AI can help you with coding challenges, creative brainstorming, 
+                    research assistance, and much more. See firsthand how our intelligent assistant adapts to your needs.
+                </p>
+                <a href="https://aditya-cmd-max.github.io/exonovaai/chat" class="video-cta">
+                    <span>Try It Yourself</span>
+                    <span class="material-icons-round">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Testimonials Section -->
     <section class="testimonials" id="testimonials">
         <div class="section-header fade-in">
@@ -1313,7 +1430,7 @@
                 <ul class="footer-links">
                     <li><a href="#features" class="footer-link">Features</a></li>
                     <li><a href="#how-it-works" class="footer-link">How It Works</a></li>
-                    <li><a href="#" class="footer-link">Pricing</a></li>
+                    <li><a href="#video" class="footer-link">Video Demo</a></li>
                     <li><a href="#" class="footer-link">Updates</a></li>
                 </ul>
             </div>
@@ -1447,7 +1564,7 @@
             });
         });
 
-        // Floating Elements Animation with Framer Motion
+        // Floating Elements Animation
         const floatingElements = document.querySelectorAll('.floating-element');
         
         floatingElements.forEach((element, index) => {
@@ -1528,6 +1645,18 @@
             
             // Start typing after a short delay
             setTimeout(typeWriter, 1000);
+        }
+        
+        // Video hover effect
+        const videoWrapper = document.querySelector('.video-wrapper');
+        if (videoWrapper) {
+            videoWrapper.addEventListener('mouseenter', () => {
+                videoWrapper.style.transform = 'perspective(1000px) rotateX(0) scale(1.02)';
+            });
+            
+            videoWrapper.addEventListener('mouseleave', () => {
+                videoWrapper.style.transform = 'perspective(1000px) rotateX(2deg) scale(1)';
+            });
         }
     </script>
 </body>
