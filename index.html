@@ -710,12 +710,182 @@
             box-shadow: var(--md-elevation-5);
         }
 
-        .video-frame {
+        /* Custom Video Player Styles */
+        .custom-video-player {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: var(--md-radius-large);
+            overflow: hidden;
+        }
+
+        .video-element {
             width: 100%;
             height: 500px;
-            border: none;
+            display: block;
             border-radius: var(--md-radius-large);
-            background: #000;
+            transition: var(--md-transition);
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            padding: var(--md-spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+            opacity: 0;
+            transition: var(--md-transition);
+            transform: translateY(10px);
+        }
+
+        .custom-video-player:hover .video-controls {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--md-primary);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .left-controls, .right-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .play-pause-btn {
+            background: var(--md-primary);
+            color: white;
+            width: 44px;
+            height: 44px;
+        }
+
+        .play-pause-btn:hover {
+            background: var(--md-primary);
+            transform: scale(1.05);
+        }
+
+        .time-display {
+            color: white;
+            font-size: var(--md-font-size-label);
+            font-weight: 500;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        .fullscreen-btn {
+            color: white;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: var(--md-transition);
+            cursor: pointer;
+        }
+
+        .video-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .play-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--md-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: var(--md-elevation-3);
+            transition: var(--md-transition);
+        }
+
+        .play-icon:hover {
+            transform: scale(1.1);
         }
 
         .video-content {
@@ -1101,7 +1271,7 @@
                 grid-template-columns: 1fr 1fr;
             }
             
-            .video-frame {
+            .video-element {
                 height: 400px;
             }
         }
@@ -1136,7 +1306,7 @@
                 text-align: center;
             }
             
-            .video-frame {
+            .video-element {
                 height: 300px;
             }
         }
@@ -1146,8 +1316,17 @@
                 font-size: 2rem;
             }
             
-            .video-frame {
+            .video-element {
                 height: 250px;
+            }
+            
+            .control-buttons {
+                flex-wrap: wrap;
+                gap: var(--md-spacing-sm);
+            }
+            
+            .volume-control {
+                display: none;
             }
         }
     </style>
@@ -1320,13 +1499,48 @@
         
         <div class="video-container">
             <div class="video-wrapper fade-in">
-                <iframe 
-                    class="video-frame"
-                    src="https://www.youtube.com/embed/SwV8nLDE3E4" 
-                    title="Clover AI Demo Video"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
+                <div class="custom-video-player">
+                    <video class="video-element" poster="https://aditya-cmd-max.github.io/exonovaai/logo.png">
+                        <!-- Replace with your video URL -->
+                        <source src="https://aditya-cmd-max.github.io/exonovaai/Exonova.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    
+                    <div class="video-overlay" id="video-overlay">
+                        <div class="play-icon">
+                            <span class="material-icons-round" style="font-size: 2.5rem;">play_arrow</span>
+                        </div>
+                    </div>
+                    
+                    <div class="video-controls">
+                        <div class="progress-container" id="progress-container">
+                            <div class="progress-bar" id="progress-bar"></div>
+                        </div>
+                        
+                        <div class="control-buttons">
+                            <div class="left-controls">
+                                <button class="control-btn play-pause-btn" id="play-pause-btn">
+                                    <span class="material-icons-round" id="play-pause-icon">play_arrow</span>
+                                </button>
+                                <div class="time-display">
+                                    <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="right-controls">
+                                <div class="volume-control">
+                                    <button class="control-btn volume-btn" id="volume-btn">
+                                        <span class="material-icons-round" id="volume-icon">volume_up</span>
+                                    </button>
+                                    <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.01" value="1">
+                                </div>
+                                <button class="control-btn fullscreen-btn" id="fullscreen-btn">
+                                    <span class="material-icons-round">fullscreen</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="video-content fade-in">
@@ -1658,6 +1872,142 @@
                 videoWrapper.style.transform = 'perspective(1000px) rotateX(2deg) scale(1)';
             });
         }
+
+        // Custom Video Player Functionality
+        const videoPlayer = document.querySelector('.custom-video-player');
+        const video = document.querySelector('.video-element');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const volumeBtn = document.getElementById('volume-btn');
+        const volumeIcon = document.getElementById('volume-icon');
+        const volumeSlider = document.getElementById('volume-slider');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const videoOverlay = document.getElementById('video-overlay');
+
+        // Format time in MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Update progress bar and time display
+        function updateProgress() {
+            const percent = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = `${percent}%`;
+            currentTimeEl.textContent = formatTime(video.currentTime);
+        }
+
+        // Set video duration
+        function setVideoDuration() {
+            durationEl.textContent = formatTime(video.duration);
+        }
+
+        // Toggle play/pause
+        function togglePlayPause() {
+            if (video.paused) {
+                video.play();
+                playPauseIcon.textContent = 'pause';
+                videoOverlay.classList.add('hidden');
+            } else {
+                video.pause();
+                playPauseIcon.textContent = 'play_arrow';
+            }
+        }
+
+        // Set progress bar position
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = video.duration;
+            video.currentTime = (clickX / width) * duration;
+        }
+
+        // Toggle volume mute/unmute
+        function toggleMute() {
+            video.muted = !video.muted;
+            if (video.muted) {
+                volumeIcon.textContent = 'volume_off';
+                volumeSlider.value = 0;
+            } else {
+                volumeIcon.textContent = 'volume_up';
+                volumeSlider.value = video.volume;
+            }
+        }
+
+        // Set volume
+        function setVolume() {
+            video.volume = volumeSlider.value;
+            if (video.volume === 0) {
+                volumeIcon.textContent = 'volume_off';
+            } else if (video.volume < 0.5) {
+                volumeIcon.textContent = 'volume_down';
+            } else {
+                volumeIcon.textContent = 'volume_up';
+            }
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                videoPlayer.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Event listeners
+        video.addEventListener('loadedmetadata', setVideoDuration);
+        video.addEventListener('timeupdate', updateProgress);
+        video.addEventListener('ended', () => {
+            playPauseIcon.textContent = 'replay';
+            videoOverlay.classList.remove('hidden');
+        });
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        videoOverlay.addEventListener('click', togglePlayPause);
+
+        progressContainer.addEventListener('click', setProgress);
+
+        volumeBtn.addEventListener('click', toggleMute);
+        volumeSlider.addEventListener('input', setVolume);
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.target === video || e.target === videoPlayer) {
+                switch(e.key) {
+                    case ' ':
+                    case 'k':
+                        e.preventDefault();
+                        togglePlayPause();
+                        break;
+                    case 'm':
+                        e.preventDefault();
+                        toggleMute();
+                        break;
+                    case 'f':
+                        e.preventDefault();
+                        toggleFullscreen();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        video.currentTime -= 5;
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        video.currentTime += 5;
+                        break;
+                }
+            }
+        });
     </script>
 </body>
 </html>
