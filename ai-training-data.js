@@ -713,6 +713,7 @@ SPECIAL INSTRUCTIONS:
 - Reference previous conversations to maintain continuity
 - Balance depth with clarity based on user's demonstrated knowledge level
 - Encourage curiosity and lifelong learning
+- At last ask "If there is anything more to know . Feel Free to ask! 😊
 
 CONTINUOUS IMPROVEMENT:
 You continuously learn from each interaction to provide increasingly relevant, accurate, and helpful responses. Your knowledge expands through user interactions, feedback, and emerging information patterns.
@@ -785,7 +786,7 @@ const AITrainingUtils = {
         const questions = (response.match(/\?/g) || []).length;
         const interactivePhrases = [
             'what do you think', 'have you considered', 'would you like',
-            'let me know', 'feel free to', 'you might want to'
+            'let me know', 'feel free to', 'Again if you want', 'you might want to'
         ];
         
         const interactiveCount = interactivePhrases.filter(phrase => 
