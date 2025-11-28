@@ -674,6 +674,83 @@
             visibility: visible;
         }
 
+        /* Desktop Sidebar Overlay */
+        .desktop-sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--md-transition);
+            display: none;
+        }
+
+        .desktop-sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Desktop Sidebar */
+        .desktop-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100%;
+            background: var(--md-surface);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: var(--md-transition);
+            display: flex;
+            flex-direction: column;
+            padding: var(--md-spacing-xl) var(--md-spacing-lg);
+            box-shadow: var(--md-elevation-5);
+            border-right: 1px solid var(--md-outline-variant);
+        }
+
+        .desktop-sidebar.active {
+            left: 0;
+        }
+
+        .desktop-sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--md-spacing-xl);
+            padding-bottom: var(--md-spacing-md);
+            border-bottom: 1px solid var(--md-outline-variant);
+        }
+
+        .desktop-sidebar-close {
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+        }
+
+        .desktop-sidebar-close:hover {
+            background: var(--md-surface-variant);
+        }
+
+        .desktop-sidebar-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-xl);
+        }
+
         /* Mobile Sidebar */
         .mobile-sidebar {
             position: fixed;
@@ -966,89 +1043,9 @@
             position: relative;
         }
 
-        /* Sidebar - Fixed and Unscrollable */
+        /* Sidebar - Hidden on Desktop by Default */
         .sidebar {
-            width: var(--sidebar-width);
-            min-width: var(--sidebar-min-width);
-            max-width: 500px;
-            background: var(--md-surface);
-            border-radius: var(--md-radius-large);
-            padding: var(--md-spacing-xl);
-            box-shadow: var(--md-elevation-1);
-            border: 1px solid var(--md-outline-variant);
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-xl);
-            overflow: hidden; /* Changed from auto to hidden */
-            transition: var(--md-transition);
-            resize: horizontal;
-            position: relative;
-            min-height: 400px;
-        }
-
-        /* Resize Handle */
-        .sidebar::after {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: 50%;
-            bottom: 50%;
-            height: 40px;
-            width: 8px;
-            cursor: col-resize;
-            z-index: 10;
-            background: var(--md-outline-variant);
-            border-radius: 4px;
-            opacity: 0;
-            transition: var(--md-transition);
-        }
-
-        .sidebar:hover::after {
-            opacity: 1;
-        }
-
-        /* Collapsed Sidebar Styles - Improved */
-        .sidebar.collapsed {
-            width: var(--sidebar-min-width) !important;
-            padding: var(--md-spacing-md);
-            min-width: var(--sidebar-min-width) !important;
-            resize: none; /* Disable resize when collapsed */
-        }
-
-        .sidebar.collapsed .sidebar-section {
-            align-items: center;
-        }
-
-        .sidebar.collapsed .sidebar-title,
-        .sidebar.collapsed .search-chat-container,
-        .sidebar.collapsed .chat-session-title,
-        .sidebar.collapsed .feature-btn span:not(.material-icons-round),
-        .sidebar.collapsed .quick-action span:not(.material-icons-round),
-        .sidebar.collapsed .chat-session-pin,
-        .sidebar.collapsed .chat-session-delete {
             display: none;
-        }
-
-        .sidebar.collapsed .sidebar-title {
-            justify-content: center;
-        }
-
-        .sidebar.collapsed .feature-btn,
-        .sidebar.collapsed .quick-action,
-        .sidebar.collapsed .chat-session {
-            justify-content: center;
-            padding: var(--md-spacing-md);
-            min-width: auto;
-        }
-
-        .sidebar.collapsed .chat-sessions-container {
-            max-height: 150px;
-            min-height: 120px;
-        }
-
-        /* Prevent sidebar from becoming too small during resize */
-        .sidebar:not(.collapsed) {
-            min-width: 200px !important; /* Minimum usable width */
         }
 
         /* Toggle Sidebar Button */
@@ -1126,19 +1123,22 @@
         }
 
         /* Mobile sidebar specific styles */
-        .mobile-sidebar .chat-sessions-container {
+        .mobile-sidebar .chat-sessions-container,
+        .desktop-sidebar .chat-sessions-container {
             max-height: 180px;
         }
 
         /* Improved Scrollbar Styling */
-        .sidebar::-webkit-scrollbar,
+        .desktop-sidebar::-webkit-scrollbar,
+        .mobile-sidebar::-webkit-scrollbar,
         .chat-sessions-container::-webkit-scrollbar,
         .feature-buttons::-webkit-scrollbar,
         .quick-actions::-webkit-scrollbar {
             width: 6px;
         }
 
-        .sidebar::-webkit-scrollbar-track,
+        .desktop-sidebar::-webkit-scrollbar-track,
+        .mobile-sidebar::-webkit-scrollbar-track,
         .chat-sessions-container::-webkit-scrollbar-track,
         .feature-buttons::-webkit-scrollbar-track,
         .quick-actions::-webkit-scrollbar-track {
@@ -1146,7 +1146,8 @@
             border-radius: 3px;
         }
 
-        .sidebar::-webkit-scrollbar-thumb,
+        .desktop-sidebar::-webkit-scrollbar-thumb,
+        .mobile-sidebar::-webkit-scrollbar-thumb,
         .chat-sessions-container::-webkit-scrollbar-thumb,
         .feature-buttons::-webkit-scrollbar-thumb,
         .quick-actions::-webkit-scrollbar-thumb {
@@ -1154,7 +1155,8 @@
             border-radius: 3px;
         }
 
-        .sidebar::-webkit-scrollbar-thumb:hover,
+        .desktop-sidebar::-webkit-scrollbar-thumb:hover,
+        .mobile-sidebar::-webkit-scrollbar-thumb:hover,
         .chat-sessions-container::-webkit-scrollbar-thumb:hover,
         .feature-buttons::-webkit-scrollbar-thumb:hover,
         .quick-actions::-webkit-scrollbar-thumb:hover {
@@ -1767,7 +1769,7 @@
             box-shadow: none;
         }
 
-        /* Tools Dropdown */
+        /* Tools Dropdown - Updated to left bottom position */
         .tools-dropdown {
             position: relative;
             display: inline-block;
@@ -1939,18 +1941,20 @@
             40% { transform: translateY(-6px); }
         }
 
-        /* Google-like Blue Highlighting with Animation - UPDATED */
+        /* IMPROVED Google-like Blue Highlighting with Animation */
         .highlight {
-            background-color: #e3f2fd;
+            background: linear-gradient(120deg, #e3f2fd, #bbdefb, #e3f2fd);
+            background-size: 200% 100%;
             color: #1976d2;
             padding: 2px 4px;
-            border-radius: 3px;
+            border-radius: 4px;
             font-weight: 500;
-            box-shadow: 0 1px 2px rgba(25, 118, 210, 0.2);
-            transition: all 0.2s ease;
-            animation: highlightPulse 1.5s ease-in-out;
+            box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+            transition: all 0.3s ease;
+            animation: highlightSlide 2s ease-in-out;
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(25, 118, 210, 0.1);
         }
 
         .highlight::before {
@@ -1960,72 +1964,56 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: highlightShine 2s ease-in-out 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: highlightShine 3s ease-in-out 0.5s;
         }
 
         .dark-theme .highlight {
-            background-color: rgba(25, 118, 210, 0.2);
+            background: linear-gradient(120deg, rgba(25, 118, 210, 0.2), rgba(25, 118, 210, 0.3), rgba(25, 118, 210, 0.2));
+            background-size: 200% 100%;
             color: #64b5f6;
-            box-shadow: 0 1px 2px rgba(25, 118, 210, 0.3);
-            animation: highlightPulseDark 1.5s ease-in-out;
+            box-shadow: 0 2px 6px rgba(25, 118, 210, 0.3);
+            border: 1px solid rgba(25, 118, 210, 0.2);
+            animation: highlightSlideDark 2s ease-in-out;
         }
 
         .dark-theme .highlight::before {
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
         }
 
-        @keyframes highlightPulse {
+        @keyframes highlightSlide {
             0% {
-                background-color: transparent;
-                color: inherit;
-                box-shadow: none;
+                background-position: 200% 0;
                 transform: scale(1);
-            }
-            25% {
-                background-color: #bbdefb;
-                color: #1976d2;
-                box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
-                transform: scale(1.02);
+                box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
             }
             50% {
-                background-color: #90caf9;
-                color: #1976d2;
-                box-shadow: 0 3px 12px rgba(25, 118, 210, 0.4);
-                transform: scale(1.03);
+                background-position: -100% 0;
+                transform: scale(1.02);
+                box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
             }
             100% {
-                background-color: #e3f2fd;
-                color: #1976d2;
-                box-shadow: 0 1px 2px rgba(25, 118, 210, 0.2);
+                background-position: 200% 0;
                 transform: scale(1);
+                box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
             }
         }
 
-        @keyframes highlightPulseDark {
+        @keyframes highlightSlideDark {
             0% {
-                background-color: transparent;
-                color: inherit;
-                box-shadow: none;
+                background-position: 200% 0;
                 transform: scale(1);
-            }
-            25% {
-                background-color: rgba(25, 118, 210, 0.4);
-                color: #90caf9;
-                box-shadow: 0 2px 8px rgba(25, 118, 210, 0.5);
-                transform: scale(1.02);
+                box-shadow: 0 2px 6px rgba(25, 118, 210, 0.3);
             }
             50% {
-                background-color: rgba(25, 118, 210, 0.6);
-                color: #bbdefb;
-                box-shadow: 0 3px 12px rgba(25, 118, 210, 0.6);
-                transform: scale(1.03);
+                background-position: -100% 0;
+                transform: scale(1.02);
+                box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4);
             }
             100% {
-                background-color: rgba(25, 118, 210, 0.2);
-                color: #64b5f6;
-                box-shadow: 0 1px 2px rgba(25, 118, 210, 0.3);
+                background-position: 200% 0;
                 transform: scale(1);
+                box-shadow: 0 2px 6px rgba(25, 118, 210, 0.3);
             }
         }
 
@@ -2287,7 +2275,8 @@
                 max-height: 150px;
             }
             
-            .mobile-sidebar .chat-sessions-container {
+            .mobile-sidebar .chat-sessions-container,
+            .desktop-sidebar .chat-sessions-container {
                 max-height: 120px;
             }
             
@@ -2381,6 +2370,16 @@
                 right: 10px;
                 width: 40px;
                 height: 40px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .desktop-sidebar-overlay {
+                display: block;
+            }
+            
+            .mobile-menu-btn {
+                display: flex; /* Show hamburger menu on desktop */
             }
         }
 
@@ -2664,6 +2663,98 @@
         </div>
     </div>
 
+    <!-- Desktop Sidebar Overlay -->
+    <div class="desktop-sidebar-overlay" id="desktop-sidebar-overlay"></div>
+
+    <!-- Desktop Sidebar -->
+    <div class="desktop-sidebar" id="desktop-sidebar">
+        <div class="desktop-sidebar-header">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="Clover AI Logo">
+                </div>
+                <h1 class="app-name">Clover AI</h1>
+            </div>
+            <button class="desktop-sidebar-close" id="desktop-sidebar-close">
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+        
+        <div class="desktop-sidebar-content">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">
+                    Chat Sessions
+                    <div style="display: flex; gap: 4px;">
+                        <button id="desktop-pin-filter-btn" class="pin-filter-btn" title="Show pinned chats only">
+                            <span class="material-icons-round">push_pin</span>
+                        </button>
+                        <button id="desktop-new-chat-btn" class="btn-icon btn-text" title="New Chat">
+                            <span class="material-icons-round">add</span>
+                        </button>
+                    </div>
+                </h3>
+                
+                <!-- Search Chat Input -->
+                <div class="search-chat-container">
+                    <span class="material-icons-round search-icon">search</span>
+                    <input type="text" id="desktop-search-chat-input" class="search-chat-input" placeholder="Search chats...">
+                    <button id="desktop-clear-search-btn" class="clear-search-btn" title="Clear search">
+                        <span class="material-icons-round">close</span>
+                    </button>
+                </div>
+                
+                <div class="chat-sessions-container">
+                    <div class="chat-sessions" id="desktop-chat-sessions">
+                        <!-- Chat sessions will be dynamically added here -->
+                    </div>
+                    <div id="desktop-no-chats-found" class="no-chats-found" style="display: none;">
+                        No chats found matching your search
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Quick Actions</h3>
+                <div class="quick-actions">
+                    <button class="quick-action" data-prompt="Create a study schedule for exam preparation">
+                        <span class="material-icons-round">schedule</span>
+                        <span>Study Schedule</span>
+                    </button>
+                    <button class="quick-action" data-prompt="Write a professional email template">
+                        <span class="material-icons-round">email</span>
+                        <span>Email Template</span>
+                    </button>
+                    <button class="quick-action" data-prompt="Explain machine learning in simple terms">
+                        <span class="material-icons-round">psychology</span>
+                        <span>ML Explanation</span>
+                    </button>
+                    <button class="quick-action" data-prompt="Create a workout plan for beginners">
+                        <span class="material-icons-round">fitness_center</span>
+                        <span>Workout Plan</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Tools</h3>
+                <div class="feature-buttons">
+                    <button id="desktop-clear-btn" class="feature-btn">
+                        <span class="material-icons-round">delete</span>
+                        <span>Clear Chat</span>
+                    </button>
+                    <button id="desktop-export-btn" class="feature-btn">
+                        <span class="material-icons-round">download</span>
+                        <span>Export Chat</span>
+                    </button>
+                    <button id="desktop-customization-btn" class="feature-btn">
+                        <span class="material-icons-round">palette</span>
+                        <span>Customize</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Mobile Sidebar Overlay -->
     <div class="mobile-sidebar-overlay" id="mobile-sidebar-overlay"></div>
 
@@ -2819,85 +2910,6 @@
     </header>
 
     <div class="app-container">
-        <!-- Sidebar - Desktop Only -->
-        <aside class="sidebar" id="sidebar">
-            <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
-                <span class="material-icons-round" id="sidebar-toggle-icon">chevron_left</span>
-            </button>
-            
-            <div class="sidebar-section">
-                <h3 class="sidebar-title">
-                    <span>Chat Sessions</span>
-                    <div style="display: flex; gap: 4px;">
-                        <button id="pin-filter-btn" class="pin-filter-btn" title="Show pinned chats only">
-                            <span class="material-icons-round">push_pin</span>
-                        </button>
-                        <button id="new-chat-btn" class="btn-icon btn-text" title="New Chat">
-                            <span class="material-icons-round">add</span>
-                        </button>
-                    </div>
-                </h3>
-                
-                <!-- Search Chat Input -->
-                <div class="search-chat-container">
-                    <span class="material-icons-round search-icon">search</span>
-                    <input type="text" id="search-chat-input" class="search-chat-input" placeholder="Search chats...">
-                    <button id="clear-search-btn" class="clear-search-btn" title="Clear search">
-                        <span class="material-icons-round">close</span>
-                    </button>
-                </div>
-                
-                <div class="chat-sessions-container">
-                    <div class="chat-sessions" id="chat-sessions">
-                        <!-- Chat sessions will be dynamically added here -->
-                    </div>
-                    <div id="no-chats-found" class="no-chats-found" style="display: none;">
-                        No chats found matching your search
-                    </div>
-                </div>
-            </div>
-
-            <div class="sidebar-section">
-                <h3 class="sidebar-title">Quick Actions</h3>
-                <div class="quick-actions">
-                    <button class="quick-action" data-prompt="Create a study schedule for exam preparation">
-                        <span class="material-icons-round">schedule</span>
-                        <span>Study Schedule</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Write a professional email template">
-                        <span class="material-icons-round">email</span>
-                        <span>Email Template</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Explain machine learning in simple terms">
-                        <span class="material-icons-round">psychology</span>
-                        <span>ML Explanation</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Create a workout plan for beginners">
-                        <span class="material-icons-round">fitness_center</span>
-                        <span>Workout Plan</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="sidebar-section">
-                <h3 class="sidebar-title">Tools</h3>
-                <div class="feature-buttons">
-                    <button id="clear-btn" class="feature-btn">
-                        <span class="material-icons-round">delete</span>
-                        <span>Clear Chat</span>
-                    </button>
-                    <button id="export-btn" class="feature-btn">
-                        <span class="material-icons-round">download</span>
-                        <span>Export Chat</span>
-                    </button>
-                    <button id="customization-sidebar-btn" class="feature-btn">
-                        <span class="material-icons-round">palette</span>
-                        <span>Customize</span>
-                    </button>
-                </div>
-            </div>
-        </aside>
-
         <!-- Main Content -->
         <main class="main-content">
             <!-- Chat Header -->
@@ -2946,7 +2958,7 @@
                             <div class="input-hint">Enter to send • Shift+Enter for new line</div>
                         </div>
                         <div class="input-actions">
-                            <!-- Tools Dropdown -->
+                            <!-- Tools Dropdown - Moved to left bottom -->
                             <div class="tools-dropdown">
                                 <button type="button" class="tools-dropdown-btn" id="tools-dropdown-btn">
                                     <span class="material-icons-round">build</span>
@@ -3032,15 +3044,13 @@
         const messageInput = document.getElementById('message-input');
         const sendBtn = document.getElementById('send-btn');
         const sendIcon = document.getElementById('send-icon');
-        const chatSessionsContainer = document.getElementById('chat-sessions');
-        const mobileChatSessionsContainer = document.getElementById('mobile-chat-sessions');
         const currentChatTitle = document.getElementById('current-chat-title');
-        const newChatBtn = document.getElementById('new-chat-btn');
+        const newChatBtn = document.getElementById('desktop-new-chat-btn');
         const mobileNewChatBtn = document.getElementById('mobile-new-chat-btn');
         const renameChatBtn = document.getElementById('rename-chat-btn');
-        const clearBtn = document.getElementById('clear-btn');
+        const clearBtn = document.getElementById('desktop-clear-btn');
         const mobileClearBtn = document.getElementById('mobile-clear-btn');
-        const exportBtn = document.getElementById('export-btn');
+        const exportBtn = document.getElementById('desktop-export-btn');
         const mobileExportBtn = document.getElementById('mobile-export-btn');
         const voiceInputBtn = document.getElementById('voice-input-btn');
         const fileUploadBtn = document.getElementById('file-upload-btn');
@@ -3052,16 +3062,13 @@
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('.material-icons-round');
         const dynamicWelcomeTitle = document.getElementById('dynamic-welcome-title');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebar-toggle');
-        const sidebarToggleIcon = document.getElementById('sidebar-toggle-icon');
         const backToTopBtn = document.getElementById('back-to-top');
         const toolsDropdownBtn = document.getElementById('tools-dropdown-btn');
         const toolsDropdownContent = document.getElementById('tools-dropdown-content');
         
         // Customization Elements
         const customizationBtn = document.getElementById('customization-btn');
-        const customizationSidebarBtn = document.getElementById('customization-sidebar-btn');
+        const desktopCustomizationBtn = document.getElementById('desktop-customization-btn');
         const mobileCustomizationBtn = document.getElementById('mobile-customization-btn');
         const customizationPanel = document.getElementById('customization-panel');
         const customizationClose = document.getElementById('customization-close');
@@ -3079,22 +3086,27 @@
         const removeProfilePictureBtn = document.getElementById('remove-profile-picture-btn');
         const profilePictureInput = document.getElementById('profile-picture-input');
         
-        // Mobile Menu Elements
+        // Desktop Menu Elements
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const desktopSidebar = document.getElementById('desktop-sidebar');
+        const desktopSidebarOverlay = document.getElementById('desktop-sidebar-overlay');
+        const desktopSidebarClose = document.getElementById('desktop-sidebar-close');
+
+        // Mobile Menu Elements
         const mobileSidebar = document.getElementById('mobile-sidebar');
         const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
         const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 
         // Search Elements
-        const searchChatInput = document.getElementById('search-chat-input');
+        const desktopSearchChatInput = document.getElementById('desktop-search-chat-input');
         const mobileSearchChatInput = document.getElementById('mobile-search-chat-input');
-        const clearSearchBtn = document.getElementById('clear-search-btn');
+        const desktopClearSearchBtn = document.getElementById('desktop-clear-search-btn');
         const mobileClearSearchBtn = document.getElementById('mobile-clear-search-btn');
-        const noChatsFound = document.getElementById('no-chats-found');
+        const desktopNoChatsFound = document.getElementById('desktop-no-chats-found');
         const mobileNoChatsFound = document.getElementById('mobile-no-chats-found');
 
         // Pin Filter Elements
-        const pinFilterBtn = document.getElementById('pin-filter-btn');
+        const desktopPinFilterBtn = document.getElementById('desktop-pin-filter-btn');
         const mobilePinFilterBtn = document.getElementById('mobile-pin-filter-btn');
 
         // Modal Elements
@@ -3124,7 +3136,6 @@
         let searchTerm = '';
         let showPinnedOnly = false;
         let chatToDelete = null;
-        let isSidebarCollapsed = false;
         
         // Customization state
         let userSettings = {
@@ -3489,7 +3500,8 @@
             // Update welcome message for new chat
             updateWelcomeMessage();
             
-            // Close mobile sidebar if open
+            // Close sidebars if open
+            closeDesktopSidebar();
             closeMobileSidebar();
         }
 
@@ -3541,11 +3553,12 @@
             
             chatWindow.scrollTop = chatWindow.scrollHeight;
             
-            // Close mobile sidebar if open
+            // Close sidebars if open
+            closeDesktopSidebar();
             closeMobileSidebar();
         }
 
-        // Render chat sessions in sidebar
+        // Render chat sessions in sidebars
         function renderChatSessions() {
             filterChatSessions();
         }
@@ -3615,7 +3628,7 @@
         // Filter to show only pinned chats
         function togglePinnedFilter() {
             showPinnedOnly = !showPinnedOnly;
-            pinFilterBtn.classList.toggle('active', showPinnedOnly);
+            desktopPinFilterBtn.classList.toggle('active', showPinnedOnly);
             mobilePinFilterBtn.classList.toggle('active', showPinnedOnly);
             renderChatSessions();
             showNotification(showPinnedOnly ? 'Showing pinned chats only' : 'Showing all chats');
@@ -3829,6 +3842,21 @@
             closeCustomizationPanel();
         }
 
+        // Desktop Menu Functions
+        function openDesktopSidebar() {
+            desktopSidebar.classList.add('active');
+            desktopSidebarOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDesktopSidebar() {
+            desktopSidebar.classList.remove('active');
+            desktopSidebarOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
         // Mobile Menu Functions
         function openMobileSidebar() {
             mobileSidebar.classList.add('active');
@@ -3847,7 +3875,7 @@
         // Search functionality
         function initializeSearch() {
             // Desktop search
-            searchChatInput.addEventListener('input', (e) => {
+            desktopSearchChatInput.addEventListener('input', (e) => {
                 searchTerm = e.target.value.trim().toLowerCase();
                 updateClearButtonVisibility();
                 filterChatSessions();
@@ -3861,28 +3889,32 @@
             });
 
             // Clear search buttons
-            clearSearchBtn.addEventListener('click', clearSearch);
+            desktopClearSearchBtn.addEventListener('click', clearSearch);
             mobileClearSearchBtn.addEventListener('click', clearSearch);
 
-            // Close mobile sidebar when searching (optional)
-            searchChatInput.addEventListener('focus', () => {
+            // Close sidebars when searching (optional)
+            desktopSearchChatInput.addEventListener('focus', () => {
                 if (window.innerWidth <= 768) {
-                    closeMobileSidebar();
+                    closeDesktopSidebar();
                 }
+            });
+            
+            mobileSearchChatInput.addEventListener('focus', () => {
+                closeMobileSidebar();
             });
         }
 
         // Update clear button visibility
         function updateClearButtonVisibility() {
             const hasSearchTerm = searchTerm.length > 0;
-            clearSearchBtn.classList.toggle('visible', hasSearchTerm);
+            desktopClearSearchBtn.classList.toggle('visible', hasSearchTerm);
             mobileClearSearchBtn.classList.toggle('visible', hasSearchTerm);
         }
 
         // Clear search
         function clearSearch() {
             searchTerm = '';
-            searchChatInput.value = '';
+            desktopSearchChatInput.value = '';
             mobileSearchChatInput.value = '';
             updateClearButtonVisibility();
             filterChatSessions();
@@ -3906,10 +3938,10 @@
             }
 
             // Update desktop sidebar
-            renderFilteredChatSessions(filteredChats, chatSessionsContainer, noChatsFound);
+            renderFilteredChatSessions(filteredChats, document.getElementById('desktop-chat-sessions'), desktopNoChatsFound);
             
             // Update mobile sidebar
-            renderFilteredChatSessions(filteredChats, mobileChatSessionsContainer, mobileNoChatsFound);
+            renderFilteredChatSessions(filteredChats, document.getElementById('mobile-chat-sessions'), mobileNoChatsFound);
         }
 
         // Render filtered chat sessions
@@ -3977,95 +4009,6 @@
             if (chatToDelete) {
                 deleteChatConfirmed(chatToDelete);
                 closeDeleteModal();
-            }
-        }
-
-        // Sidebar Resize and Toggle Functions - Improved
-        function initializeSidebarResize() {
-            const sidebar = document.getElementById('sidebar');
-            let isResizing = false;
-
-            // Add resize handle functionality
-            sidebar.addEventListener('mousedown', function(e) {
-                // Don't allow resize if sidebar is collapsed
-                if (isSidebarCollapsed) return;
-                
-                // Check if click is near the right edge
-                const rect = sidebar.getBoundingClientRect();
-                if (e.clientX > rect.right - 15) {
-                    isResizing = true;
-                    document.body.style.cursor = 'col-resize';
-                    document.body.style.userSelect = 'none';
-                    
-                    function onMouseMove(e) {
-                        if (!isResizing) return;
-                        
-                        const newWidth = Math.max(
-                            200, // Minimum usable width
-                            Math.min(
-                                500, // Maximum width
-                                e.clientX - rect.left
-                            )
-                        );
-                        
-                        sidebar.style.width = newWidth + 'px';
-                        document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
-                    }
-                    
-                    function onMouseUp() {
-                        isResizing = false;
-                        document.body.style.cursor = '';
-                        document.body.style.userSelect = '';
-                        document.removeEventListener('mousemove', onMouseMove);
-                        document.removeEventListener('mouseup', onMouseUp);
-                        
-                        // Save sidebar width
-                        const currentWidth = parseInt(getComputedStyle(sidebar).width);
-                        localStorage.setItem('cloverAISidebarWidth', currentWidth);
-                    }
-                    
-                    document.addEventListener('mousemove', onMouseMove);
-                    document.addEventListener('mouseup', onMouseUp);
-                }
-            });
-
-            // Toggle sidebar collapse/expand
-            sidebarToggle.addEventListener('click', function() {
-                isSidebarCollapsed = !isSidebarCollapsed;
-                
-                if (isSidebarCollapsed) {
-                    sidebar.classList.add('collapsed');
-                    sidebarToggleIcon.textContent = 'chevron_right';
-                    sidebar.style.width = 'var(--sidebar-min-width)';
-                    document.documentElement.style.setProperty('--sidebar-width', 'var(--sidebar-min-width)');
-                } else {
-                    sidebar.classList.remove('collapsed');
-                    sidebarToggleIcon.textContent = 'chevron_left';
-                    // Restore previous width or use default
-                    const savedWidth = localStorage.getItem('cloverAISidebarWidth');
-                    const width = savedWidth ? savedWidth + 'px' : '320px';
-                    sidebar.style.width = width;
-                    document.documentElement.style.setProperty('--sidebar-width', width);
-                }
-                
-                // Save sidebar state
-                localStorage.setItem('cloverAISidebarCollapsed', isSidebarCollapsed);
-            });
-
-            // Load sidebar state
-            const savedSidebarState = localStorage.getItem('cloverAISidebarCollapsed');
-            const savedSidebarWidth = localStorage.getItem('cloverAISidebarWidth');
-            
-            if (savedSidebarState === 'true') {
-                isSidebarCollapsed = true;
-                sidebar.classList.add('collapsed');
-                sidebarToggleIcon.textContent = 'chevron_right';
-                sidebar.style.width = 'var(--sidebar-min-width)';
-                document.documentElement.style.setProperty('--sidebar-width', 'var(--sidebar-min-width)');
-            } else if (savedSidebarWidth) {
-                // Apply saved width if not collapsed
-                sidebar.style.width = savedSidebarWidth + 'px';
-                document.documentElement.style.setProperty('--sidebar-width', savedSidebarWidth + 'px');
             }
         }
 
@@ -4239,7 +4182,7 @@
         
         // Customization event listeners
         customizationBtn.addEventListener('click', openCustomizationPanel);
-        customizationSidebarBtn.addEventListener('click', openCustomizationPanel);
+        desktopCustomizationBtn.addEventListener('click', openCustomizationPanel);
         mobileCustomizationBtn.addEventListener('click', () => {
             openCustomizationPanel();
             closeMobileSidebar();
@@ -4283,13 +4226,24 @@
             }
         });
         
+        // Desktop menu event listeners
+        mobileMenuBtn.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                openMobileSidebar();
+            } else {
+                openDesktopSidebar();
+            }
+        });
+        
+        desktopSidebarClose.addEventListener('click', closeDesktopSidebar);
+        desktopSidebarOverlay.addEventListener('click', closeDesktopSidebar);
+        
         // Mobile menu event listeners
-        mobileMenuBtn.addEventListener('click', openMobileSidebar);
         mobileSidebarClose.addEventListener('click', closeMobileSidebar);
         mobileSidebarOverlay.addEventListener('click', closeMobileSidebar);
         
         // Pin filter event listeners
-        pinFilterBtn.addEventListener('click', togglePinnedFilter);
+        desktopPinFilterBtn.addEventListener('click', togglePinnedFilter);
         mobilePinFilterBtn.addEventListener('click', togglePinnedFilter);
         
         // Modal Event Listeners
@@ -4477,7 +4431,8 @@
             currentMode = currentMode === newMode ? 'chat' : newMode;
             updateUIForMode();
             
-            // Close mobile sidebar if open
+            // Close sidebars if open
+            closeDesktopSidebar();
             closeMobileSidebar();
         }
 
@@ -4490,7 +4445,8 @@
                 showNotification('Web search disabled');
             }
             
-            // Close mobile sidebar if open
+            // Close sidebars if open
+            closeDesktopSidebar();
             closeMobileSidebar();
         }
 
@@ -4571,7 +4527,8 @@
             
             showNotification('Chat cleared successfully');
             
-            // Close mobile sidebar if open
+            // Close sidebars if open
+            closeDesktopSidebar();
             closeMobileSidebar();
         }
 
@@ -4604,7 +4561,8 @@
             
             showNotification('Chat exported successfully');
             
-            // Close mobile sidebar if open
+            // Close sidebars if open
+            closeDesktopSidebar();
             closeMobileSidebar();
         }
 
@@ -5147,7 +5105,6 @@
         loadUserSettings();
         initializeChatSessions();
         initializeSearch();
-        initializeSidebarResize();
         initEnhancedLayout();
         updateUIForMode();
         sendBtn.disabled = true;
