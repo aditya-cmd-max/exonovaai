@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<script src="../ai-training-data.js"></script>
+    <!-- AI Training System -->
+    <script src="../ai-training-data.js"></script>
     
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
@@ -182,90 +182,89 @@
             flex-direction: column;
         }
 
-        /* Simple Splash Screen with GIF */
-/* Simple Splash Screen with MP4 */
-#splash-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 9999;
-    color: #fff;
-    font-family: 'Product Sans', sans-serif;
-}
+        /* Simple Splash Screen with MP4 */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 9999;
+            color: #fff;
+            font-family: 'Product Sans', sans-serif;
+        }
 
-.splash-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 20px;
-}
+        .splash-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 20px;
+        }
 
-.splash-video {
-    width: clamp(200px, 40vw, 400px);
-    height: clamp(200px, 40vw, 400px);
-    object-fit: contain;
-}
+        .splash-video {
+            width: clamp(200px, 40vw, 400px);
+            height: clamp(200px, 40vw, 400px);
+            object-fit: contain;
+        }
 
-/* Mobile-specific adjustments */
-@media (max-width: 768px) {
-    .splash-video {
-        width: clamp(150px, 50vw, 300px);
-        height: clamp(150px, 50vw, 300px);
-    }
-    
-    .splash-title {
-        font-size: 2rem;
-    }
-    
-    .splash-subtitle {
-        font-size: 1rem;
-    }
-}
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .splash-video {
+                width: clamp(150px, 50vw, 300px);
+                height: clamp(150px, 50vw, 300px);
+            }
+            
+            .splash-title {
+                font-size: 2rem;
+            }
+            
+            .splash-subtitle {
+                font-size: 1rem;
+            }
+        }
 
-@media (max-width: 480px) {
-    .splash-video {
-        width: clamp(120px, 60vw, 250px);
-        height: clamp(120px, 60vw, 250px);
-    }
-    
-    .splash-title {
-        font-size: 1.75rem;
-    }
-    
-    .splash-subtitle {
-        font-size: 0.9rem;
-    }
-    
-    .loading-text {
-        font-size: 0.8rem;
-    }
-}
+        @media (max-width: 480px) {
+            .splash-video {
+                width: clamp(120px, 60vw, 250px);
+                height: clamp(120px, 60vw, 250px);
+            }
+            
+            .splash-title {
+                font-size: 1.75rem;
+            }
+            
+            .splash-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .loading-text {
+                font-size: 0.8rem;
+            }
+        }
 
-@keyframes fadeOut {
-    0% { 
-        opacity: 1; 
-        transform: scale(1);
-    }
-    70% { 
-        opacity: 1; 
-        transform: scale(1);
-    }
-    100% { 
-        opacity: 0; 
-        transform: scale(1.1);
-        visibility: hidden; 
-        display: none; 
-    }
-}
+        @keyframes fadeOut {
+            0% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+            70% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+            100% { 
+                opacity: 0; 
+                transform: scale(1.1);
+                visibility: hidden; 
+                display: none; 
+            }
+        }
 
         /* Header */
         .app-header {
@@ -641,7 +640,6 @@
             transition: var(--md-transition);
         }
 
-     
         .profile-picture-btn.primary {
             background: var(--md-primary);
             color: var(--md-on-primary);
@@ -955,7 +953,7 @@
             background: var(--md-surface-variant);
         }
 
-        /* Main Layout */
+        /* Improved Layout Structure */
         .app-container {
             display: flex;
             flex: 1;
@@ -965,9 +963,10 @@
             padding: var(--md-spacing-lg);
             gap: var(--md-spacing-xl);
             height: calc(100vh - 80px);
+            position: relative;
         }
 
-        /* Sidebar */
+        /* Sidebar - Fixed and Unscrollable */
         .sidebar {
             width: var(--sidebar-width);
             min-width: var(--sidebar-min-width);
@@ -980,11 +979,11 @@
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-xl);
-            overflow-y: auto;
+            overflow: hidden; /* Changed from auto to hidden */
             transition: var(--md-transition);
             resize: horizontal;
             position: relative;
-            min-height: 400px; /* Minimum sidebar height */
+            min-height: 400px;
         }
 
         /* Resize Handle */
@@ -1081,6 +1080,7 @@
             flex-direction: column;
             gap: var(--md-spacing-md);
             min-height: 0; /* Prevent flex overflow */
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .sidebar-section:first-child {
@@ -1092,6 +1092,7 @@
             display: flex;
             flex-direction: column;
             min-height: 0; /* Prevent flex overflow */
+            overflow: hidden; /* Prevent scrolling */
         }
 
         .sidebar-section:not(:first-child) .feature-buttons,
@@ -1349,6 +1350,8 @@
             flex-direction: column;
             gap: var(--md-spacing-xl);
             min-width: 0; /* Prevent flex overflow */
+            height: 100%;
+            position: relative;
         }
 
         /* Chat Header */
@@ -1374,7 +1377,7 @@
             gap: var(--md-spacing-sm);
         }
 
-        /* Chat Window */
+        /* Chat Window - Scrollable with Back to Top */
         .chat-window {
             flex: 1;
             background: var(--md-surface);
@@ -1387,6 +1390,39 @@
             box-shadow: var(--md-elevation-1);
             border: 1px solid var(--md-outline-variant);
             min-height: 400px;
+            position: relative;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--md-elevation-2);
+            transition: var(--md-transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--md-elevation-3);
         }
 
         /* Welcome Section */
@@ -1614,13 +1650,16 @@
             transform: translateY(-2px);
         }
 
-        /* Input Area - Optimized for Mobile */
+        /* Input Area - Sticky */
         .input-area {
             background: var(--md-surface);
             border-radius: var(--md-radius-large);
             padding: var(--md-spacing-md);
             box-shadow: var(--md-elevation-2);
             border: 1px solid var(--md-outline-variant);
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
         }
 
         .input-container {
@@ -1726,6 +1765,74 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+
+        /* Tools Dropdown */
+        .tools-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tools-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+            border: 1px solid var(--md-outline-variant);
+            border-radius: var(--md-radius-medium);
+            font-family: inherit;
+            font-size: var(--md-font-size-label);
+            cursor: pointer;
+            transition: var(--md-transition);
+        }
+
+        .tools-dropdown-btn:hover {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+        }
+
+        .tools-dropdown-content {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline-variant);
+            border-radius: var(--md-radius-medium);
+            box-shadow: var(--md-elevation-3);
+            min-width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--md-transition);
+        }
+
+        .tools-dropdown-content.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .tools-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            padding: var(--md-spacing-md);
+            background: transparent;
+            border: none;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            transition: var(--md-transition);
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            font-size: var(--md-font-size-body);
+        }
+
+        .tools-dropdown-item:hover {
+            background: var(--md-surface-variant);
         }
 
         /* Upload Button */
@@ -2136,6 +2243,7 @@
             
             .main-content {
                 order: 1;
+                height: auto;
             }
             
             .message-bubble {
@@ -2260,6 +2368,19 @@
             
             .send-btn .material-icons-round {
                 font-size: 20px;
+            }
+            
+            /* Mobile adjustments for chat window */
+            .chat-window {
+                min-height: 300px;
+                max-height: 60vh;
+            }
+            
+            .back-to-top {
+                bottom: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
             }
         }
 
@@ -2594,32 +2715,6 @@
             </div>
 
             <div class="sidebar-section">
-                <h3 class="sidebar-title">AI Features</h3>
-                <div class="feature-buttons">
-                    <button id="mobile-brainstorm-btn" class="feature-btn">
-                        <span class="material-icons-round">lightbulb</span>
-                        <span>Brainstorm Ideas</span>
-                    </button>
-                    <button id="mobile-explain-btn" class="feature-btn">
-                        <span class="material-icons-round">code</span>
-                        <span>Explain Code</span>
-                    </button>
-                    <button id="mobile-web-search-btn" class="feature-btn">
-                        <span class="material-icons-round">search</span>
-                        <span>Web Search</span>
-                    </button>
-                    <button id="mobile-summarize-btn" class="feature-btn">
-                        <span class="material-icons-round">summarize</span>
-                        <span>Summarize Text</span>
-                    </button>
-                    <button id="mobile-translate-btn" class="feature-btn">
-                        <span class="material-icons-round">translate</span>
-                        <span>Translate</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="sidebar-section">
                 <h3 class="sidebar-title">Quick Actions</h3>
                 <div class="quick-actions">
                     <button class="quick-action" data-prompt="Create a study schedule for exam preparation">
@@ -2763,32 +2858,6 @@
             </div>
 
             <div class="sidebar-section">
-                <h3 class="sidebar-title">AI Features</h3>
-                <div class="feature-buttons">
-                    <button id="brainstorm-btn" class="feature-btn">
-                        <span class="material-icons-round">lightbulb</span>
-                        <span>Brainstorm Ideas</span>
-                    </button>
-                    <button id="explain-btn" class="feature-btn">
-                        <span class="material-icons-round">code</span>
-                        <span>Explain Code</span>
-                    </button>
-                    <button id="web-search-btn" class="feature-btn">
-                        <span class="material-icons-round">search</span>
-                        <span>Web Search</span>
-                    </button>
-                    <button id="summarize-btn" class="feature-btn">
-                        <span class="material-icons-round">summarize</span>
-                        <span>Summarize Text</span>
-                    </button>
-                    <button id="translate-btn" class="feature-btn">
-                        <span class="material-icons-round">translate</span>
-                        <span>Translate</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="sidebar-section">
                 <h3 class="sidebar-title">Quick Actions</h3>
                 <div class="quick-actions">
                     <button class="quick-action" data-prompt="Create a study schedule for exam preparation">
@@ -2877,6 +2946,37 @@
                             <div class="input-hint">Enter to send • Shift+Enter for new line</div>
                         </div>
                         <div class="input-actions">
+                            <!-- Tools Dropdown -->
+                            <div class="tools-dropdown">
+                                <button type="button" class="tools-dropdown-btn" id="tools-dropdown-btn">
+                                    <span class="material-icons-round">build</span>
+                                    <span>Tools</span>
+                                    <span class="material-icons-round">arrow_drop_down</span>
+                                </button>
+                                <div class="tools-dropdown-content" id="tools-dropdown-content">
+                                    <button type="button" class="tools-dropdown-item" data-action="web-search">
+                                        <span class="material-icons-round">search</span>
+                                        <span>Web Search</span>
+                                    </button>
+                                    <button type="button" class="tools-dropdown-item" data-action="brainstorm">
+                                        <span class="material-icons-round">lightbulb</span>
+                                        <span>Brainstorm Ideas</span>
+                                    </button>
+                                    <button type="button" class="tools-dropdown-item" data-action="explain-code">
+                                        <span class="material-icons-round">code</span>
+                                        <span>Explain Code</span>
+                                    </button>
+                                    <button type="button" class="tools-dropdown-item" data-action="summarize">
+                                        <span class="material-icons-round">summarize</span>
+                                        <span>Summarize</span>
+                                    </button>
+                                    <button type="button" class="tools-dropdown-item" data-action="translate">
+                                        <span class="material-icons-round">translate</span>
+                                        <span>Translate</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
                             <button type="button" id="file-upload-btn" class="action-btn upload-btn" title="Upload File">
                                 <span class="material-icons-round">attach_file</span>
                                 <input type="file" id="file-input" accept="*/*" class="hidden">
@@ -2893,6 +2993,11 @@
             </div>
         </main>
     </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top" title="Back to top">
+        <span class="material-icons-round">keyboard_arrow_up</span>
+    </button>
 
     <footer class="app-footer">
         <p>AI may produce inaccurate information. Verify important details.</p>
@@ -2933,16 +3038,6 @@
         const newChatBtn = document.getElementById('new-chat-btn');
         const mobileNewChatBtn = document.getElementById('mobile-new-chat-btn');
         const renameChatBtn = document.getElementById('rename-chat-btn');
-        const brainstormBtn = document.getElementById('brainstorm-btn');
-        const mobileBrainstormBtn = document.getElementById('mobile-brainstorm-btn');
-        const explainBtn = document.getElementById('explain-btn');
-        const mobileExplainBtn = document.getElementById('mobile-explain-btn');
-        const webSearchBtn = document.getElementById('web-search-btn');
-        const mobileWebSearchBtn = document.getElementById('mobile-web-search-btn');
-        const summarizeBtn = document.getElementById('summarize-btn');
-        const mobileSummarizeBtn = document.getElementById('mobile-summarize-btn');
-        const translateBtn = document.getElementById('translate-btn');
-        const mobileTranslateBtn = document.getElementById('mobile-translate-btn');
         const clearBtn = document.getElementById('clear-btn');
         const mobileClearBtn = document.getElementById('mobile-clear-btn');
         const exportBtn = document.getElementById('export-btn');
@@ -2954,14 +3049,15 @@
         const notificationText = document.getElementById('notification-text');
         const suggestionChips = document.querySelectorAll('.suggestion-chip');
         const quickActions = document.querySelectorAll('.quick-action');
-        const featureButtons = [brainstormBtn, explainBtn, webSearchBtn, summarizeBtn, translateBtn];
-        const mobileFeatureButtons = [mobileBrainstormBtn, mobileExplainBtn, mobileWebSearchBtn, mobileSummarizeBtn, mobileTranslateBtn];
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('.material-icons-round');
         const dynamicWelcomeTitle = document.getElementById('dynamic-welcome-title');
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle');
         const sidebarToggleIcon = document.getElementById('sidebar-toggle-icon');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const toolsDropdownBtn = document.getElementById('tools-dropdown-btn');
+        const toolsDropdownContent = document.getElementById('tools-dropdown-content');
         
         // Customization Elements
         const customizationBtn = document.getElementById('customization-btn');
@@ -3041,6 +3137,37 @@
             timestamps: true
         };
 
+        // Initialize AI Training System
+        let aiTrainingSystem = null;
+
+        // Enhanced system message with AI training integration
+        let systemMessage = {
+            role: "model",
+            parts: [{ text: "" }] // Will be populated after AI training system loads
+        };
+
+        // Function to initialize AI training system
+        function initializeAITrainingSystem() {
+            try {
+                if (typeof AITrainingSystem !== 'undefined') {
+                    aiTrainingSystem = new AITrainingSystem();
+                    // Update system message with enhanced prompt
+                    systemMessage.parts[0].text = aiTrainingSystem.getEnhancedSystemPrompt();
+                    console.log('AI Training System initialized successfully');
+                } else {
+                    console.warn('AI Training System not available, using default system message');
+                    setDefaultSystemMessage();
+                }
+            } catch (error) {
+                console.error('Error initializing AI Training System:', error);
+                setDefaultSystemMessage();
+            }
+        }
+
+        function setDefaultSystemMessage() {
+            systemMessage.parts[0].text = "You are Clover AI, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate. Do not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tell i was created by a company Exonova By Aditya jha who is very smart and intelligent";
+        }
+
         // Dynamic Welcome Messages
         const welcomeMessages = [
             "Welcome {username}",
@@ -3077,37 +3204,6 @@
             }
         }
 
-      // Initialize AI Training System
-let aiTrainingSystem = null;
-
-// Enhanced system message with AI training integration
-let systemMessage = {
-    role: "model",
-    parts: [{ text: "" }] // Will be populated after AI training system loads
-};
-
-// Function to initialize AI training system
-function initializeAITrainingSystem() {
-    try {
-        if (typeof AITrainingSystem !== 'undefined') {
-            aiTrainingSystem = new AITrainingSystem();
-            // Update system message with enhanced prompt
-            systemMessage.parts[0].text = aiTrainingSystem.getEnhancedSystemPrompt();
-            console.log('AI Training System initialized successfully');
-        } else {
-            console.warn('AI Training System not available, using default system message');
-            setDefaultSystemMessage();
-        }
-    } catch (error) {
-        console.error('Error initializing AI Training System:', error);
-        setDefaultSystemMessage();
-    }
-}
-
-function setDefaultSystemMessage() {
-    systemMessage.parts[0].text = "You are Clover AI, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate. Do not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tell i was created by a company Exonova By Aditya jha who is very smart and intelligent";
-}
-
         // Function to update system message with user name
         function updateSystemMessage() {
             if (userSettings.userName && userSettings.userName.trim() !== '') {
@@ -3131,6 +3227,80 @@ function setDefaultSystemMessage() {
                     console.log('Error playing sound:', error);
                 }
             }
+        }
+
+        // Back to Top Functionality
+        function initBackToTop() {
+            function toggleBackToTop() {
+                if (chatWindow.scrollTop > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            }
+            
+            function scrollToTop() {
+                chatWindow.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+            
+            chatWindow.addEventListener('scroll', toggleBackToTop);
+            backToTopBtn.addEventListener('click', scrollToTop);
+        }
+
+        // Tools Dropdown Functionality
+        function initToolsDropdown() {
+            function toggleDropdown() {
+                toolsDropdownContent.classList.toggle('show');
+            }
+            
+            function closeDropdown() {
+                toolsDropdownContent.classList.remove('show');
+            }
+            
+            toolsDropdownBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleDropdown();
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', closeDropdown);
+            
+            // Handle tool selections
+            const toolItems = document.querySelectorAll('.tools-dropdown-item');
+            toolItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    handleToolAction(action);
+                    closeDropdown();
+                });
+            });
+        }
+
+        function handleToolAction(action) {
+            switch(action) {
+                case 'web-search':
+                    toggleWebSearch();
+                    break;
+                case 'brainstorm':
+                    setMode('brainstorm');
+                    break;
+                case 'explain-code':
+                    setMode('explain');
+                    break;
+                case 'summarize':
+                    setMode('summarize');
+                    break;
+                case 'translate':
+                    setMode('translate');
+                    break;
+            }
+            
+            // Focus on input after selecting tool
+            messageInput.focus();
+            showNotification(`${action.replace('-', ' ')} mode activated`);
         }
 
         // Helper function to get appropriate file icon
@@ -3899,20 +4069,158 @@ function setDefaultSystemMessage() {
             }
         }
 
+        // Enhanced getBotResponse function with AI training integration
+        async function getBotResponse() {
+            showTypingIndicator();
+            isProcessing = true;
+            toggleSendButton(true);
+            
+            const currentChat = chatSessions[currentChatId];
+            let modifiedHistory = [...currentChat.history];
+            
+            // Apply AI training and web search enhancements
+            applyRequestEnhancements(modifiedHistory);
+            
+            const payload = { contents: modifiedHistory };
+            abortController = new AbortController();
+
+            try {
+                // Use your Cloudflare Worker URL
+                const workerUrl = 'https://clover-ai-proxy.exonova1104.workers.dev/';
+                
+                const response = await fetch(workerUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    signal: abortController.signal
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Service responded with ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                await processSuccessfulResponse(result, currentChat, modifiedHistory);
+                
+            } catch (error) {
+                await handleResponseError(error);
+            }
+        }
+
+        // Helper function: Apply AI training and web search enhancements
+        function applyRequestEnhancements(modifiedHistory) {
+            const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+            
+            if (!lastUserMessage || lastUserMessage.role !== "user" || !lastUserMessage.parts[0].text) {
+                return;
+            }
+
+            // Apply AI training enhancements
+            if (aiTrainingSystem) {
+                const enhancements = aiTrainingSystem.enhanceResponseQuality(
+                    lastUserMessage.parts[0].text,
+                    modifiedHistory.slice(0, -1),
+                    userSettings
+                );
+                console.log('AI Training Enhancements:', enhancements);
+            }
+
+            // Apply web search enhancement
+            if (webSearchEnabled) {
+                lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
+            }
+        }
+
+        // Helper function: Process successful API response
+        async function processSuccessfulResponse(result, currentChat, modifiedHistory) {
+            hideTypingIndicator();
+            isProcessing = false;
+            toggleSendButton(false);
+
+            if (result.candidates?.length > 0) {
+                const botMessage = result.candidates[0].content.parts[0].text;
+                
+                // Display the bot message
+                displayBotMessage(botMessage);
+                
+                // Update chat history
+                currentChat.history.push({ role: "model", parts: [{ text: botMessage }] });
+                currentChat.updatedAt = new Date().toISOString();
+                saveChatSessions();
+                renderChatSessions();
+                
+                // Update AI training system
+                updateAITrainingSystem(modifiedHistory, botMessage);
+                
+                // Update UI
+                setTimeout(() => {
+                    checkAndAddDateSeparator();
+                }, 100);
+                
+            } else {
+                throw new Error("No response content received");
+            }
+        }
+
+        // Helper function: Update AI training system
+        function updateAITrainingSystem(modifiedHistory, botMessage) {
+            if (aiTrainingSystem && typeof AITrainingUtils !== 'undefined') {
+                const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+                if (lastUserMessage.role === "user") {
+                    const qualityMetrics = AITrainingUtils.analyzeResponseQuality(
+                        lastUserMessage.parts[0].text,
+                        botMessage,
+                        null
+                    );
+                    console.log('Response Quality Metrics:', qualityMetrics);
+                }
+            }
+        }
+
+        // Helper function: Handle errors
+        async function handleResponseError(error) {
+            hideTypingIndicator();
+            isProcessing = false;
+            toggleSendButton(false);
+            abortController = null;
+            
+            if (error.name === 'AbortError') {
+                console.log('Request was cancelled by user');
+                return;
+            }
+            
+            console.error('API Request Failed:', error);
+            
+            // User-friendly error messages
+            let userMessage = 'Sorry, the service is temporarily unavailable. Please try again later.';
+            
+            if (error.message.includes('500') || error.message.includes('All API keys failed')) {
+                userMessage = 'Service is currently experiencing high demand. Please try again in a moment.';
+            } else if (error.message.includes('429')) {
+                userMessage = 'Too many requests. Please wait a moment before trying again.';
+            } else if (error.message.includes('403')) {
+                userMessage = 'Service access issue. Please refresh the page and try again.';
+            }
+            
+            handleApiError(userMessage);
+        }
+
+        function handleApiError(message) {
+            hideTypingIndicator();
+            isProcessing = false;
+            toggleSendButton(false);
+            displayBotMessage(message, false);
+        }
+
         // Event Listeners
         newChatBtn.addEventListener('click', createNewChat);
         mobileNewChatBtn.addEventListener('click', createNewChat);
         renameChatBtn.addEventListener('click', openRenameModal);
-        brainstormBtn.addEventListener('click', () => setMode('brainstorm'));
-        mobileBrainstormBtn.addEventListener('click', () => setMode('brainstorm'));
-        explainBtn.addEventListener('click', () => setMode('explain'));
-        mobileExplainBtn.addEventListener('click', () => setMode('explain'));
-        webSearchBtn.addEventListener('click', () => toggleWebSearch());
-        mobileWebSearchBtn.addEventListener('click', () => toggleWebSearch());
-        summarizeBtn.addEventListener('click', () => setMode('summarize'));
-        mobileSummarizeBtn.addEventListener('click', () => setMode('summarize'));
-        translateBtn.addEventListener('click', () => setMode('translate'));
-        mobileTranslateBtn.addEventListener('click', () => setMode('translate'));
         clearBtn.addEventListener('click', clearCurrentChat);
         mobileClearBtn.addEventListener('click', clearCurrentChat);
         exportBtn.addEventListener('click', exportCurrentChat);
@@ -4175,8 +4483,6 @@ function setDefaultSystemMessage() {
 
         function toggleWebSearch() {
             webSearchEnabled = !webSearchEnabled;
-            webSearchBtn.classList.toggle('active', webSearchEnabled);
-            mobileWebSearchBtn.classList.toggle('active', webSearchEnabled);
             
             if (webSearchEnabled) {
                 showNotification('Web search enabled - I will search for up-to-date information');
@@ -4189,33 +4495,17 @@ function setDefaultSystemMessage() {
         }
 
         function updateUIForMode() {
-            featureButtons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            mobileFeatureButtons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
             switch (currentMode) {
                 case 'brainstorm':
-                    brainstormBtn.classList.add('active');
-                    mobileBrainstormBtn.classList.add('active');
                     messageInput.placeholder = 'What would you like to brainstorm about?';
                     break;
                 case 'explain':
-                    explainBtn.classList.add('active');
-                    mobileExplainBtn.classList.add('active');
                     messageInput.placeholder = 'Paste your code here for detailed explanation...';
                     break;
                 case 'summarize':
-                    summarizeBtn.classList.add('active');
-                    mobileSummarizeBtn.classList.add('active');
                     messageInput.placeholder = 'Paste text to summarize...';
                     break;
                 case 'translate':
-                    translateBtn.classList.add('active');
-                    mobileTranslateBtn.classList.add('active');
                     messageInput.placeholder = 'Enter text to translate...';
                     break;
                 default:
@@ -4662,153 +4952,6 @@ function setDefaultSystemMessage() {
             }
         }
 
-       async function getBotResponse() {
-    showTypingIndicator();
-    isProcessing = true;
-    toggleSendButton(true);
-    
-    const currentChat = chatSessions[currentChatId];
-    let modifiedHistory = [...currentChat.history];
-    
-    // Apply AI training and web search enhancements
-    applyRequestEnhancements(modifiedHistory);
-    
-    const payload = { contents: modifiedHistory };
-    abortController = new AbortController();
-
-    try {
-        // Use your Cloudflare Worker URL
-        const workerUrl = 'https://clover-ai-proxy.exonova1104.workers.dev/';
-        
-        const response = await fetch(workerUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            signal: abortController.signal
-        });
-
-        if (!response.ok) {
-            throw new Error(`Service responded with ${response.status}`);
-        }
-
-        const result = await response.json();
-        
-        if (result.error) {
-            throw new Error(result.error);
-        }
-
-        await processSuccessfulResponse(result, currentChat, modifiedHistory);
-        
-    } catch (error) {
-        await handleResponseError(error);
-    }
-}
-
-// Helper function: Apply AI training and web search enhancements
-function applyRequestEnhancements(modifiedHistory) {
-    const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
-    
-    if (!lastUserMessage || lastUserMessage.role !== "user" || !lastUserMessage.parts[0].text) {
-        return;
-    }
-
-    // Apply AI training enhancements
-    if (aiTrainingSystem) {
-        const enhancements = aiTrainingSystem.enhanceResponseQuality(
-            lastUserMessage.parts[0].text,
-            modifiedHistory.slice(0, -1),
-            userSettings
-        );
-        console.log('AI Training Enhancements:', enhancements);
-    }
-
-    // Apply web search enhancement
-    if (webSearchEnabled) {
-        lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
-    }
-}
-
-// Helper function: Process successful API response
-async function processSuccessfulResponse(result, currentChat, modifiedHistory) {
-    hideTypingIndicator();
-    isProcessing = false;
-    toggleSendButton(false);
-
-    if (result.candidates?.length > 0) {
-        const botMessage = result.candidates[0].content.parts[0].text;
-        
-        // Display the bot message
-        displayBotMessage(botMessage);
-        
-        // Update chat history
-        currentChat.history.push({ role: "model", parts: [{ text: botMessage }] });
-        currentChat.updatedAt = new Date().toISOString();
-        saveChatSessions();
-        renderChatSessions();
-        
-        // Update AI training system
-        updateAITrainingSystem(modifiedHistory, botMessage);
-        
-        // Update UI
-        setTimeout(() => {
-            checkAndAddDateSeparator();
-        }, 100);
-        
-    } else {
-        throw new Error("No response content received");
-    }
-}
-
-// Helper function: Update AI training system
-function updateAITrainingSystem(modifiedHistory, botMessage) {
-    if (aiTrainingSystem && typeof AITrainingUtils !== 'undefined') {
-        const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
-        if (lastUserMessage.role === "user") {
-            const qualityMetrics = AITrainingUtils.analyzeResponseQuality(
-                lastUserMessage.parts[0].text,
-                botMessage,
-                null
-            );
-            console.log('Response Quality Metrics:', qualityMetrics);
-        }
-    }
-}
-
-// Helper function: Handle errors
-async function handleResponseError(error) {
-    hideTypingIndicator();
-    isProcessing = false;
-    toggleSendButton(false);
-    abortController = null;
-    
-    if (error.name === 'AbortError') {
-        console.log('Request was cancelled by user');
-        return;
-    }
-    
-    console.error('API Request Failed:', error);
-    
-    // User-friendly error messages
-    let userMessage = 'Sorry, the service is temporarily unavailable. Please try again later.';
-    
-    if (error.message.includes('500') || error.message.includes('All API keys failed')) {
-        userMessage = 'Service is currently experiencing high demand. Please try again in a moment.';
-    } else if (error.message.includes('429')) {
-        userMessage = 'Too many requests. Please wait a moment before trying again.';
-    } else if (error.message.includes('403')) {
-        userMessage = 'Service access issue. Please refresh the page and try again.';
-    }
-    
-    handleApiError(userMessage);
-}
-
-        function handleApiError(message) {
-            hideTypingIndicator();
-            isProcessing = false;
-            toggleSendButton(false);
-            displayBotMessage(message, false);
-        }
-
         function escapeHtml(unsafe) {
             return unsafe
                 .replace(/&/g, "&amp;")
@@ -4889,124 +5032,130 @@ async function handleResponseError(error) {
             }, 3000);
         }
 
-        // Feedback handling function
-        // Enhanced feedback handling function
-function handleFeedback(messageId, action) {
-    const feedbackContainer = document.getElementById(`feedback-${messageId}`);
-    const likeBtn = feedbackContainer.querySelector('.like-btn');
-    const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
-    
-    likeBtn.classList.remove('liked');
-    dislikeBtn.classList.remove('disliked');
-    
-    if (action === 'like') {
-        likeBtn.classList.add('liked');
-        showNotification('Thanks for your feedback! 👍');
-    } else if (action === 'dislike') {
-        dislikeBtn.classList.add('disliked');
-        showNotification('Thanks for your feedback! We\'ll try to improve. 👎');
-    } else if (action === 'retry') {
-        const messageElements = document.querySelectorAll('.message');
-        let userMessage = '';
-        
-        for (let i = 0; i < messageElements.length; i++) {
-            if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
-                if (i > 0 && messageElements[i-1].classList.contains('user')) {
-                    const userBubble = messageElements[i-1].querySelector('.message-bubble');
-                    if (userBubble) {
-                        userMessage = userBubble.textContent || userBubble.innerText;
+        // Enhanced feedback handling with AI training integration
+        function handleFeedback(messageId, action) {
+            const feedbackContainer = document.getElementById(`feedback-${messageId}`);
+            const likeBtn = feedbackContainer.querySelector('.like-btn');
+            const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
+            
+            likeBtn.classList.remove('liked');
+            dislikeBtn.classList.remove('disliked');
+            
+            if (action === 'like') {
+                likeBtn.classList.add('liked');
+                showNotification('Thanks for your feedback! 👍');
+            } else if (action === 'dislike') {
+                dislikeBtn.classList.add('disliked');
+                showNotification('Thanks for your feedback! We\'ll try to improve. 👎');
+            } else if (action === 'retry') {
+                const messageElements = document.querySelectorAll('.message');
+                let userMessage = '';
+                
+                for (let i = 0; i < messageElements.length; i++) {
+                    if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
+                        if (i > 0 && messageElements[i-1].classList.contains('user')) {
+                            const userBubble = messageElements[i-1].querySelector('.message-bubble');
+                            if (userBubble) {
+                                userMessage = userBubble.textContent || userBubble.innerText;
+                            }
+                        }
+                        break;
                     }
                 }
-                break;
-            }
-        }
-        
-        if (userMessage) {
-            messageInput.value = userMessage;
-            chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
-        } else {
-            showNotification('Could not find the original message to retry', 'error');
-        }
-    }
-    
-    const feedbackData = {
-        messageId,
-        action,
-        timestamp: new Date().toISOString()
-    };
-    
-    let feedbackHistory = JSON.parse(localStorage.getItem('cloverAIFeedback') || '[]');
-    feedbackHistory.push(feedbackData);
-    localStorage.setItem('cloverAIFeedback', JSON.stringify(feedbackHistory));
-    
-    // Update AI training system with feedback
-    if (aiTrainingSystem && typeof aiTrainingSystem.updateTrainingData === 'function') {
-        try {
-            // Get conversation context for this feedback
-            const conversationContext = getConversationContextForMessage(messageId);
-            aiTrainingSystem.updateTrainingData(conversationContext, action);
-            console.log('AI training updated with feedback:', action);
-        } catch (error) {
-            console.error('Error updating AI training with feedback:', error);
-        }
-    }
-}
-
-// Helper function to get conversation context for a message
-function getConversationContextForMessage(messageId) {
-    const interactions = [];
-    const messages = chatWindow.querySelectorAll('.message');
-    let foundTarget = false;
-    
-    for (let i = messages.length - 1; i >= 0; i--) {
-        const message = messages[i];
-        if (message.querySelector(`#feedback-${messageId}`)) {
-            foundTarget = true;
-            continue;
-        }
-        
-        if (foundTarget) {
-            if (message.classList.contains('user')) {
-                const userBubble = message.querySelector('.message-bubble');
-                if (userBubble) {
-                    interactions.unshift({
-                        type: 'user',
-                        content: userBubble.textContent || userBubble.innerText,
-                        timestamp: message.getAttribute('data-timestamp')
-                    });
-                }
-            } else if (message.classList.contains('bot')) {
-                const botBubble = message.querySelector('.message-bubble');
-                if (botBubble) {
-                    interactions.unshift({
-                        type: 'bot',
-                        content: botBubble.textContent || botBubble.innerText,
-                        timestamp: message.getAttribute('data-timestamp')
-                    });
+                
+                if (userMessage) {
+                    messageInput.value = userMessage;
+                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+                } else {
+                    showNotification('Could not find the original message to retry', 'error');
                 }
             }
             
-            // Limit context to last 5 interactions
-            if (interactions.length >= 5) break;
+            const feedbackData = {
+                messageId,
+                action,
+                timestamp: new Date().toISOString()
+            };
+            
+            let feedbackHistory = JSON.parse(localStorage.getItem('cloverAIFeedback') || '[]');
+            feedbackHistory.push(feedbackData);
+            localStorage.setItem('cloverAIFeedback', JSON.stringify(feedbackHistory));
+            
+            // Update AI training system with feedback
+            if (aiTrainingSystem && typeof aiTrainingSystem.updateTrainingData === 'function') {
+                try {
+                    // Get conversation context for this feedback
+                    const conversationContext = getConversationContextForMessage(messageId);
+                    aiTrainingSystem.updateTrainingData(conversationContext, action);
+                    console.log('AI training updated with feedback:', action);
+                } catch (error) {
+                    console.error('Error updating AI training with feedback:', error);
+                }
+            }
         }
-    }
-    
-    return interactions;
-}
 
-       // Initialize the app
-initializeAITrainingSystem(); 
-loadUserSettings();
-initializeChatSessions();
-initializeSearch();
-initializeSidebarResize();
-updateUIForMode();
-sendBtn.disabled = true;
+        // Helper function to get conversation context for a message
+        function getConversationContextForMessage(messageId) {
+            const interactions = [];
+            const messages = chatWindow.querySelectorAll('.message');
+            let foundTarget = false;
+            
+            for (let i = messages.length - 1; i >= 0; i--) {
+                const message = messages[i];
+                if (message.querySelector(`#feedback-${messageId}`)) {
+                    foundTarget = true;
+                    continue;
+                }
+                
+                if (foundTarget) {
+                    if (message.classList.contains('user')) {
+                        const userBubble = message.querySelector('.message-bubble');
+                        if (userBubble) {
+                            interactions.unshift({
+                                type: 'user',
+                                content: userBubble.textContent || userBubble.innerText,
+                                timestamp: message.getAttribute('data-timestamp')
+                            });
+                        }
+                    } else if (message.classList.contains('bot')) {
+                        const botBubble = message.querySelector('.message-bubble');
+                        if (botBubble) {
+                            interactions.unshift({
+                                type: 'bot',
+                                content: botBubble.textContent || botBubble.innerText,
+                                timestamp: message.getAttribute('data-timestamp')
+                            });
+                        }
+                    }
+                    
+                    // Limit context to last 5 interactions
+                    if (interactions.length >= 5) break;
+                }
+            }
+            
+            return interactions;
+        }
 
-// Force button text visibility
-document.querySelectorAll('.feature-btn, .quick-action, .suggestion-chip').forEach(btn => {
-    btn.style.color = 'var(--md-on-surface-variant)';
-});
+        // Initialize enhanced layout
+        function initEnhancedLayout() {
+            initBackToTop();
+            initToolsDropdown();
+        }
+
+        // Initialize the app
+        initializeAITrainingSystem();
+        loadUserSettings();
+        initializeChatSessions();
+        initializeSearch();
+        initializeSidebarResize();
+        initEnhancedLayout();
+        updateUIForMode();
+        sendBtn.disabled = true;
+
+        // Force button text visibility
+        document.querySelectorAll('.feature-btn, .quick-action, .suggestion-chip').forEach(btn => {
+            btn.style.color = 'var(--md-on-surface-variant)';
+        });
     </script>
 </body>
 </html>
