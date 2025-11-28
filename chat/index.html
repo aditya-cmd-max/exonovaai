@@ -181,6 +181,7 @@
         }
 
         /* Simple Splash Screen with GIF */
+/* Simple Splash Screen with MP4 */
 #splash-screen {
     position: fixed;
     top: 0;
@@ -206,33 +207,45 @@
     gap: 20px;
 }
 
-.splash-gif {
-    width: 400px;
-    height: 400px;
+.splash-video {
+    width: clamp(200px, 40vw, 400px);
+    height: clamp(200px, 40vw, 400px);
     object-fit: contain;
 }
 
-.splash-title {
-    font-size: 2.5rem;
-    letter-spacing: 2px;
-    margin: 0;
-    background: linear-gradient(135deg, #fff, #EADDFF, #9b4dff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .splash-video {
+        width: clamp(150px, 50vw, 300px);
+        height: clamp(150px, 50vw, 300px);
+    }
+    
+    .splash-title {
+        font-size: 2rem;
+    }
+    
+    .splash-subtitle {
+        font-size: 1rem;
+    }
 }
 
-.splash-subtitle {
-    font-size: 1.1rem;
-    opacity: 0.8;
-    letter-spacing: 1px;
-}
-
-.loading-text {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
-    letter-spacing: 1px;
+@media (max-width: 480px) {
+    .splash-video {
+        width: clamp(120px, 60vw, 250px);
+        height: clamp(120px, 60vw, 250px);
+    }
+    
+    .splash-title {
+        font-size: 1.75rem;
+    }
+    
+    .splash-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .loading-text {
+        font-size: 0.8rem;
+    }
 }
 
 @keyframes fadeOut {
@@ -2396,10 +2409,15 @@
     </style>
 </head>
 <body class="light-theme">
-     <!-- Simple Splash Screen with GIF -->
-    <div id="splash-screen">
-        <div class="splash-content">
-            <img src="https://aditya-cmd-max.github.io/exonovaai/Scene-1 (27).gif" alt="Loading Animation" class="splash-gif">
+    <!-- Simple Splash Screen with MP4 -->
+<div id="splash-screen">
+    <div class="splash-content">
+       <video autoplay muted playsinline class="splash-video">
+    <source src="https://aditya-cmd-max.github.io/exonovaai/Scene-1%20(27)%20(1).mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+          
+          
           
         </div>
     </div>
