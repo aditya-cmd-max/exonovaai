@@ -1835,44 +1835,6 @@
             background: var(--md-surface-variant);
         }
 
-        /* Mobile-specific Tools Dropdown changes */
-        @media (max-width: 768px) {
-            .tools-dropdown-btn span:not(.material-icons-round) {
-                display: none; /* Hide "Tools" text on mobile */
-            }
-            
-            .tools-dropdown-btn {
-                padding: var(--md-spacing-sm); /* Smaller padding for icon-only button */
-            }
-            
-            .tools-dropdown-content {
-                bottom: auto;
-                top: 100%; /* Change from bottom: 100% to top: 100% */
-                left: 0; /* Keep it on the left side */
-                right: auto; /* Ensure right is not set */
-                transform: translateY(-10px); /* Adjust transform for new position */
-            }
-            
-            .tools-dropdown-content.show {
-                transform: translateY(0);
-            }
-        }
-
-        /* Extra small screen adjustments */
-        @media (max-width: 480px) {
-            .tools-dropdown-btn {
-                padding: 8px; /* Even smaller padding on very small screens */
-            }
-            
-            .tools-dropdown-btn .material-icons-round {
-                font-size: 18px; /* Slightly smaller icon */
-            }
-            
-            .tools-dropdown-content {
-                min-width: 180px; /* Slightly smaller on very small screens */
-            }
-        }
-
         /* Upload Button */
         .upload-btn {
             position: relative;
