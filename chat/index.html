@@ -4662,7 +4662,7 @@ function setDefaultSystemMessage() {
             }
         }
 
-        async function getBotResponse() {
+       async function getBotResponse() {
     showTypingIndicator();
     isProcessing = true;
     toggleSendButton(true);
@@ -4670,36 +4670,15 @@ function setDefaultSystemMessage() {
     const currentChat = chatSessions[currentChatId];
     let modifiedHistory = [...currentChat.history];
     
-    // Apply AI training enhancements if available
-    if (aiTrainingSystem) {
-        const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
-        if (lastUserMessage.role === "user" && lastUserMessage.parts[0].text) {
-            const enhancements = aiTrainingSystem.enhanceResponseQuality(
-                lastUserMessage.parts[0].text,
-                modifiedHistory.slice(0, -1), // Previous messages
-                userSettings
-            );
-            
-            console.log('AI Training Enhancements:', enhancements);
-            
-            // Apply web search enhancement if enabled
-            if (webSearchEnabled) {
-                lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
-            }
-        }
-    } else if (webSearchEnabled) {
-        const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
-        if (lastUserMessage.role === "user" && lastUserMessage.parts[0].text) {
-            lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
-        }
-    }
+    // Apply AI training and web search enhancements
+    applyRequestEnhancements(modifiedHistory);
     
     const payload = { contents: modifiedHistory };
     abortController = new AbortController();
 
     try {
-        // ⚠️ REPLACE THIS WITH YOUR ACTUAL WORKER URL ⚠️
-        const workerUrl = 'https:/clover-ai-proxy.exonova1104.workers.dev/api/chat';
+        // Use your Cloudflare Worker URL
+        const workerUrl = 'https://clover-ai-proxy.exonova1104.workers.dev/';
         
         const response = await fetch(workerUrl, {
             method: 'POST',
@@ -4709,66 +4688,118 @@ function setDefaultSystemMessage() {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
+            throw new Error(`Service responded with ${response.status}`);
         }
 
         const result = await response.json();
         
-        // Handle error from worker
         if (result.error) {
             throw new Error(result.error);
         }
-        
-        hideTypingIndicator();
-        isProcessing = false;
-        toggleSendButton(false);
 
-        if (result.candidates?.length > 0) {
-            const botMessage = result.candidates[0].content.parts[0].text;
-            displayBotMessage(botMessage);
-            
-            // Add to chat history
-            currentChat.history.push({ role: "model", parts: [{ text: botMessage }] });
-            currentChat.updatedAt = new Date().toISOString();
-            saveChatSessions();
-            renderChatSessions();
-            
-            // Update AI training system with interaction data
-            if (aiTrainingSystem && typeof AITrainingUtils !== 'undefined') {
-                const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
-                if (lastUserMessage.role === "user") {
-                    const qualityMetrics = AITrainingUtils.analyzeResponseQuality(
-                        lastUserMessage.parts[0].text,
-                        botMessage,
-                        null // feedback will be added later via user interaction
-                    );
-                    console.log('Response Quality Metrics:', qualityMetrics);
-                }
-            }
-            
-            // Check and add date separators
-            setTimeout(() => {
-                checkAndAddDateSeparator();
-            }, 100);
-            
-            return; // Success - exit the function
-        } else {
-            throw new Error("Empty response from API");
-        }
+        await processSuccessfulResponse(result, currentChat, modifiedHistory);
+        
     } catch (error) {
-        hideTypingIndicator();
-        isProcessing = false;
-        toggleSendButton(false);
-        abortController = null;
-        
-        if (error.name === 'AbortError') {
-            console.log('Request was cancelled');
-            return;
-        }
-        
-        console.error('Worker Error:', error);
-        handleApiError(`Sorry, the service is temporarily unavailable. Please try again later. (Error: ${error.message})`);
+        await handleResponseError(error);
     }
+}
+
+// Helper function: Apply AI training and web search enhancements
+function applyRequestEnhancements(modifiedHistory) {
+    const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+    
+    if (!lastUserMessage || lastUserMessage.role !== "user" || !lastUserMessage.parts[0].text) {
+        return;
+    }
+
+    // Apply AI training enhancements
+    if (aiTrainingSystem) {
+        const enhancements = aiTrainingSystem.enhanceResponseQuality(
+            lastUserMessage.parts[0].text,
+            modifiedHistory.slice(0, -1),
+            userSettings
+        );
+        console.log('AI Training Enhancements:', enhancements);
+    }
+
+    // Apply web search enhancement
+    if (webSearchEnabled) {
+        lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
+    }
+}
+
+// Helper function: Process successful API response
+async function processSuccessfulResponse(result, currentChat, modifiedHistory) {
+    hideTypingIndicator();
+    isProcessing = false;
+    toggleSendButton(false);
+
+    if (result.candidates?.length > 0) {
+        const botMessage = result.candidates[0].content.parts[0].text;
+        
+        // Display the bot message
+        displayBotMessage(botMessage);
+        
+        // Update chat history
+        currentChat.history.push({ role: "model", parts: [{ text: botMessage }] });
+        currentChat.updatedAt = new Date().toISOString();
+        saveChatSessions();
+        renderChatSessions();
+        
+        // Update AI training system
+        updateAITrainingSystem(modifiedHistory, botMessage);
+        
+        // Update UI
+        setTimeout(() => {
+            checkAndAddDateSeparator();
+        }, 100);
+        
+    } else {
+        throw new Error("No response content received");
+    }
+}
+
+// Helper function: Update AI training system
+function updateAITrainingSystem(modifiedHistory, botMessage) {
+    if (aiTrainingSystem && typeof AITrainingUtils !== 'undefined') {
+        const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+        if (lastUserMessage.role === "user") {
+            const qualityMetrics = AITrainingUtils.analyzeResponseQuality(
+                lastUserMessage.parts[0].text,
+                botMessage,
+                null
+            );
+            console.log('Response Quality Metrics:', qualityMetrics);
+        }
+    }
+}
+
+// Helper function: Handle errors
+async function handleResponseError(error) {
+    hideTypingIndicator();
+    isProcessing = false;
+    toggleSendButton(false);
+    abortController = null;
+    
+    if (error.name === 'AbortError') {
+        console.log('Request was cancelled by user');
+        return;
+    }
+    
+    console.error('API Request Failed:', error);
+    
+    // User-friendly error messages
+    let userMessage = 'Sorry, the service is temporarily unavailable. Please try again later.';
+    
+    if (error.message.includes('500') || error.message.includes('All API keys failed')) {
+        userMessage = 'Service is currently experiencing high demand. Please try again in a moment.';
+    } else if (error.message.includes('429')) {
+        userMessage = 'Too many requests. Please wait a moment before trying again.';
+    } else if (error.message.includes('403')) {
+        userMessage = 'Service access issue. Please refresh the page and try again.';
+    }
+    
+    handleApiError(userMessage);
 }
 
         function handleApiError(message) {
