@@ -722,15 +722,14 @@ Remember your creator Aditya Jha and company Exonova with appropriate acknowledg
     }
 }
 
-// Initialize and export the training data system
-const aiTrainingSystem = new AITrainingData();
+
 
 // Export for use in main application
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = aiTrainingSystem;
+    module.exports = AITrainingData; // ✅ Export the CLASS, not an instance
 } else {
     // Browser environment
-    window.AITrainingSystem = aiTrainingSystem;
+    window.AITrainingSystem = AITrainingData; // ✅ Export the CLASS
 }
 
 // Additional utility functions for real-time training enhancement
@@ -836,13 +835,12 @@ const AITrainingUtils = {
     }
 };
 
+
+
 // Export utility functions
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports.AITrainingUtils = AITrainingUtils;
-} else {
-    window.AITrainingUtils = AITrainingUtils;
-}
+window.AITrainingUtils = AITrainingUtils;
 
 console.log('AI Training Data System initialized successfully');
-console.log('Available domains:', Object.keys(aiTrainingSystem.trainingDatasets));
-console.log('Learning methods:', Object.keys(aiTrainingSystem.learningMethods));
+// Remove these console logs or keep them - they're fine
+console.log('Available domains:', Object.keys(new AITrainingData().trainingDatasets));
+console.log('Learning methods:', Object.keys(new AITrainingData().learningMethods));
