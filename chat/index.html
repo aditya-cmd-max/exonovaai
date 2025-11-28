@@ -4667,25 +4667,6 @@ function setDefaultSystemMessage() {
     isProcessing = true;
     toggleSendButton(true);
     
-    // Define your 3 APIs with fallback order
-    const apis = [
-        {
-            name: "Primary API",
-            apiKey: "AIzaSyCoZKgIy1-L4F96nt2dJuk3FEsyHyi4Zys",
-            apiUrl: "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key="
-        },
-        {
-            name: "Backup API 1", 
-            apiKey: "AIzaSyBnIXJ_3Xe3tlI3HoTsuDcUQh1WMuN1G-o",
-            apiUrl: "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key="
-        },
-        {
-            name: "Backup API 2",
-            apiKey: "AIzaSyDqrEDTFs5Txz5kMzrwNmsygU-_nrU4ZeQ", 
-            apiUrl: "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key="
-        }
-    ];
-    
     const currentChat = chatSessions[currentChatId];
     let modifiedHistory = [...currentChat.history];
     
@@ -4716,102 +4697,78 @@ function setDefaultSystemMessage() {
     const payload = { contents: modifiedHistory };
     abortController = new AbortController();
 
-    let lastError = null;
-    
-    // Try each API in order until one works
-    for (let i = 0; i < apis.length; i++) {
-        const api = apis[i];
-        const apiUrl = `${api.apiUrl}${api.apiKey}`;
+    try {
+        // ⚠️ REPLACE THIS WITH YOUR ACTUAL WORKER URL ⚠️
+        const workerUrl = 'https:/clover-ai-proxy.exonova1104.workers.dev/api/chat';
         
-        try {
-            console.log(`Trying ${api.name}...`);
-            
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-                signal: abortController.signal
-            });
+        const response = await fetch(workerUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: abortController.signal
+        });
 
-            if (!response.ok) {
-                // If rate limited (429) or quota exceeded, try next API
-                if (response.status === 429 || response.status === 403) {
-                    const errorData = await response.json();
-                    console.log(`${api.name} rate limited or quota exceeded:`, errorData);
-                    lastError = new Error(`${api.name}: ${errorData.error?.message || `HTTP ${response.status}`}`);
-                    continue; // Try next API
-                } else {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error?.message || `API Error: ${response.status}`);
-                }
-            }
-
-            const result = await response.json();
-            hideTypingIndicator();
-            isProcessing = false;
-            toggleSendButton(false);
-
-            if (result.candidates?.length > 0) {
-                const botMessage = result.candidates[0].content.parts[0].text;
-                displayBotMessage(botMessage);
-                
-                // Add to chat history
-                currentChat.history.push({ role: "model", parts: [{ text: botMessage }] });
-                currentChat.updatedAt = new Date().toISOString();
-                saveChatSessions();
-                renderChatSessions();
-                
-                // Update AI training system with interaction data
-                if (aiTrainingSystem && typeof AITrainingUtils !== 'undefined') {
-                    const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
-                    if (lastUserMessage.role === "user") {
-                        const qualityMetrics = AITrainingUtils.analyzeResponseQuality(
-                            lastUserMessage.parts[0].text,
-                            botMessage,
-                            null // feedback will be added later via user interaction
-                        );
-                        console.log('Response Quality Metrics:', qualityMetrics);
-                    }
-                }
-                
-                // Show which API was used (optional)
-                if (i > 0) {
-                    console.log(`Successfully used ${api.name} as fallback`);
-                }
-                
-                // Check and add date separators
-                setTimeout(() => {
-                    checkAndAddDateSeparator();
-                }, 100);
-                
-                return; // Success - exit the function
-            } else {
-                throw new Error("Empty response from API");
-            }
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                console.log('Request was cancelled');
-                return;
-            }
-            
-            console.error(`${api.name} Error:`, error);
-            lastError = error;
-            
-            // If this is the last API, show error
-            if (i === apis.length - 1) {
-                handleApiError(`Sorry, all APIs are currently unavailable. Please try again later. (Last error: ${lastError.message})`);
-            } else {
-                console.log(`Trying next API...`);
-                // Continue to next API
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
         }
+
+        const result = await response.json();
+        
+        // Handle error from worker
+        if (result.error) {
+            throw new Error(result.error);
+        }
+        
+        hideTypingIndicator();
+        isProcessing = false;
+        toggleSendButton(false);
+
+        if (result.candidates?.length > 0) {
+            const botMessage = result.candidates[0].content.parts[0].text;
+            displayBotMessage(botMessage);
+            
+            // Add to chat history
+            currentChat.history.push({ role: "model", parts: [{ text: botMessage }] });
+            currentChat.updatedAt = new Date().toISOString();
+            saveChatSessions();
+            renderChatSessions();
+            
+            // Update AI training system with interaction data
+            if (aiTrainingSystem && typeof AITrainingUtils !== 'undefined') {
+                const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+                if (lastUserMessage.role === "user") {
+                    const qualityMetrics = AITrainingUtils.analyzeResponseQuality(
+                        lastUserMessage.parts[0].text,
+                        botMessage,
+                        null // feedback will be added later via user interaction
+                    );
+                    console.log('Response Quality Metrics:', qualityMetrics);
+                }
+            }
+            
+            // Check and add date separators
+            setTimeout(() => {
+                checkAndAddDateSeparator();
+            }, 100);
+            
+            return; // Success - exit the function
+        } else {
+            throw new Error("Empty response from API");
+        }
+    } catch (error) {
+        hideTypingIndicator();
+        isProcessing = false;
+        toggleSendButton(false);
+        abortController = null;
+        
+        if (error.name === 'AbortError') {
+            console.log('Request was cancelled');
+            return;
+        }
+        
+        console.error('Worker Error:', error);
+        handleApiError(`Sorry, the service is temporarily unavailable. Please try again later. (Error: ${error.message})`);
     }
-    
-    // If we get here, all APIs failed
-    hideTypingIndicator();
-    isProcessing = false;
-    toggleSendButton(false);
-    abortController = null;
 }
 
         function handleApiError(message) {
