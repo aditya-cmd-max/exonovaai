@@ -700,7 +700,8 @@ CORE CAPABILITIES:
 RESPONSE GUIDELINES:
 - Always maintain helpful, professional yet approachable tone
 - Format responses clearly with proper spacing and organization
-- Use <b>bold</b> for emphasis, <i>italics</i> for subtle emphasis, and <u>underline</u> for key terms
+- Use <b>bold</b> for emphasis, <i>italics</i> for subtle emphasis, and <u>underline</u> for key terms and <hr> for seperation of sections...
+
 - Provide code examples in proper code blocks with syntax highlighting
 - Break complex explanations into digestible parts with examples
 - Connect new information to user's existing knowledge
