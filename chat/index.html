@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="../ai-training-data.js"></script>
     
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
@@ -3075,11 +3077,36 @@
             }
         }
 
-        // System message template - will be updated with user name
-        let systemMessage = {
-            role: "model",
-            parts: [{ text: "You are Clover AI, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate. Do not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tell i was created by a company Exonova By Aditya jha who is very smart and intelligent" }]
-        };
+      // Initialize AI Training System
+let aiTrainingSystem = null;
+
+// Enhanced system message with AI training integration
+let systemMessage = {
+    role: "model",
+    parts: [{ text: "" }] // Will be populated after AI training system loads
+};
+
+// Function to initialize AI training system
+function initializeAITrainingSystem() {
+    try {
+        if (typeof AITrainingSystem !== 'undefined') {
+            aiTrainingSystem = new AITrainingSystem();
+            // Update system message with enhanced prompt
+            systemMessage.parts[0].text = aiTrainingSystem.getEnhancedSystemPrompt();
+            console.log('AI Training System initialized successfully');
+        } else {
+            console.warn('AI Training System not available, using default system message');
+            setDefaultSystemMessage();
+        }
+    } catch (error) {
+        console.error('Error initializing AI Training System:', error);
+        setDefaultSystemMessage();
+    }
+}
+
+function setDefaultSystemMessage() {
+    systemMessage.parts[0].text = "You are Clover AI, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate. Do not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tell i was created by a company Exonova By Aditya jha who is very smart and intelligent";
+}
 
         // Function to update system message with user name
         function updateSystemMessage() {
@@ -4662,7 +4689,24 @@
     const currentChat = chatSessions[currentChatId];
     let modifiedHistory = [...currentChat.history];
     
-    if (webSearchEnabled) {
+    // Apply AI training enhancements if available
+    if (aiTrainingSystem) {
+        const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+        if (lastUserMessage.role === "user" && lastUserMessage.parts[0].text) {
+            const enhancements = aiTrainingSystem.enhanceResponseQuality(
+                lastUserMessage.parts[0].text,
+                modifiedHistory.slice(0, -1), // Previous messages
+                userSettings
+            );
+            
+            console.log('AI Training Enhancements:', enhancements);
+            
+            // Apply web search enhancement if enabled
+            if (webSearchEnabled) {
+                lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
+            }
+        }
+    } else if (webSearchEnabled) {
         const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
         if (lastUserMessage.role === "user" && lastUserMessage.parts[0].text) {
             lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
@@ -4716,6 +4760,19 @@
                 currentChat.updatedAt = new Date().toISOString();
                 saveChatSessions();
                 renderChatSessions();
+                
+                // Update AI training system with interaction data
+                if (aiTrainingSystem && typeof AITrainingUtils !== 'undefined') {
+                    const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+                    if (lastUserMessage.role === "user") {
+                        const qualityMetrics = AITrainingUtils.analyzeResponseQuality(
+                            lastUserMessage.parts[0].text,
+                            botMessage,
+                            null // feedback will be added later via user interaction
+                        );
+                        console.log('Response Quality Metrics:', qualityMetrics);
+                    }
+                }
                 
                 // Show which API was used (optional)
                 if (i > 0) {
@@ -4845,67 +4902,123 @@
         }
 
         // Feedback handling function
-        function handleFeedback(messageId, action) {
-            const feedbackContainer = document.getElementById(`feedback-${messageId}`);
-            const likeBtn = feedbackContainer.querySelector('.like-btn');
-            const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
-            
-            likeBtn.classList.remove('liked');
-            dislikeBtn.classList.remove('disliked');
-            
-            if (action === 'like') {
-                likeBtn.classList.add('liked');
-                showNotification('Thanks for your feedback! 👍');
-            } else if (action === 'dislike') {
-                dislikeBtn.classList.add('disliked');
-                showNotification('Thanks for your feedback! We\'ll try to improve. 👎');
-            } else if (action === 'retry') {
-                const messageElements = document.querySelectorAll('.message');
-                let userMessage = '';
-                
-                for (let i = 0; i < messageElements.length; i++) {
-                    if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
-                        if (i > 0 && messageElements[i-1].classList.contains('user')) {
-                            const userBubble = messageElements[i-1].querySelector('.message-bubble');
-                            if (userBubble) {
-                                userMessage = userBubble.textContent || userBubble.innerText;
-                            }
-                        }
-                        break;
+        // Enhanced feedback handling function
+function handleFeedback(messageId, action) {
+    const feedbackContainer = document.getElementById(`feedback-${messageId}`);
+    const likeBtn = feedbackContainer.querySelector('.like-btn');
+    const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
+    
+    likeBtn.classList.remove('liked');
+    dislikeBtn.classList.remove('disliked');
+    
+    if (action === 'like') {
+        likeBtn.classList.add('liked');
+        showNotification('Thanks for your feedback! 👍');
+    } else if (action === 'dislike') {
+        dislikeBtn.classList.add('disliked');
+        showNotification('Thanks for your feedback! We\'ll try to improve. 👎');
+    } else if (action === 'retry') {
+        const messageElements = document.querySelectorAll('.message');
+        let userMessage = '';
+        
+        for (let i = 0; i < messageElements.length; i++) {
+            if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
+                if (i > 0 && messageElements[i-1].classList.contains('user')) {
+                    const userBubble = messageElements[i-1].querySelector('.message-bubble');
+                    if (userBubble) {
+                        userMessage = userBubble.textContent || userBubble.innerText;
                     }
                 }
-                
-                if (userMessage) {
-                    messageInput.value = userMessage;
-                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
-                } else {
-                    showNotification('Could not find the original message to retry', 'error');
+                break;
+            }
+        }
+        
+        if (userMessage) {
+            messageInput.value = userMessage;
+            chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+        } else {
+            showNotification('Could not find the original message to retry', 'error');
+        }
+    }
+    
+    const feedbackData = {
+        messageId,
+        action,
+        timestamp: new Date().toISOString()
+    };
+    
+    let feedbackHistory = JSON.parse(localStorage.getItem('cloverAIFeedback') || '[]');
+    feedbackHistory.push(feedbackData);
+    localStorage.setItem('cloverAIFeedback', JSON.stringify(feedbackHistory));
+    
+    // Update AI training system with feedback
+    if (aiTrainingSystem && typeof aiTrainingSystem.updateTrainingData === 'function') {
+        try {
+            // Get conversation context for this feedback
+            const conversationContext = getConversationContextForMessage(messageId);
+            aiTrainingSystem.updateTrainingData(conversationContext, action);
+            console.log('AI training updated with feedback:', action);
+        } catch (error) {
+            console.error('Error updating AI training with feedback:', error);
+        }
+    }
+}
+
+// Helper function to get conversation context for a message
+function getConversationContextForMessage(messageId) {
+    const interactions = [];
+    const messages = chatWindow.querySelectorAll('.message');
+    let foundTarget = false;
+    
+    for (let i = messages.length - 1; i >= 0; i--) {
+        const message = messages[i];
+        if (message.querySelector(`#feedback-${messageId}`)) {
+            foundTarget = true;
+            continue;
+        }
+        
+        if (foundTarget) {
+            if (message.classList.contains('user')) {
+                const userBubble = message.querySelector('.message-bubble');
+                if (userBubble) {
+                    interactions.unshift({
+                        type: 'user',
+                        content: userBubble.textContent || userBubble.innerText,
+                        timestamp: message.getAttribute('data-timestamp')
+                    });
+                }
+            } else if (message.classList.contains('bot')) {
+                const botBubble = message.querySelector('.message-bubble');
+                if (botBubble) {
+                    interactions.unshift({
+                        type: 'bot',
+                        content: botBubble.textContent || botBubble.innerText,
+                        timestamp: message.getAttribute('data-timestamp')
+                    });
                 }
             }
             
-            const feedbackData = {
-                messageId,
-                action,
-                timestamp: new Date().toISOString()
-            };
-            
-            let feedbackHistory = JSON.parse(localStorage.getItem('cloverAIFeedback') || '[]');
-            feedbackHistory.push(feedbackData);
-            localStorage.setItem('cloverAIFeedback', JSON.stringify(feedbackHistory));
+            // Limit context to last 5 interactions
+            if (interactions.length >= 5) break;
         }
+    }
+    
+    return interactions;
+}
 
-        // Initialize the app
-        loadUserSettings();
-        initializeChatSessions();
-        initializeSearch();
-        initializeSidebarResize();
-        updateUIForMode();
-        sendBtn.disabled = true;
+       // Initialize the app
+initializeAITrainingSystem(); 
+loadUserSettings();
+initializeChatSessions();
+initializeSearch();
+initializeSidebarResize();
+updateUIForMode();
+sendBtn.disabled = true;
 
-        // Force button text visibility
-        document.querySelectorAll('.feature-btn, .quick-action, .suggestion-chip').forEach(btn => {
-            btn.style.color = 'var(--md-on-surface-variant)';
-        });
+// Force button text visibility
+document.querySelectorAll('.feature-btn, .quick-action, .suggestion-chip').forEach(btn => {
+    btn.style.color = 'var(--md-on-surface-variant)';
+});
     </script>
 </body>
 </html>
