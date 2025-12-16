@@ -159,54 +159,62 @@
             font-weight: 600;
         }
 
-        /* New Banner Styles */
-        .announcement-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 2000;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: var(--md-spacing-lg);
-            transform: translateY(-100%);
-            opacity: 0;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            font-family: 'Bricolage Grotesque', sans-serif;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
+       /* New Banner Styles */
+.announcement-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: var(--md-spacing-lg);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-height: 90vh; /* Limit height */
+    overflow-y: auto; /* Make banner scrollable */
+}
 
-        .announcement-banner.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
+.announcement-banner.show {
+    transform: translateY(0);
+    opacity: 1;
+}
 
-        .banner-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease;
-        }
+.banner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Allow clicks to pass through */
+}
 
-        .banner-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
+.banner-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Only block clicks when visible */
+}
 
-        .banner-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: var(--md-spacing-xl);
-            align-items: flex-start;
-        }
-
+/* Make banner content scrollable on mobile */
+@media (max-width: 768px) {
+    .announcement-banner {
+        max-height: 85vh;
+        padding: var(--md-spacing-md);
+    }
+    
+    .banner-content {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
         .banner-image {
             flex: 0 0 300px;
             border-radius: var(--md-radius-medium);
