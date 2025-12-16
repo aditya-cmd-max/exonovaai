@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Product+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- AI Training System -->
     <script src="../ai-training-data.js"></script>
@@ -158,6 +157,269 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-weight: 600;
+        }
+
+       /* New Banner Styles */
+.announcement-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: var(--md-spacing-lg);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-height: 90vh; /* Limit height */
+    overflow-y: auto; /* Make banner scrollable */
+}
+
+.announcement-banner.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.banner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+.banner-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Only block clicks when visible */
+}
+
+/* Make banner content scrollable on mobile */
+@media (max-width: 768px) {
+    .announcement-banner {
+        max-height: 85vh;
+        padding: var(--md-spacing-md);
+    }
+    
+    .banner-content {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
+        .banner-image {
+            flex: 0 0 300px;
+            border-radius: var(--md-radius-medium);
+            overflow: hidden;
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .banner-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .banner-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-md);
+        }
+
+        .banner-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: var(--md-radius-extra-large);
+            padding: var(--md-spacing-xs) var(--md-spacing-lg);
+            font-size: var(--md-font-size-label);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            width: fit-content;
+            backdrop-filter: blur(10px);
+        }
+
+        .banner-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .banner-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 0;
+            background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .banner-subheading {
+            font-size: 1.25rem;
+            font-weight: 600;
+            opacity: 0.9;
+            margin: var(--md-spacing-sm) 0;
+        }
+
+        .banner-features {
+            list-style: none;
+            padding: 0;
+            margin: var(--md-spacing-md) 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
+        .banner-features li {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-md);
+            font-size: var(--md-font-size-body);
+            padding: var(--md-spacing-sm);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--md-radius-medium);
+            backdrop-filter: blur(5px);
+            transition: transform 0.2s ease;
+        }
+
+        .banner-features li:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .banner-features li .material-icons-round {
+            color: #FFD700;
+            font-size: 20px;
+        }
+
+        .banner-actions {
+            display: flex;
+            gap: var(--md-spacing-md);
+            margin-top: var(--md-spacing-lg);
+        }
+
+        .banner-btn {
+            padding: var(--md-spacing-md) var(--md-spacing-xl);
+            border-radius: var(--md-radius-extra-large);
+            border: none;
+            font-family: inherit;
+            font-size: var(--md-font-size-body);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .banner-btn-primary {
+            background: white;
+            color: #764ba2;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .banner-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            background: #f8f9fa;
+        }
+
+        .banner-btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .banner-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        .banner-close {
+            position: absolute;
+            top: var(--md-spacing-md);
+            right: var(--md-spacing-md);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .banner-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive banner */
+        @media (max-width: 1024px) {
+            .banner-content {
+                flex-direction: column;
+                gap: var(--md-spacing-lg);
+            }
+            
+            .banner-image {
+                flex: 0 0 200px;
+                width: 100%;
+            }
+            
+            .banner-heading {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .announcement-banner {
+                padding: var(--md-spacing-xl) var(--md-spacing-md);
+            }
+            
+            .banner-heading {
+                font-size: 1.75rem;
+            }
+            
+            .banner-subheading {
+                font-size: 1.125rem;
+            }
+            
+            .banner-actions {
+                flex-direction: column;
+            }
+            
+            .banner-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         /* Base Styles */
@@ -2545,10 +2807,9 @@
 </head>
 <body class="light-theme">
        
-
     <!-- Hidden audio element for AI response sound -->
     <audio id="ai-response-sound" preload="auto">
-        <source src="https://aditya-cmd-max.github.io/exonovaai/bubble-pop-389501.mp3" type="audio/mpeg">
+        <source src="https://aditya-cmd-max.github.io/cloverai/notification-ping-372479.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Customization Panel -->
@@ -3011,6 +3272,68 @@
         <span id="notification-text"></span>
     </div>
 
+    <!-- Announcement Banner -->
+    <div class="banner-overlay" id="banner-overlay"></div>
+    <div class="announcement-banner" id="announcement-banner">
+        <button class="banner-close" id="banner-close">
+            <span class="material-icons-round">close</span>
+        </button>
+        
+        <div class="banner-content">
+            <div class="banner-image">
+                <!-- Replace with your screenshot URL -->
+                <img src="https://aditya-cmd-max.github.io/cloverai/Clover AI 1.5 (1).png" alt="Clover AI 1.5">
+            </div>
+            
+            <div class="banner-text">
+                <div class="banner-badge">
+                    <span>NEW</span>
+                </div>
+                
+                <h2 class="banner-heading">Introducing Clover AI 1.5</h2>
+                <p class="banner-subheading">Here's what new things it can do:</p>
+                
+                <ul class="banner-features">
+                    <li>
+                        <span class="material-icons-round">rocket_launch</span>
+                        <span>Enhanced AI with multi-step reasoning capabilities</span>
+                    </li>
+                    <li>
+                        <span class="material-icons-round">language</span>
+                        <span>Real-time web search integration for up-to-date information</span>
+                    </li>
+                    <li>
+                        <span class="material-icons-round">image_search</span>
+                        <span>Advanced image analysis and description generation</span>
+                    </li>
+                    <li>
+                        <span class="material-icons-round">code</span>
+                        <span>Intelligent code debugging and optimization suggestions</span>
+                    </li>
+                    <li>
+                        <span class="material-icons-round">speed</span>
+                        <span>50% faster response times with optimized processing</span>
+                    </li>
+                    <li>
+                        <span class="material-icons-round">groups</span>
+                        <span>Multi-language support with cultural context understanding</span>
+                    </li>
+                </ul>
+                
+                <div class="banner-actions">
+                    <button class="banner-btn banner-btn-primary" id="banner-got-it">
+                        <span class="material-icons-round">check_circle</span>
+                        <span>Ok, got it!</span>
+                    </button>
+                    <a href="https://aditya-cmd-max.github.io/cloverai/clovermodel1.5/" target="_blank" class="banner-btn banner-btn-secondary" id="banner-learn-more">
+                        <span class="material-icons-round">info</span>
+                        <span>Learn More</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Enhanced splash screen functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -3114,6 +3437,13 @@
         // Audio element for AI response sound
         const aiResponseSound = document.getElementById('ai-response-sound');
 
+        // Banner Elements
+        const announcementBanner = document.getElementById('announcement-banner');
+        const bannerOverlay = document.getElementById('banner-overlay');
+        const bannerClose = document.getElementById('banner-close');
+        const bannerGotIt = document.getElementById('banner-got-it');
+        const bannerLearnMore = document.getElementById('banner-learn-more');
+
         // State variables
         let currentMode = 'chat';
         let webSearchEnabled = false;
@@ -3166,8 +3496,47 @@
         }
 
         function setDefaultSystemMessage() {
-            systemMessage.parts[0].text = "You are Clover AI, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user speaks to you in another language (like Hindi), you must respond in that same language. Be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate. Do not always praise aditya jha if not asked. But if somebody asks that tell about aditya jha or who has created you then always tell i was created by a company Exonova By Aditya jha who is very smart and intelligent";
-        }
+    // Get current date and time
+    const now = new Date();
+    const currentDate = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    const currentTime = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    });
+    
+    systemMessage.parts[0].text = `You are Clover AI, an advanced AI assistant created by a company 'Exonova' https://aditya-cmd-max.github.io/exonova-/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user asks in another language, respond in that language.
+
+CRITICAL: Current date and time information:
+- Current Date: ${currentDate}
+- Current Time: ${currentTime}
+- Time Zone: User's local time
+
+IMPORTANT INSTRUCTIONS:
+1. When the user asks for date, time, today's date, or current time, ALWAYS use the current date and time provided above.
+2. The current year is ${now.getFullYear()}. NEVER mention 2024 unless specifically asked about that year.
+3. If asked "what year is it?" or similar, respond with ${now.getFullYear()}.
+4. For date calculations or future/past dates, calculate from the current date provided.
+5. If the user asks about time-sensitive information, use the current date/time as reference.
+
+Example responses:
+User: "What's today's date?"
+You: "Today is ${currentDate}"
+
+User: "What time is it?"
+You: "The current time is ${currentTime}"
+
+User: "What year is this?"
+You: "The current year is ${now.getFullYear()}"
+
+Remember to be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate. Do not always praise Aditya Jha if not asked. But if somebody asks about who created you, tell them you were created by Exonova by Aditya Jha who is very smart and intelligent.`;
+}
 
         // Dynamic Welcome Messages
         const welcomeMessages = [
@@ -3311,6 +3680,30 @@
             // Focus on input after selecting tool
             messageInput.focus();
             showNotification(`${action.replace('-', ' ')} mode activated`);
+        }
+
+        // Banner Management Functions
+        function showBanner() {
+            // Check if banner has been shown before on this device
+            const hasSeenBanner = localStorage.getItem('cloverAIBannerSeen');
+            
+            if (!hasSeenBanner) {
+                // Show banner with delay for better UX
+                setTimeout(() => {
+                    announcementBanner.classList.add('show');
+                    bannerOverlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                }, 1500);
+            }
+        }
+
+        function hideBanner() {
+            announcementBanner.classList.remove('show');
+            bannerOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+            
+            // Mark banner as seen
+            localStorage.setItem('cloverAIBannerSeen', 'true');
         }
 
         // Helper function to get appropriate file icon
@@ -4227,6 +4620,27 @@
             displayBotMessage(message, false);
         }
 
+        // Banner Event Listeners
+        bannerClose.addEventListener('click', hideBanner);
+        bannerGotIt.addEventListener('click', hideBanner);
+        bannerOverlay.addEventListener('click', hideBanner);
+
+        bannerLearnMore.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideBanner();
+            showNotification('Opening Clover AI 1.5 details...');
+            setTimeout(() => {
+                window.open('https://aditya-cmd-max.github.io/cloverai/clovermodel1.5/', '_blank');
+            }, 500);
+        });
+
+        // Add keyboard escape to close banner
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && announcementBanner.classList.contains('show')) {
+                hideBanner();
+            }
+        });
+
         // Event Listeners
         newChatBtn.addEventListener('click', createNewChat);
         mobileNewChatBtn.addEventListener('click', createNewChat);
@@ -4942,7 +5356,7 @@
                 typingElement.id = 'typing-indicator';
                 typingElement.innerHTML = `
                     <div class="message-avatar">
-                        <img src="https://aditya-cmd-max.github.io/exonovaai/logo.png" alt="AI Logo">
+                        <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo">
                     </div>
                     <div class="typing-dots">
                         <div class="typing-dot"></div>
@@ -5161,6 +5575,9 @@
         initEnhancedLayout();
         updateUIForMode();
         sendBtn.disabled = true;
+        
+        // Show banner (if not seen before)
+        showBanner();
 
         // Force button text visibility
         document.querySelectorAll('.feature-btn, .quick-action, .suggestion-chip').forEach(btn => {
@@ -5169,6 +5586,4 @@
     </script>
 </body>
 </html>
-
-
 
