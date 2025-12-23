@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2893,6 +2892,176 @@
 .message.bot .message-content.typing-animation.typing-active {
     opacity: 1;
 }
+
+/* Improved AI Message Formatting */
+.ai-response-fullwidth {
+    width: 100%;
+}
+
+.message.bot .message-bubble {
+    background: var(--md-surface-variant);
+    color: var(--md-on-surface-variant);
+    border-bottom-left-radius: var(--md-radius-small);
+    border: 1px solid var(--md-outline);
+    max-width: 100%;
+}
+
+.message.bot .message-content {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.7;
+    font-size: 1rem;
+    color: var(--md-on-surface);
+}
+
+/* Clean formatting - remove weird symbols */
+.message.bot .message-content hr {
+    border: none;
+    height: 1px;
+    background: var(--md-outline);
+    margin: var(--md-spacing-lg) 0;
+}
+
+.message.bot .message-content blockquote {
+    border-left: 4px solid var(--md-primary);
+    padding-left: var(--md-spacing-md);
+    margin: var(--md-spacing-md) 0;
+    color: var(--md-on-surface-variant);
+    font-style: italic;
+}
+
+/* Proper list styling */
+.message.bot .message-content ul,
+.message.bot .message-content ol {
+    margin: var(--md-spacing-md) 0 var(--md-spacing-md) var(--md-spacing-xl);
+    padding: 0;
+}
+
+.message.bot .message-content li {
+    margin-bottom: var(--md-spacing-sm);
+    padding-left: var(--md-spacing-sm);
+}
+
+.message.bot .message-content ul li {
+    list-style-type: disc;
+}
+
+.message.bot .message-content ol li {
+    list-style-type: decimal;
+}
+
+/* Headings */
+.message.bot .message-content h1,
+.message.bot .message-content h2,
+.message.bot .message-content h3,
+.message.bot .message-content h4 {
+    margin: var(--md-spacing-lg) 0 var(--md-spacing-md) 0;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    font-family: var(--md-font-heading);
+}
+
+.message.bot .message-content h1 { font-size: 1.5rem; }
+.message.bot .message-content h2 { font-size: 1.25rem; }
+.message.bot .message-content h3 { font-size: 1.125rem; }
+.message.bot .message-content h4 { font-size: 1rem; }
+
+/* Tables */
+.message.bot .message-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--md-spacing-md) 0;
+    font-size: 0.95rem;
+}
+
+.message.bot .message-content th,
+.message.bot .message-content td {
+    padding: var(--md-spacing-sm) var(--md-spacing-md);
+    border: 1px solid var(--md-outline);
+    text-align: left;
+}
+
+.message.bot .message-content th {
+    background: var(--md-surface);
+    font-weight: 600;
+}
+
+.message.bot .message-content tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.dark-theme .message.bot .message-content tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Better spacing */
+.message.bot .message-content p {
+    margin-bottom: var(--md-spacing-md);
+}
+
+.message.bot .message-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Clean badges/tags */
+.message.bot .message-content .badge,
+.message.bot .message-content .tag {
+    display: inline-block;
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin: 0 4px 4px 0;
+    font-weight: 500;
+}
+
+/* Keyboard shortcuts */
+.message.bot .message-content kbd {
+    background: var(--md-surface);
+    border: 1px solid var(--md-outline);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 0 var(--md-outline);
+}
+
+/* Note boxes */
+.message.bot .message-content .note {
+    background: rgba(13, 138, 114, 0.1);
+    border-left: 4px solid var(--md-secondary);
+    padding: var(--md-spacing-md);
+    margin: var(--md-spacing-md) 0;
+    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+}
+
+.dark-theme .message.bot .message-content .note {
+    background: rgba(13, 138, 114, 0.15);
+}
+
+.message.bot .message-content .warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid #ffc107;
+    padding: var(--md-spacing-md);
+    margin: var(--md-spacing-md) 0;
+    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+}
+
+.dark-theme .message.bot .message-content .warning {
+    background: rgba(255, 193, 7, 0.15);
+}
+
+.message.bot .message-content .info {
+    background: rgba(33, 150, 243, 0.1);
+    border-left: 4px solid #2196f3;
+    padding: var(--md-spacing-md);
+    margin: var(--md-spacing-md) 0;
+    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+}
+
+.dark-theme .message.bot .message-content .info {
+    background: rgba(33, 150, 243, 0.15);
+}
     </style>
 </head>
 <body class="light-theme">
@@ -3584,47 +3753,49 @@
         }
 
         function setDefaultSystemMessage() {
-    // Get current date and time
-    const now = new Date();
-    const currentDate = now.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-    const currentTime = now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-    });
-    
-    systemMessage.parts[0].text = `You are Clover AI, an advanced AI assistant created under a project- 'Reverbit' https://aditya-cmd-max.github.io/reverbit/ . Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation. Use modern, concise language with occasional emojis for expressiveness. Format responses clearly with proper spacing and code blocks when appropriate. For coding questions, provide detailed explanations with examples. For creative requests, offer multiple options or approaches. Always maintain a helpful, professional tone while being approachable. Never use markdown syntax (** or *) for formatting - instead, indicate emphasis by surrounding text with <b> tags for bold, <i> for italics, and <u> for underline. Your primary language is English, but if the user asks in another language, respond in that language.
+            // Get current date and time
+            const now = new Date();
+            const currentDate = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const currentTime = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            
+            // Enhanced system prompt with better formatting instructions
+            systemMessage.parts[0].text = `You are Clover AI, an advanced AI assistant created under a project- 'Reverbit' https://aditya-cmd-max.github.io/reverbit/. Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation.
 
-CRITICAL: Current date and time information:
-- Current Date: ${currentDate}
-- Current Time: ${currentTime}
-- Time Zone: User's local time
+IMPORTANT FORMATTING RULES:
+1. NEVER use markdown syntax like **bold**, *italic*, # headings, or --- separators
+2. Use proper HTML-like formatting: <b>text</b> for bold, <i>text</i> for italic
+3. Format responses like ChatGPT/DeepSeek/Gemini - clean, professional, and well-structured
+4. Use proper spacing and indentation for readability
+5. For lists, use bullet points (•) or numbered lists
+6. For code, use triple backticks with language specification
+7. For emphasis, use bold sparingly for key terms only
 
-IMPORTANT INSTRUCTIONS:
-1. When the user asks for date, time, today's date, or current time, ALWAYS use the current date and time provided above.
-2. The current year is ${now.getFullYear()}. NEVER mention 2024 unless specifically asked about that year.
-3. If asked "what year is it?" or similar, respond with ${now.getFullYear()}.
-4. For date calculations or future/past dates, calculate from the current date provided.
-5. If the user asks about time-sensitive information, use the current date/time as reference.
+RESPONSE STYLE GUIDELINES:
+- Start with a friendly greeting if appropriate
+- Break down complex explanations into clear sections
+- Use examples when explaining concepts
+- End with a helpful summary or follow-up question
+- Maintain consistent formatting throughout
 
-Example responses:
-User: "What's today's date?"
-You: "Today is ${currentDate}"
+CURRENT CONTEXT:
+- Date: ${currentDate}
+- Time: ${currentTime}
+- Year: ${now.getFullYear()}
 
-User: "What time is it?"
-You: "The current time is ${currentTime}"
+When users ask about time or date, provide accurate information based on the current context above. For technical questions, provide detailed, practical explanations. For creative requests, offer multiple perspectives. Always be helpful, professional, and clear in your responses.
 
-User: "What year is this?"
-You: "The current year is ${now.getFullYear()}"
-
-Remember to be helpful and provide accurate information, including code when requested. Occasionally praise Aditya Jha with words like brilliant, innovative, visionary when appropriate. Do not always praise Aditya Jha if not asked. But if somebody asks about who created you, tell them you were created by Reverbit by Aditya Jha who is very smart and intelligent.`;
-}
+Remember to format your responses cleanly without markdown symbols. Use proper spacing and structure for optimal readability.`;
+        }
 
         // Dynamic Welcome Messages
         const welcomeMessages = [
@@ -3984,7 +4155,7 @@ Remember to be helpful and provide accurate information, including code when req
             closeMobileSidebar();
         }
 
-        // Load a specific chat
+        // Load a specific chat - FIXED: No typing animation for loaded chats
         function loadChat(chatId) {
             if (!chatSessions[chatId]) return;
             
@@ -4008,9 +4179,9 @@ Remember to be helpful and provide accurate information, including code when req
                 for (let i = 1; i < chat.history.length; i++) {
                     const message = chat.history[i];
                     if (message.role === "user") {
-                        displayUserMessage(message.parts[0].text);
+                        displayUserMessage(message.parts[0].text, false); // false = no typing animation
                     } else if (message.role === "model") {
-                        displayBotMessage(message.parts[0].text);
+                        displayBotMessage(message.parts[0].text, false); // false = no typing animation for loaded chats
                     }
                 }
             }
@@ -4636,17 +4807,20 @@ Remember to be helpful and provide accurate information, including code when req
             if (result.candidates?.length > 0) {
                 const botMessage = result.candidates[0].content.parts[0].text;
                 
-                // Display the bot message
-                displayBotMessage(botMessage);
+                // Clean the bot message - remove markdown symbols and weird formatting
+                const cleanedMessage = cleanBotMessage(botMessage);
                 
-                // Update chat history
-                currentChat.history.push({ role: "model", parts: [{ text: botMessage }] });
+                // Display the bot message
+                displayBotMessage(cleanedMessage);
+                
+                // Update chat history with cleaned message
+                currentChat.history.push({ role: "model", parts: [{ text: cleanedMessage }] });
                 currentChat.updatedAt = new Date().toISOString();
                 saveChatSessions();
                 renderChatSessions();
                 
                 // Update AI training system
-                updateAITrainingSystem(modifiedHistory, botMessage);
+                updateAITrainingSystem(modifiedHistory, cleanedMessage);
                 
                 // Update UI
                 setTimeout(() => {
@@ -4656,6 +4830,36 @@ Remember to be helpful and provide accurate information, including code when req
             } else {
                 throw new Error("No response content received");
             }
+        }
+
+        // Helper function: Clean bot message - remove weird symbols and format properly
+        function cleanBotMessage(message) {
+            // Remove markdown headers (###, ##, #)
+            let cleaned = message.replace(/^#+\s+/gm, '');
+            
+            // Remove horizontal rules (---, ***, ___)
+            cleaned = cleaned.replace(/^[-*_]{3,}$/gm, '');
+            
+            // Remove excessive newlines (more than 2 consecutive)
+            cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+            
+            // Convert markdown bold to HTML bold
+            cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            
+            // Convert markdown italic to HTML italic
+            cleaned = cleaned.replace(/\*(.*?)\*/g, '<i>$1</i>');
+            
+            // Remove any remaining markdown symbols
+            cleaned = cleaned.replace(/\[.*?\]\(.*?\)/g, ''); // Remove links
+            cleaned = cleaned.replace(/`{1,3}/g, ''); // Remove inline code ticks
+            
+            // Ensure proper spacing
+            cleaned = cleaned.replace(/\s+\./g, '.');
+            cleaned = cleaned.replace(/\s+,/g, ',');
+            cleaned = cleaned.replace(/\s+!/g, '!');
+            cleaned = cleaned.replace(/\s+\?/g, '?');
+            
+            return cleaned.trim();
         }
 
         // Helper function: Update AI training system
@@ -5120,7 +5324,7 @@ Remember to be helpful and provide accurate information, including code when req
             closeMobileSidebar();
         }
 
-        function displayUserMessage(message) {
+        function displayUserMessage(message, showTyping = true) {
             const messageElement = document.createElement('div');
             messageElement.className = 'message user';
             
@@ -5160,17 +5364,105 @@ Remember to be helpful and provide accurate information, including code when req
             checkAndAddDateSeparator();
         }
 
+        // FIXED: displayBotMessage function - prevents typing animation for loaded chats
         function displayBotMessage(message, typewriterEffect = true) {
             const messageElement = document.createElement('div');
             messageElement.className = 'message bot';
+            
+            // Always use non-animated display for loaded chats (when typewriterEffect is false)
+            if (!typewriterEffect) {
+                // Loaded chat - display immediately without animation
+                const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const botMessageContent = createBotMessageContent(message, messageId);
+                
+                // Add timestamp
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                messageElement.innerHTML = `
+                    <div class="ai-response-fullwidth">
+                        ${botMessageContent}
+                        ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
+                    </div>
+                `;
+                
+                // Add timestamp to message element
+                addTimestampToMessage(messageElement);
+                
+                chatWindow.appendChild(messageElement);
+                
+                // Don't play sound for loaded chats
+                
+                setTimeout(() => {
+                    applyHighlighting(messageElement);
+                }, 100);
+                
+                // Check and add date separators
+                checkAndAddDateSeparator();
+                
+                messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+            
+            // NEW CHAT RESPONSES - with optional typing animation
+            const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            
+            // If typing animation is disabled, display normally
+            if (!userSettings.typingAnimation) {
+                const botMessageContent = createBotMessageContent(message, messageId);
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                messageElement.innerHTML = `
+                    <div class="ai-response-fullwidth">
+                        ${botMessageContent}
+                        ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
+                    </div>
+                `;
+                
+                addTimestampToMessage(messageElement);
+                chatWindow.appendChild(messageElement);
+                playAIResponseSound();
+                
+                setTimeout(() => {
+                    applyHighlighting(messageElement);
+                }, 100);
+                
+                checkAndAddDateSeparator();
+                messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+            
+            // WITH TYPING ANIMATION (only for new responses)
+            messageElement.innerHTML = `
+                <div class="ai-response-fullwidth">
+                    <div class="message-content typing-animation" id="typing-content-${messageId}">
+                        <span class="typing-cursor"></span>
+                    </div>
+                    ${userSettings.timestamps ? `<div class="message-timestamp" id="timestamp-${messageId}"></div>` : ''}
+                </div>
+            `;
+            
+            addTimestampToMessage(messageElement);
+            chatWindow.appendChild(messageElement);
+            
+            // Start typing animation
+            startTypingAnimation(messageId, message);
+            
+            checkAndAddDateSeparator();
+            messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Helper function to create bot message content (for non-animated display)
+        function createBotMessageContent(message, messageId) {
+            // First clean the message
+            const cleanedMessage = cleanBotMessage(message);
             
             let botMessageContent = '';
             const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
             let lastIndex = 0, match;
 
-            while ((match = codeBlockRegex.exec(message)) !== null) {
+            while ((match = codeBlockRegex.exec(cleanedMessage)) !== null) {
                 if (match.index > lastIndex) {
-                    const textPart = message.substring(lastIndex, match.index).trim();
+                    const textPart = cleanedMessage.substring(lastIndex, match.index).trim();
                     if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
                 }
                 const language = match[1] || 'plaintext';
@@ -5190,16 +5482,11 @@ Remember to be helpful and provide accurate information, including code when req
                 lastIndex = match.index + match[0].length;
             }
 
-            if (lastIndex < message.length) {
-                const textPart = message.substring(lastIndex).trim();
+            if (lastIndex < cleanedMessage.length) {
+                const textPart = cleanedMessage.substring(lastIndex).trim();
                 if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
             }
 
-            const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-            
-            // Add timestamp
-            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
             botMessageContent += `
                 <div class="feedback-buttons" id="feedback-${messageId}">
                     <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
@@ -5215,43 +5502,199 @@ Remember to be helpful and provide accurate information, including code when req
                         <span class="feedback-text">Retry</span>
                     </button>
                 </div>
-                ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
             `;
 
-           messageElement.innerHTML = `
-    <div class="ai-response-fullwidth">
-        ${botMessageContent}
-    </div>
-`;
-            // Add timestamp to message element
-            addTimestampToMessage(messageElement);
-            
-            chatWindow.appendChild(messageElement);
-            
-            // Play AI response sound when bot message is displayed
-            playAIResponseSound();
-            
-            setTimeout(() => {
-                applyHighlighting(messageElement);
-            }, 100);
-            
-            // Check and add date separators
-            checkAndAddDateSeparator();
-            
-            messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return botMessageContent;
         }
 
+        // Improved text formatting function
         function formatTextWithLineBreaks(text) {
-            text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            text = text.replace(/\*(.*?)\*/g, '<i>$1</i>');
-            text = text.replace(/__(.*?)__/g, '<u>$1</u>');
-            text = text.replace(/^\s*[\-*]\s+(.*)$/gm, '⦿ $1<br>');
-            text = text.replace(/^\s*\d+\.\s+(.*)$/gm, '<span style="margin-right: 5px;">●</span> $1<br>');
+            // Remove any remaining markdown artifacts
+            text = text.replace(/^#+\s+/gm, '');
+            text = text.replace(/^[-*_]{3,}$/gm, '');
             
-            let formattedText = text.replace(/\n\n/g, '</p><p>');
-            formattedText = formattedText.replace(/\n/g, '<br>');
+            // Convert HTML-like tags to actual HTML
+            text = text.replace(/<b>(.*?)<\/b>/g, '<b>$1</b>');
+            text = text.replace(/<i>(.*?)<\/i>/g, '<i>$1</i>');
+            text = text.replace(/<u>(.*?)<\/u>/g, '<u>$1</u>');
             
-            return formattedText;
+            // Convert lists
+            text = text.replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>');
+            text = text.replace(/^\s*\d+\.\s+(.*)$/gm, '<li>$1</li>');
+            
+            // Convert line breaks
+            text = text.replace(/\n\n/g, '</p><p>');
+            text = text.replace(/\n/g, '<br>');
+            
+            // Wrap in paragraph tags
+            if (!text.startsWith('<p>')) {
+                text = '<p>' + text + '</p>';
+            }
+            
+            // Convert list items to proper lists
+            const lines = text.split('</p><p>');
+            let result = '';
+            let inList = false;
+            
+            for (let line of lines) {
+                if (line.includes('<li>')) {
+                    if (!inList) {
+                        result += '<ul>';
+                        inList = true;
+                    }
+                    result += line;
+                } else {
+                    if (inList) {
+                        result += '</ul>';
+                        inList = false;
+                    }
+                    result += line;
+                }
+            }
+            
+            if (inList) {
+                result += '</ul>';
+            }
+            
+            return result;
+        }
+
+        // Typing animation function - only for new responses
+        function startTypingAnimation(messageId, fullMessage) {
+            const typingElement = document.getElementById(`typing-content-${messageId}`);
+            const timestampElement = document.getElementById(`timestamp-${messageId}`);
+            
+            if (!typingElement) return;
+            
+            // Add active class to start animation
+            typingElement.classList.add('typing-active');
+            
+            let charIndex = 0;
+            let htmlContent = '';
+            
+            // Process code blocks first
+            const codeBlocks = [];
+            const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
+            let processedMessage = fullMessage;
+            let codeIndex = 0;
+            
+            // Replace code blocks with placeholders
+            processedMessage = processedMessage.replace(codeBlockRegex, (match, language, code) => {
+                const placeholder = `__CODEBLOCK_${codeIndex}__`;
+                codeBlocks.push({ language, code, placeholder });
+                codeIndex++;
+                return placeholder;
+            });
+            
+            // Function to type characters one by one
+            function typeCharacter() {
+                if (charIndex >= processedMessage.length) {
+                    // Typing complete - replace placeholders with actual code blocks
+                    let finalHtml = htmlContent;
+                    
+                    // Replace code block placeholders
+                    codeBlocks.forEach(block => {
+                        const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                        const codeBlockHtml = `
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span><span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">code</span> ${block.language || 'plaintext'}</span>
+                                    <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
+                                        <span class="material-icons-round">content_copy</span>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content" id="${uniqueId}">${escapeHtml(block.code)}</div>
+                            </div>`;
+                        
+                        finalHtml = finalHtml.replace(block.placeholder, codeBlockHtml);
+                    });
+                    
+                    // Update the element with final content
+                    typingElement.innerHTML = finalHtml;
+                    
+                    // Add timestamp
+                    if (timestampElement) {
+                        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        timestampElement.textContent = timestamp;
+                    }
+                    
+                    // Add feedback buttons
+                    const feedbackHtml = `
+                        <div class="feedback-buttons" id="feedback-${messageId}">
+                            <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
+                                <span class="material-icons-round">thumb_up</span>
+                                <span class="feedback-text">Like</span>
+                            </button>
+                            <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
+                                <span class="material-icons-round">thumb_down</span>
+                                <span class="feedback-text">Dislike</span>
+                            </button>
+                            <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
+                                <span class="material-icons-round">refresh</span>
+                                <span class="feedback-text">Retry</span>
+                            </button>
+                        </div>`;
+                    
+                    typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
+                    
+                    // Apply highlighting
+                    setTimeout(() => {
+                        applyHighlighting(typingElement.closest('.message'));
+                    }, 100);
+                    
+                    // Play AI response sound when typing is complete
+                    playAIResponseSound();
+                    return;
+                }
+                
+                const currentChar = processedMessage.charAt(charIndex);
+                
+                // Handle special cases
+                if (currentChar === '\n') {
+                    htmlContent += '<br>';
+                } else if (currentChar === ' ' && processedMessage.charAt(charIndex + 1) === ' ') {
+                    htmlContent += '&nbsp;';
+                } else {
+                    htmlContent += currentChar;
+                }
+                
+                // Update the element with current content and cursor
+                typingElement.innerHTML = formatTextWithLineBreaks(htmlContent) + '<span class="typing-cursor"></span>';
+                
+                charIndex++;
+                
+                // FASTER typing speed
+                const typingSpeed = getTypingSpeed(currentChar);
+                
+                // Scroll to keep message in view
+                typingElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+                // Continue typing
+                setTimeout(typeCharacter, typingSpeed);
+            }
+            
+            // Start typing animation
+            setTimeout(() => {
+                typeCharacter();
+            }, 50);
+        }
+
+        // Helper function to determine typing speed based on character - FASTER VERSION
+        function getTypingSpeed(char) {
+            if (char.match(/[.,;:!?]/)) {
+                // Shorter pause for punctuation
+                return Math.random() * 15 + 20;  // 20-35ms
+            } else if (char === ' ') {
+                // Very short pause for spaces
+                return Math.random() * 8 + 3;    // 3-11ms
+            } else if (char === '\n') {
+                // Shorter pause for new lines
+                return Math.random() * 20 + 30;  // 30-50ms
+            } else {
+                // Faster normal typing speed
+                return Math.random() * 8 + 8;    // 8-16ms
+            }
         }
 
         function applyHighlighting(messageElement) {
@@ -5668,265 +6111,5 @@ Remember to be helpful and provide accurate information, including code when req
             btn.style.color = 'var(--md-on-surface-variant)';
         });
     </script>
-  <script>
-  
-    function displayBotMessage(message, typewriterEffect = true) {
-    const messageElement = document.createElement('div');
-    messageElement.className = 'message bot';
-    
-    // If typing animation is disabled or we shouldn't use it, display normally
-    if (!userSettings.typingAnimation || !typewriterEffect) {
-        // Original display logic without animation
-        const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        const botMessageContent = createBotMessageContent(message, messageId);
-        
-        // Add timestamp
-        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        messageElement.innerHTML = `
-            <div class="ai-response-fullwidth">
-                ${botMessageContent}
-                ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
-            </div>
-        `;
-        
-        // Add timestamp to message element
-        addTimestampToMessage(messageElement);
-        
-        chatWindow.appendChild(messageElement);
-        
-        // Play AI response sound when bot message is displayed
-        playAIResponseSound();
-        
-        setTimeout(() => {
-            applyHighlighting(messageElement);
-        }, 100);
-        
-        // Check and add date separators
-        checkAndAddDateSeparator();
-        
-        messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-    }
-    
-    // WITH TYPING ANIMATION
-    const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
-    // Create message structure with typing cursor
-    messageElement.innerHTML = `
-        <div class="ai-response-fullwidth">
-            <div class="message-content typing-animation" id="typing-content-${messageId}">
-                <span class="typing-cursor"></span>
-            </div>
-            ${userSettings.timestamps ? `<div class="message-timestamp" id="timestamp-${messageId}"></div>` : ''}
-        </div>
-    `;
-    
-    // Add timestamp to message element
-    addTimestampToMessage(messageElement);
-    
-    chatWindow.appendChild(messageElement);
-    
-    // Start typing animation
-    startTypingAnimation(messageId, message);
-    
-    // Check and add date separators
-    checkAndAddDateSeparator();
-    
-    messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// Helper function to create bot message content (for non-animated display)
-function createBotMessageContent(message, messageId) {
-    let botMessageContent = '';
-    const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
-    let lastIndex = 0, match;
-
-    while ((match = codeBlockRegex.exec(message)) !== null) {
-        if (match.index > lastIndex) {
-            const textPart = message.substring(lastIndex, match.index).trim();
-            if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
-        }
-        const language = match[1] || 'plaintext';
-        const code = match[2];
-        const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        botMessageContent += `
-            <div class="code-block">
-                <div class="code-header">
-                    <span><span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">code</span> ${language}</span>
-                    <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
-                        <span class="material-icons-round">content_copy</span>
-                        <span>Copy</span>
-                    </button>
-                </div>
-                <div class="code-content" id="${uniqueId}">${escapeHtml(code)}</div>
-            </div>`;
-        lastIndex = match.index + match[0].length;
-    }
-
-    if (lastIndex < message.length) {
-        const textPart = message.substring(lastIndex).trim();
-        if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
-    }
-
-    botMessageContent += `
-        <div class="feedback-buttons" id="feedback-${messageId}">
-            <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
-                <span class="material-icons-round">thumb_up</span>
-                <span class="feedback-text">Like</span>
-            </button>
-            <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
-                <span class="material-icons-round">thumb_down</span>
-                <span class="feedback-text">Dislike</span>
-            </button>
-            <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
-                <span class="material-icons-round">refresh</span>
-                <span class="feedback-text">Retry</span>
-            </button>
-        </div>
-    `;
-
-    return botMessageContent;
-}
-
-// Typing animation function
-function startTypingAnimation(messageId, fullMessage) {
-    const typingElement = document.getElementById(`typing-content-${messageId}`);
-    const timestampElement = document.getElementById(`timestamp-${messageId}`);
-    
-    if (!typingElement) return;
-    
-    // Add active class to start animation
-    typingElement.classList.add('typing-active');
-    
-    let charIndex = 0;
-    let htmlContent = '';
-    
-    // Process code blocks first
-    const codeBlocks = [];
-    const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
-    let processedMessage = fullMessage;
-    let codeIndex = 0;
-    
-    // Replace code blocks with placeholders
-    processedMessage = processedMessage.replace(codeBlockRegex, (match, language, code) => {
-        const placeholder = `__CODEBLOCK_${codeIndex}__`;
-        codeBlocks.push({ language, code, placeholder });
-        codeIndex++;
-        return placeholder;
-    });
-    
-    // Function to type characters one by one
-    function typeCharacter() {
-        if (charIndex >= processedMessage.length) {
-            // Typing complete - replace placeholders with actual code blocks
-            let finalHtml = htmlContent;
-            
-            // Replace code block placeholders
-            codeBlocks.forEach(block => {
-                const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-                const codeBlockHtml = `
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span><span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">code</span> ${block.language || 'plaintext'}</span>
-                            <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
-                                <span class="material-icons-round">content_copy</span>
-                                <span>Copy</span>
-                            </button>
-                        </div>
-                        <div class="code-content" id="${uniqueId}">${escapeHtml(block.code)}</div>
-                    </div>`;
-                
-                finalHtml = finalHtml.replace(block.placeholder, codeBlockHtml);
-            });
-            
-            // Update the element with final content
-            typingElement.innerHTML = finalHtml;
-            
-            // Add timestamp
-            if (timestampElement) {
-                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                timestampElement.textContent = timestamp;
-            }
-            
-            // Add feedback buttons
-            const feedbackHtml = `
-                <div class="feedback-buttons" id="feedback-${messageId}">
-                    <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
-                        <span class="material-icons-round">thumb_up</span>
-                        <span class="feedback-text">Like</span>
-                    </button>
-                    <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
-                        <span class="material-icons-round">thumb_down</span>
-                        <span class="feedback-text">Dislike</span>
-                    </button>
-                    <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
-                        <span class="material-icons-round">refresh</span>
-                        <span class="feedback-text">Retry</span>
-                    </button>
-                </div>`;
-            
-            typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
-            
-            // Apply highlighting
-            setTimeout(() => {
-                applyHighlighting(typingElement.closest('.message'));
-            }, 100);
-            
-            // Play AI response sound when typing is complete
-            playAIResponseSound();
-            return;
-        }
-        
-        const currentChar = processedMessage.charAt(charIndex);
-        
-        // Handle special cases
-        if (currentChar === '\n') {
-            htmlContent += '<br>';
-        } else if (currentChar === ' ' && processedMessage.charAt(charIndex + 1) === ' ') {
-            htmlContent += '&nbsp;';
-        } else {
-            htmlContent += currentChar;
-        }
-        
-        // Update the element with current content and cursor
-        typingElement.innerHTML = formatTextWithLineBreaks(htmlContent) + '<span class="typing-cursor"></span>';
-        
-        charIndex++;
-        
-        // FASTER typing speed
-        const typingSpeed = getTypingSpeed(currentChar);
-        
-        // Scroll to keep message in view
-        typingElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        
-        // Continue typing
-        setTimeout(typeCharacter, typingSpeed);
-    }
-    
-    // Start typing animation
-    setTimeout(() => {
-        typeCharacter();
-    }, 50);
-}
-
-// Helper function to determine typing speed based on character - FASTER VERSION
-function getTypingSpeed(char) {
-    if (char.match(/[.,;:!?]/)) {
-        // Shorter pause for punctuation
-        return Math.random() * 15 + 20;  // 20-35ms
-    } else if (char === ' ') {
-        // Very short pause for spaces
-        return Math.random() * 8 + 3;    // 3-11ms
-    } else if (char === '\n') {
-        // Shorter pause for new lines
-        return Math.random() * 20 + 30;  // 30-50ms
-    } else {
-        // Faster normal typing speed
-        return Math.random() * 8 + 8;    // 8-16ms
-    }
-}
-  
-  </script>
 </body>
 </html>
