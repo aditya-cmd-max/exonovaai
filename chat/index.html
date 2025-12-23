@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3062,6 +3063,22 @@
 .dark-theme .message.bot .message-content .info {
     background: rgba(33, 150, 243, 0.15);
 }
+      
+      /* Add this to your CSS to prevent any smooth scrolling during typing */
+.chat-window {
+    scroll-behavior: auto;
+}
+
+.typing-active {
+    pointer-events: none;
+}
+
+/* Ensure no transitions cause shaking */
+.message, .message-bubble, .ai-response-fullwidth {
+    transition: none !important;
+    animation: none !important;
+}
+      
     </style>
 </head>
 <body class="light-theme">
@@ -6111,5 +6128,150 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             btn.style.color = 'var(--md-on-surface-variant)';
         });
     </script>
+  
+  
+  
+  <script>
+  
+  // Revised typing animation function - prevents screen shaking completely
+function startTypingAnimation(messageId, fullMessage) {
+    const typingElement = document.getElementById(`typing-content-${messageId}`);
+    const timestampElement = document.getElementById(`timestamp-${messageId}`);
+    const chatWindow = document.getElementById('chat-window');
+    
+    if (!typingElement) return;
+    
+    // Add active class to start animation
+    typingElement.classList.add('typing-active');
+    
+    let charIndex = 0;
+    let htmlContent = '';
+    
+    // Process code blocks first
+    const codeBlocks = [];
+    const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
+    let processedMessage = fullMessage;
+    let codeIndex = 0;
+    
+    // Replace code blocks with placeholders
+    processedMessage = processedMessage.replace(codeBlockRegex, (match, language, code) => {
+        const placeholder = `__CODEBLOCK_${codeIndex}__`;
+        codeBlocks.push({ language, code, placeholder });
+        codeIndex++;
+        return placeholder;
+    });
+    
+    // Function to scroll chat window to bottom
+    function scrollToBottom() {
+        // Direct scroll without animation - this prevents shaking
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+    
+    // Function to type characters one by one
+    function typeCharacter() {
+        if (charIndex >= processedMessage.length) {
+            // Typing complete - replace placeholders with actual code blocks
+            let finalHtml = htmlContent;
+            
+            // Replace code block placeholders
+            codeBlocks.forEach(block => {
+                const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const codeBlockHtml = `
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">code</span> ${block.language || 'plaintext'}</span>
+                            <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
+                                <span class="material-icons-round">content_copy</span>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                        <div class="code-content" id="${uniqueId}">${escapeHtml(block.code)}</div>
+                    </div>`;
+                
+                finalHtml = finalHtml.replace(block.placeholder, codeBlockHtml);
+            });
+            
+            // Update the element with final content
+            typingElement.innerHTML = finalHtml;
+            
+            // Add timestamp
+            if (timestampElement) {
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                timestampElement.textContent = timestamp;
+            }
+            
+            // Add feedback buttons
+            const feedbackHtml = `
+                <div class="feedback-buttons" id="feedback-${messageId}">
+                    <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
+                        <span class="material-icons-round">thumb_up</span>
+                        <span class="feedback-text">Like</span>
+                    </button>
+                    <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
+                        <span class="material-icons-round">thumb_down</span>
+                        <span class="feedback-text">Dislike</span>
+                    </button>
+                    <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
+                        <span class="material-icons-round">refresh</span>
+                        <span class="feedback-text">Retry</span>
+                    </button>
+                </div>`;
+            
+            typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
+            
+            // Final scroll to show complete message
+            setTimeout(() => {
+                scrollToBottom();
+            }, 50);
+            
+            // Apply highlighting
+            setTimeout(() => {
+                applyHighlighting(typingElement.closest('.message'));
+            }, 100);
+            
+            // Play AI response sound when typing is complete
+            playAIResponseSound();
+            return;
+        }
+        
+        const currentChar = processedMessage.charAt(charIndex);
+        
+        // Handle special cases
+        if (currentChar === '\n') {
+            htmlContent += '<br>';
+        } else if (currentChar === ' ' && processedMessage.charAt(charIndex + 1) === ' ') {
+            htmlContent += '&nbsp;';
+        } else {
+            htmlContent += currentChar;
+        }
+        
+        // Update the element with current content and cursor
+        typingElement.innerHTML = formatTextWithLineBreaks(htmlContent) + '<span class="typing-cursor"></span>';
+        
+        charIndex++;
+        
+        // FASTER typing speed
+        const typingSpeed = getTypingSpeed(currentChar);
+        
+        // Only scroll occasionally (every 15-20 characters) and only if user is near bottom
+        if (charIndex % 20 === 0) {
+            const scrollBottom = chatWindow.scrollHeight - chatWindow.scrollTop - chatWindow.clientHeight;
+            if (scrollBottom < 500) { // If user is within 500px of bottom
+                scrollToBottom();
+            }
+        }
+        
+        // Continue typing
+        setTimeout(typeCharacter, typingSpeed);
+    }
+    
+    // Start typing animation after a small delay
+    setTimeout(() => {
+        // Initial scroll to show typing indicator
+        scrollToBottom();
+        typeCharacter();
+    }, 50);
+}
+  </script>
 </body>
 </html>
