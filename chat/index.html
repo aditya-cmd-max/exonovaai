@@ -5697,22 +5697,22 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             }, 50);
         }
 
-        // Helper function to determine typing speed based on character - FASTER VERSION
-        function getTypingSpeed(char) {
-            if (char.match(/[.,;:!?]/)) {
-                // Shorter pause for punctuation
-                return Math.random() * 15 + 20;  // 20-35ms
-            } else if (char === ' ') {
-                // Very short pause for spaces
-                return Math.random() * 8 + 3;    // 3-11ms
-            } else if (char === '\n') {
-                // Shorter pause for new lines
-                return Math.random() * 20 + 30;  // 30-50ms
-            } else {
-                // Faster normal typing speed
-                return Math.random() * 8 + 8;    // 8-16ms
-            }
-        }
+   // Helper function to determine typing speed based on character - ULTRA FAST VERSION
+function getTypingSpeed(char) {
+    if (char.match(/[.,;:!?]/)) {
+        // Ultra short pause for punctuation
+        return Math.random() * 5 + 5;      // 5-10ms
+    } else if (char === ' ') {
+        // Almost no pause for spaces
+        return Math.random() * 3 + 1;      // 1-4ms
+    } else if (char === '\n') {
+        // Short pause for new lines
+        return Math.random() * 10 + 10;    // 10-20ms
+    } else {
+        // Lightning fast normal typing
+        return Math.random() * 3 + 2;      // 2-5ms
+    }
+}
 
         function applyHighlighting(messageElement) {
             const messageContents = messageElement.querySelectorAll('.message-content');
