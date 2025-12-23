@@ -4849,26 +4849,41 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             }
         }
 
-        // Helper function: Clean bot message - remove weird symbols and format properly
-        function cleanBotMessage(message) {
-            // Remove markdown headers (###, ##, #)
-            let cleaned = message.replace(/^#+\s+/gm, '');
-            
-            // Remove horizontal rules (---, ***, ___)
-            cleaned = cleaned.replace(/^[-*_]{3,}$/gm, '');
-            
-            // Remove excessive newlines (more than 2 consecutive)
-            cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
-            
-            // Convert markdown bold to HTML bold
-            cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            
-            // Convert markdown italic to HTML italic
-            cleaned = cleaned.replace(/\*(.*?)\*/g, '<i>$1</i>');
-            
-            // Remove any remaining markdown symbols
-            cleaned = cleaned.replace(/\[.*?\]\(.*?\)/g, ''); // Remove links
-            cleaned = cleaned.replace(/`{1,3}/g, ''); // Remove inline code ticks
+  // Helper function: Clean bot message - remove weird symbols and format properly
+function cleanBotMessage(message) {
+    // Remove markdown headers (###, ##, #)
+    let cleaned = message.replace(/^#+\s+/gm, '');
+    
+    // Remove horizontal rules (---, ***, ___)
+    cleaned = cleaned.replace(/^[-*_]{3,}$/gm, '');
+    
+    // Remove excessive newlines (more than 2 consecutive)
+    cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+    
+    // Convert markdown bold to HTML bold
+    cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+    
+    // Convert markdown italic to HTML italic
+    cleaned = cleaned.replace(/\*(.*?)\*/g, '<i>$1</i>');
+    
+    // REMOVE MARKDOWN UNDERLINE SYNTAX - ADD THESE LINES:
+    cleaned = cleaned.replace(/__(.*?)__/g, '$1'); // Remove double underscore underline
+    cleaned = cleaned.replace(/_(.*?)_/g, '$1'); // Remove single underscore underline
+    
+    // Remove any remaining markdown symbols
+    cleaned = cleaned.replace(/\[.*?\]\(.*?\)/g, ''); // Remove links
+    cleaned = cleaned.replace(/`{1,3}/g, ''); // Remove inline code ticks
+    
+    // Also remove HTML underline tags if present
+    cleaned = cleaned.replace(/<u>(.*?)<\/u>/gi, '$1');
+    
+    // Ensure proper spacing
+    cleaned = cleaned.replace(/\s+\./g, '.');
+    cleaned = cleaned.replace(/\s+,/g, ',');
+    cleaned = cleaned.replace(/\s+!/g, '!');
+    cleaned = cleaned.replace(/\s+\?/g, '?');
+    
+ 
             
             // Ensure proper spacing
             cleaned = cleaned.replace(/\s+\./g, '.');
