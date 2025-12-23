@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2866,6 +2867,32 @@
                 font-size: 2rem;
             }
         }
+      
+      
+      
+      /* Typing animation styles */
+.typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background-color: var(--md-on-surface);
+    margin-left: 2px;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.message.bot .message-content.typing-animation {
+    opacity: 0;
+}
+
+.message.bot .message-content.typing-animation.typing-active {
+    opacity: 1;
+}
     </style>
 </head>
 <body class="light-theme">
@@ -5641,5 +5668,265 @@ Remember to be helpful and provide accurate information, including code when req
             btn.style.color = 'var(--md-on-surface-variant)';
         });
     </script>
+  <script>
+  
+    function displayBotMessage(message, typewriterEffect = true) {
+    const messageElement = document.createElement('div');
+    messageElement.className = 'message bot';
+    
+    // If typing animation is disabled or we shouldn't use it, display normally
+    if (!userSettings.typingAnimation || !typewriterEffect) {
+        // Original display logic without animation
+        const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const botMessageContent = createBotMessageContent(message, messageId);
+        
+        // Add timestamp
+        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        messageElement.innerHTML = `
+            <div class="ai-response-fullwidth">
+                ${botMessageContent}
+                ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
+            </div>
+        `;
+        
+        // Add timestamp to message element
+        addTimestampToMessage(messageElement);
+        
+        chatWindow.appendChild(messageElement);
+        
+        // Play AI response sound when bot message is displayed
+        playAIResponseSound();
+        
+        setTimeout(() => {
+            applyHighlighting(messageElement);
+        }, 100);
+        
+        // Check and add date separators
+        checkAndAddDateSeparator();
+        
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+    }
+    
+    // WITH TYPING ANIMATION
+    const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Create message structure with typing cursor
+    messageElement.innerHTML = `
+        <div class="ai-response-fullwidth">
+            <div class="message-content typing-animation" id="typing-content-${messageId}">
+                <span class="typing-cursor"></span>
+            </div>
+            ${userSettings.timestamps ? `<div class="message-timestamp" id="timestamp-${messageId}"></div>` : ''}
+        </div>
+    `;
+    
+    // Add timestamp to message element
+    addTimestampToMessage(messageElement);
+    
+    chatWindow.appendChild(messageElement);
+    
+    // Start typing animation
+    startTypingAnimation(messageId, message);
+    
+    // Check and add date separators
+    checkAndAddDateSeparator();
+    
+    messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Helper function to create bot message content (for non-animated display)
+function createBotMessageContent(message, messageId) {
+    let botMessageContent = '';
+    const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
+    let lastIndex = 0, match;
+
+    while ((match = codeBlockRegex.exec(message)) !== null) {
+        if (match.index > lastIndex) {
+            const textPart = message.substring(lastIndex, match.index).trim();
+            if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
+        }
+        const language = match[1] || 'plaintext';
+        const code = match[2];
+        const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        botMessageContent += `
+            <div class="code-block">
+                <div class="code-header">
+                    <span><span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">code</span> ${language}</span>
+                    <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
+                        <span class="material-icons-round">content_copy</span>
+                        <span>Copy</span>
+                    </button>
+                </div>
+                <div class="code-content" id="${uniqueId}">${escapeHtml(code)}</div>
+            </div>`;
+        lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < message.length) {
+        const textPart = message.substring(lastIndex).trim();
+        if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
+    }
+
+    botMessageContent += `
+        <div class="feedback-buttons" id="feedback-${messageId}">
+            <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
+                <span class="material-icons-round">thumb_up</span>
+                <span class="feedback-text">Like</span>
+            </button>
+            <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
+                <span class="material-icons-round">thumb_down</span>
+                <span class="feedback-text">Dislike</span>
+            </button>
+            <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
+                <span class="material-icons-round">refresh</span>
+                <span class="feedback-text">Retry</span>
+            </button>
+        </div>
+    `;
+
+    return botMessageContent;
+}
+
+// Typing animation function
+function startTypingAnimation(messageId, fullMessage) {
+    const typingElement = document.getElementById(`typing-content-${messageId}`);
+    const timestampElement = document.getElementById(`timestamp-${messageId}`);
+    
+    if (!typingElement) return;
+    
+    // Add active class to start animation
+    typingElement.classList.add('typing-active');
+    
+    let charIndex = 0;
+    let htmlContent = '';
+    
+    // Process code blocks first
+    const codeBlocks = [];
+    const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
+    let processedMessage = fullMessage;
+    let codeIndex = 0;
+    
+    // Replace code blocks with placeholders
+    processedMessage = processedMessage.replace(codeBlockRegex, (match, language, code) => {
+        const placeholder = `__CODEBLOCK_${codeIndex}__`;
+        codeBlocks.push({ language, code, placeholder });
+        codeIndex++;
+        return placeholder;
+    });
+    
+    // Function to type characters one by one
+    function typeCharacter() {
+        if (charIndex >= processedMessage.length) {
+            // Typing complete - replace placeholders with actual code blocks
+            let finalHtml = htmlContent;
+            
+            // Replace code block placeholders
+            codeBlocks.forEach(block => {
+                const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const codeBlockHtml = `
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span><span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">code</span> ${block.language || 'plaintext'}</span>
+                            <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
+                                <span class="material-icons-round">content_copy</span>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                        <div class="code-content" id="${uniqueId}">${escapeHtml(block.code)}</div>
+                    </div>`;
+                
+                finalHtml = finalHtml.replace(block.placeholder, codeBlockHtml);
+            });
+            
+            // Update the element with final content
+            typingElement.innerHTML = finalHtml;
+            
+            // Add timestamp
+            if (timestampElement) {
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                timestampElement.textContent = timestamp;
+            }
+            
+            // Add feedback buttons
+            const feedbackHtml = `
+                <div class="feedback-buttons" id="feedback-${messageId}">
+                    <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
+                        <span class="material-icons-round">thumb_up</span>
+                        <span class="feedback-text">Like</span>
+                    </button>
+                    <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
+                        <span class="material-icons-round">thumb_down</span>
+                        <span class="feedback-text">Dislike</span>
+                    </button>
+                    <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
+                        <span class="material-icons-round">refresh</span>
+                        <span class="feedback-text">Retry</span>
+                    </button>
+                </div>`;
+            
+            typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
+            
+            // Apply highlighting
+            setTimeout(() => {
+                applyHighlighting(typingElement.closest('.message'));
+            }, 100);
+            
+            // Play AI response sound when typing is complete
+            playAIResponseSound();
+            return;
+        }
+        
+        const currentChar = processedMessage.charAt(charIndex);
+        
+        // Handle special cases
+        if (currentChar === '\n') {
+            htmlContent += '<br>';
+        } else if (currentChar === ' ' && processedMessage.charAt(charIndex + 1) === ' ') {
+            htmlContent += '&nbsp;';
+        } else {
+            htmlContent += currentChar;
+        }
+        
+        // Update the element with current content and cursor
+        typingElement.innerHTML = formatTextWithLineBreaks(htmlContent) + '<span class="typing-cursor"></span>';
+        
+        charIndex++;
+        
+        // FASTER typing speed
+        const typingSpeed = getTypingSpeed(currentChar);
+        
+        // Scroll to keep message in view
+        typingElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Continue typing
+        setTimeout(typeCharacter, typingSpeed);
+    }
+    
+    // Start typing animation
+    setTimeout(() => {
+        typeCharacter();
+    }, 50);
+}
+
+// Helper function to determine typing speed based on character - FASTER VERSION
+function getTypingSpeed(char) {
+    if (char.match(/[.,;:!?]/)) {
+        // Shorter pause for punctuation
+        return Math.random() * 15 + 20;  // 20-35ms
+    } else if (char === ' ') {
+        // Very short pause for spaces
+        return Math.random() * 8 + 3;    // 3-11ms
+    } else if (char === '\n') {
+        // Shorter pause for new lines
+        return Math.random() * 20 + 30;  // 30-50ms
+    } else {
+        // Faster normal typing speed
+        return Math.random() * 8 + 8;    // 8-16ms
+    }
+}
+  
+  </script>
 </body>
 </html>
