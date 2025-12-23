@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Clover AI | Advanced AI Assistant by Aditya Jha</title>
+    <title>Clover AI</title>
     
     <!-- Google Fonts - Using Reverbit Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1587,13 +1587,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .message.bot .message-bubble {
-            background: var(--md-surface-variant);
-            color: var(--md-on-surface-variant);
-            border-bottom-left-radius: var(--md-radius-small);
-            border: 1px solid var(--md-outline);
-        }
-
+        
         .message-content {
             line-height: 1.6;
             font-family: var(--md-font-body);
@@ -5197,15 +5191,11 @@ Remember to be helpful and provide accurate information, including code when req
                 ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
             `;
 
-            messageElement.innerHTML = `
-                <div class="message-avatar">
-                    <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo">
-                </div>
-                <div class="message-bubble">
-                    ${botMessageContent}
-                </div>
-            `;
-            
+           messageElement.innerHTML = `
+    <div class="ai-response-fullwidth">
+        ${botMessageContent}
+    </div>
+`;
             // Add timestamp to message element
             addTimestampToMessage(messageElement);
             
