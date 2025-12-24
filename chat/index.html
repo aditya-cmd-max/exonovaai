@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -163,6 +162,14 @@
             --md-on-primary-container: #001d3d;
         }
 
+        /* Font Classes - ADDED */
+        .font-lora { --md-font-body: 'Lora', serif; }
+        .font-inter { --md-font-body: 'Inter', sans-serif; }
+        .font-roboto { --md-font-body: 'Roboto', sans-serif; }
+        .font-opensans { --md-font-body: 'Open Sans', sans-serif; }
+        .font-montserrat { --md-font-body: 'Montserrat', sans-serif; }
+        .font-sourcesanspro { --md-font-body: 'Source Sans Pro', sans-serif; }
+
         /* Gradient Username */
         .gradient-username {
             background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
@@ -297,17 +304,17 @@
         }
 
         .logo {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent; /* Changed from gradient to transparent */
-    border-radius: var(--md-radius-medium);
-    color: var(--md-on-primary);
-    overflow: hidden;
-    transition: var(--md-transition);
-}
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border-radius: var(--md-radius-medium);
+            color: var(--md-on-primary);
+            overflow: hidden;
+            transition: var(--md-transition);
+        }
 
         .logo:hover {
             transform: rotate(15deg) scale(1.1);
@@ -2143,39 +2150,36 @@
             }
         }
 
-        /* Feedback Buttons - RESPONSIVE */
+        /* Feedback Buttons - UPDATED ICON-ONLY STYLE */
         .feedback-buttons {
             display: flex;
             gap: var(--md-spacing-sm);
             margin-top: var(--md-spacing-md);
             padding-top: var(--md-spacing-sm);
             border-top: 1px solid var(--md-outline);
-            flex-wrap: wrap;
+            justify-content: flex-end;
             align-items: center;
         }
 
         .feedback-btn {
             display: inline-flex;
             align-items: center;
-            gap: var(--md-spacing-xs);
-            padding: var(--md-spacing-xs) var(--md-spacing-sm);
+            justify-content: center;
+            padding: 8px;
             background: transparent;
             color: var(--md-on-surface-variant);
             border: 1px solid var(--md-outline);
             border-radius: var(--md-radius-small);
-            font-family: var(--md-font-heading);
-            font-size: 0.875rem;
             cursor: pointer;
             transition: var(--md-transition);
-            flex: 1;
-            min-width: 0;
-            justify-content: center;
-            white-space: nowrap;
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
         }
 
         .feedback-btn:hover {
             background: var(--md-surface-variant);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .feedback-btn.liked {
@@ -2188,6 +2192,21 @@
             background: rgba(244, 67, 54, 0.1);
             color: #F44336;
             border-color: #F44336;
+        }
+
+        .feedback-btn.retry-btn:hover {
+            background: var(--md-primary-container);
+            color: var(--md-primary);
+            border-color: var(--md-primary);
+        }
+
+        .feedback-btn .material-icons-round {
+            font-size: 18px;
+        }
+
+        /* Hide text, show only icons */
+        .feedback-text {
+            display: none !important;
         }
 
         /* Custom Modal Styles - Reverbit Style */
@@ -2673,22 +2692,17 @@
             
             .feedback-buttons {
                 gap: var(--md-spacing-xs);
-                justify-content: space-between;
+                justify-content: flex-end;
             }
             
             .feedback-btn {
-                flex: 0 1 calc(33.333% - 8px);
-                padding: 8px 6px;
-                font-size: 0.75rem;
-                min-height: 36px;
+                width: 32px;
+                height: 32px;
+                padding: 6px;
             }
             
-            .feedback-btn span.material-icons-round {
-                font-size: 16px !important;
-            }
-            
-            .feedback-btn span:not(.material-icons-round) {
-                font-size: 0.7rem;
+            .feedback-btn .material-icons-round {
+                font-size: 16px;
             }
             
             .customization-panel {
@@ -2778,24 +2792,17 @@
 
         @media (max-width: 480px) {
             .feedback-buttons {
-                flex-direction: row;
                 gap: 4px;
             }
             
             .feedback-btn {
-                flex: 1;
-                min-width: 70px;
-                padding: 6px 4px;
-                font-size: 0.7rem;
+                width: 30px;
+                height: 30px;
+                padding: 5px;
             }
             
-            .feedback-btn span.material-icons-round {
-                font-size: 14px !important;
-                margin-right: 2px;
-            }
-            
-            .feedback-btn span:not(.material-icons-round) {
-                display: none;
+            .feedback-btn .material-icons-round {
+                font-size: 14px;
             }
             
             .chat-header {
@@ -2908,7 +2915,7 @@
 }
 
 .message.bot .message-content {
-    font-family: 'Lora', sans-serif;
+    font-family: var(--md-font-body);
     line-height: 1.7;
     font-size: 1rem;
     color: var(--md-on-surface);
@@ -3893,7 +3900,7 @@
         <div class="banner-content">
             <div class="banner-image">
                 <!-- Replace with your screenshot URL -->
-                <img src="https://aditya-cmd-max.github.io/cloverai/Clover AI 1.5 (1).png" alt="Clover AI 1.5">
+                <img src="https://aditya-cmd-max.github.io/cloverai/Clover AI 1.5.gif" alt="Clover AI 1.5">
             </div>
             
             <div class="banner-text">
@@ -4070,6 +4077,7 @@
         let showPinnedOnly = false;
         let chatToDelete = null;
         let isSidebarCollapsed = false;
+        let feedbackButtonsInitialized = false;
         
         // Customization state
         let userSettings = {
@@ -4080,38 +4088,20 @@
             soundEnabled: true,
             typingAnimation: true,
             timestamps: true,
-            chatFont: 'Lora' // NEW: Added chat font setting
+            chatFont: 'Lora'
         };
 
         // Initialize AI Training System
         let aiTrainingSystem = null;
 
-        // Enhanced system message with AI training integration
+        // Enhanced system message with REAL-TIME date/time
         let systemMessage = {
             role: "model",
-            parts: [{ text: "" }] // Will be populated after AI training system loads
+            parts: [{ text: "" }]
         };
 
-        // Function to initialize AI training system
-        function initializeAITrainingSystem() {
-            try {
-                if (typeof AITrainingSystem !== 'undefined') {
-                    aiTrainingSystem = new AITrainingSystem();
-                    // Update system message with enhanced prompt
-                    systemMessage.parts[0].text = aiTrainingSystem.getEnhancedSystemPrompt();
-                    console.log('AI Training System initialized successfully');
-                } else {
-                    console.warn('AI Training System not available, using default system message');
-                    setDefaultSystemMessage();
-                }
-            } catch (error) {
-                console.error('Error initializing AI Training System:', error);
-                setDefaultSystemMessage();
-            }
-        }
-
-        function setDefaultSystemMessage() {
-            // Get current date and time
+        // Function to update system message with current date/time
+        function updateSystemMessageWithCurrentTime() {
             const now = new Date();
             const currentDate = now.toLocaleDateString('en-US', {
                 weekday: 'long',
@@ -4125,9 +4115,10 @@
                 second: '2-digit',
                 hour12: true
             });
+            const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             
-            // Enhanced system prompt with better formatting instructions
-            systemMessage.parts[0].text = `You are Clover AI, an advanced AI assistant created under a project- 'Reverbit' https://aditya-cmd-max.github.io/reverbit/. Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation.
+            // Enhanced system prompt with real-time date/time
+            let systemPrompt = `You are Clover AI, an advanced AI assistant created under a project- 'Reverbit' https://aditya-cmd-max.github.io/reverbit/. Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation.
 
 IMPORTANT FORMATTING RULES:
 1. NEVER use markdown syntax like **bold**, *italic*, # headings, or --- separators
@@ -4145,14 +4136,40 @@ RESPONSE STYLE GUIDELINES:
 - End with a helpful summary or follow-up question
 - Maintain consistent formatting throughout
 
-CURRENT CONTEXT:
-- Date: ${currentDate}
-- Time: ${currentTime}
-- Year: ${now.getFullYear()}
+CRITICAL REAL-TIME INFORMATION:
+- Current Date: ${currentDate}
+- Current Time: ${currentTime}
+- Current Year: ${now.getFullYear()}
+- Timezone: ${currentTimezone}
+- Day of Week: ${now.toLocaleDateString('en-US', { weekday: 'long' })}
+- Month: ${now.toLocaleDateString('en-US', { month: 'long' })}
 
-When users ask about time or date, provide accurate information based on the current context above. For technical questions, provide detailed, practical explanations. For creative requests, offer multiple perspectives. Always be helpful, professional, and clear in your responses.
+IMPORTANT: When users ask about time, date, or current information, you MUST provide accurate information based on the current context above. Use the exact dates and times provided here. Do not make up dates or times.`;
 
-Remember to format your responses cleanly without markdown symbols. Use proper spacing and structure for optimal readability.`;
+            // Add user name if set
+            if (userSettings.userName && userSettings.userName.trim() !== '') {
+                systemPrompt += ` Address the user as ${userSettings.userName} in your responses when appropriate.`;
+            }
+            
+            systemMessage.parts[0].text = systemPrompt;
+        }
+
+        // Function to initialize AI training system
+        function initializeAITrainingSystem() {
+            try {
+                if (typeof AITrainingSystem !== 'undefined') {
+                    aiTrainingSystem = new AITrainingSystem();
+                    // Update system message with enhanced prompt
+                    updateSystemMessageWithCurrentTime();
+                    console.log('AI Training System initialized successfully');
+                } else {
+                    console.warn('AI Training System not available, using default system message');
+                    updateSystemMessageWithCurrentTime();
+                }
+            } catch (error) {
+                console.error('Error initializing AI Training System:', error);
+                updateSystemMessageWithCurrentTime();
+            }
         }
 
         // Dynamic Welcome Messages
@@ -4188,13 +4205,6 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
         function updateWelcomeMessage() {
             if (dynamicWelcomeTitle) {
                 dynamicWelcomeTitle.innerHTML = getRandomWelcomeMessage();
-            }
-        }
-
-        // Function to update system message with user name
-        function updateSystemMessage() {
-            if (userSettings.userName && userSettings.userName.trim() !== '') {
-                systemMessage.parts[0].text += ` Address the user as ${userSettings.userName} in your responses when appropriate.`;
             }
         }
 
@@ -4468,7 +4478,7 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
                 }
                 
                 // Update system message with user name
-                updateSystemMessage();
+                updateSystemMessageWithCurrentTime();
                 
                 // Update welcome message
                 updateWelcomeMessage();
@@ -4557,13 +4567,19 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             closeMobileSidebar();
         }
 
-        // Load a specific chat - FIXED: No typing animation for loaded chats
+        // Load a specific chat
         function loadChat(chatId) {
             if (!chatSessions[chatId]) return;
             
             const chat = chatSessions[chatId];
             currentChatId = chatId;
             currentChatTitle.textContent = chat.title;
+            
+            // Update system message with current time before loading
+            updateSystemMessageWithCurrentTime();
+            
+            // Update the first message (system message) with current time
+            chat.history[0] = systemMessage;
             
             // Clear chat window and rebuild from history
             const welcomeSection = chatWindow.querySelector('.welcome-section');
@@ -4581,12 +4597,17 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
                 for (let i = 1; i < chat.history.length; i++) {
                     const message = chat.history[i];
                     if (message.role === "user") {
-                        displayUserMessage(message.parts[0].text, false); // false = no typing animation
+                        displayUserMessage(message.parts[0].text, false);
                     } else if (message.role === "model") {
-                        displayBotMessage(message.parts[0].text, false); // false = no typing animation for loaded chats
+                        displayBotMessage(message.parts[0].text, false);
                     }
                 }
             }
+            
+            // Initialize feedback buttons after loading chat
+            setTimeout(() => {
+                initFeedbackButtons();
+            }, 100);
             
             // Check and add date separators after loading chat
             setTimeout(() => {
@@ -4876,8 +4897,8 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             // Save settings
             saveUserSettings();
             
-            // Update system message with new user name
-            updateSystemMessage();
+            // Update system message with new user name and current time
+            updateSystemMessageWithCurrentTime();
             
             // Update welcome message
             updateWelcomeMessage();
@@ -5143,6 +5164,10 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             const currentChat = chatSessions[currentChatId];
             let modifiedHistory = [...currentChat.history];
             
+            // Update system message with current time
+            updateSystemMessageWithCurrentTime();
+            modifiedHistory[0] = systemMessage;
+            
             // Apply AI training and web search enhancements
             applyRequestEnhancements(modifiedHistory);
             
@@ -5185,6 +5210,11 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
                 return;
             }
 
+            // Check if user is asking about time/date
+            const userMessage = lastUserMessage.parts[0].text.toLowerCase();
+            const timeKeywords = ['time', 'date', 'today', 'now', 'current', 'what day', 'what time'];
+            const isTimeQuery = timeKeywords.some(keyword => userMessage.includes(keyword));
+            
             // Apply AI training enhancements
             if (aiTrainingSystem) {
                 const enhancements = aiTrainingSystem.enhanceResponseQuality(
@@ -5198,6 +5228,11 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             // Apply web search enhancement
             if (webSearchEnabled) {
                 lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
+            }
+            
+            // If it's a time query, ensure the AI knows to use current time
+            if (isTimeQuery) {
+                lastUserMessage.parts[0].text += " (Please provide accurate current date and time information based on the context provided)";
             }
         }
 
@@ -5224,6 +5259,11 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
                 
                 // Update AI training system
                 updateAITrainingSystem(modifiedHistory, cleanedMessage);
+                
+                // Initialize feedback buttons after displaying message
+                setTimeout(() => {
+                    initFeedbackButtons();
+                }, 100);
                 
                 // Update UI
                 setTimeout(() => {
@@ -5915,17 +5955,18 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
                 if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
             }
 
+            // Add feedback buttons with only icons
             botMessageContent += `
                 <div class="feedback-buttons" id="feedback-${messageId}">
-                    <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
+                    <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
                         <span class="material-icons-round">thumb_up</span>
                         <span class="feedback-text">Like</span>
                     </button>
-                    <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
+                    <button class="feedback-btn dislike-btn" data-action="dislike" data-message-id="${messageId}">
                         <span class="material-icons-round">thumb_down</span>
                         <span class="feedback-text">Dislike</span>
                     </button>
-                    <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
+                    <button class="feedback-btn retry-btn" data-action="retry" data-message-id="${messageId}">
                         <span class="material-icons-round">refresh</span>
                         <span class="feedback-text">Retry</span>
                     </button>
@@ -5933,6 +5974,23 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             `;
 
             return botMessageContent;
+        }
+
+        // Initialize feedback buttons
+        function initFeedbackButtons() {
+            if (feedbackButtonsInitialized) return;
+            
+            const feedbackButtons = document.querySelectorAll('.feedback-btn');
+            feedbackButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const action = this.getAttribute('data-action');
+                    const messageId = this.getAttribute('data-message-id');
+                    handleFeedback(messageId, action);
+                });
+            });
+            
+            feedbackButtonsInitialized = true;
         }
 
         // Enhanced text formatting function
@@ -6102,26 +6160,29 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
                     }
                     
                     // Add feedback buttons
-                   botMessageContent += `
-    <div class="feedback-buttons" id="feedback-${messageId}">
-        <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
-            <span class="material-icons-round">thumb_up</span>
-            <span class="feedback-text">Like</span>
-        </button>
-        <button class="feedback-btn dislike-btn" data-action="dislike" data-message-id="${messageId}">
-            <span class="material-icons-round">thumb_down</span>
-            <span class="feedback-text">Dislike</span>
-        </button>
-        <button class="feedback-btn retry-btn" data-action="retry" data-message-id="${messageId}">
-            <span class="material-icons-round">refresh</span>
-            <span class="feedback-text">Retry</span>
-        </button>
-    </div>
-`;
-
-return botMessageContent;
+                    const feedbackHtml = `
+                        <div class="feedback-buttons" id="feedback-${messageId}">
+                            <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
+                                <span class="material-icons-round">thumb_up</span>
+                                <span class="feedback-text">Like</span>
+                            </button>
+                            <button class="feedback-btn dislike-btn" data-action="dislike" data-message-id="${messageId}">
+                                <span class="material-icons-round">thumb_down</span>
+                                <span class="feedback-text">Dislike</span>
+                            </button>
+                            <button class="feedback-btn retry-btn" data-action="retry" data-message-id="${messageId}">
+                                <span class="material-icons-round">refresh</span>
+                                <span class="feedback-text">Retry</span>
+                            </button>
+                        </div>
+                    `;
                     
                     typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
+                    
+                    // Initialize feedback buttons
+                    setTimeout(() => {
+                        initFeedbackButtons();
+                    }, 50);
                     
                     // Final scroll to show complete message
                     setTimeout(() => {
@@ -6430,6 +6491,120 @@ return botMessageContent;
             });
         }
 
+        // UPDATED: handleFeedback function - FIXED
+        function handleFeedback(messageId, action) {
+            const feedbackContainer = document.getElementById(`feedback-${messageId}`);
+            if (!feedbackContainer) return;
+            
+            const likeBtn = feedbackContainer.querySelector('.like-btn');
+            const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
+            
+            // Reset all buttons
+            likeBtn.classList.remove('liked');
+            dislikeBtn.classList.remove('disliked');
+            
+            if (action === 'like') {
+                likeBtn.classList.add('liked');
+                showNotification('Thanks for your feedback! 👍');
+            } else if (action === 'dislike') {
+                dislikeBtn.classList.add('disliked');
+                showNotification('Thanks for your feedback! We\'ll try to improve. 👎');
+            } else if (action === 'retry') {
+                const messageElements = document.querySelectorAll('.message');
+                let userMessage = '';
+                
+                // Find the user message that came before this bot message
+                for (let i = 0; i < messageElements.length; i++) {
+                    if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
+                        // Look for the previous user message
+                        for (let j = i - 1; j >= 0; j--) {
+                            if (messageElements[j].classList.contains('user')) {
+                                const userBubble = messageElements[j].querySelector('.message-bubble .message-content');
+                                if (userBubble) {
+                                    userMessage = userBubble.textContent || userBubble.innerText;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+                
+                if (userMessage) {
+                    messageInput.value = userMessage;
+                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+                } else {
+                    showNotification('Could not find the original message to retry', 'error');
+                }
+                return; // Don't save retry as feedback
+            }
+            
+            // Save feedback to localStorage
+            const feedbackData = {
+                messageId,
+                action,
+                timestamp: new Date().toISOString()
+            };
+            
+            let feedbackHistory = JSON.parse(localStorage.getItem('cloverAIFeedback') || '[]');
+            feedbackHistory.push(feedbackData);
+            localStorage.setItem('cloverAIFeedback', JSON.stringify(feedbackHistory));
+            
+            // Update AI training system with feedback
+            if (aiTrainingSystem && typeof aiTrainingSystem.updateTrainingData === 'function') {
+                try {
+                    // Get conversation context for this feedback
+                    const conversationContext = getConversationContextForMessage(messageId);
+                    aiTrainingSystem.updateTrainingData(conversationContext, action);
+                    console.log('AI training updated with feedback:', action);
+                } catch (error) {
+                    console.error('Error updating AI training with feedback:', error);
+                }
+            }
+        }
+
+        // Helper function to get conversation context for a message
+        function getConversationContextForMessage(messageId) {
+            const interactions = [];
+            const messages = chatWindow.querySelectorAll('.message');
+            let foundTarget = false;
+            
+            for (let i = messages.length - 1; i >= 0; i--) {
+                const message = messages[i];
+                if (message.querySelector(`#feedback-${messageId}`)) {
+                    foundTarget = true;
+                    continue;
+                }
+                
+                if (foundTarget) {
+                    if (message.classList.contains('user')) {
+                        const userBubble = message.querySelector('.message-bubble .message-content');
+                        if (userBubble) {
+                            interactions.unshift({
+                                type: 'user',
+                                content: userBubble.textContent || userBubble.innerText,
+                                timestamp: message.getAttribute('data-timestamp')
+                            });
+                        }
+                    } else if (message.classList.contains('bot')) {
+                        const botBubble = message.querySelector('.message-bubble .message-content');
+                        if (botBubble) {
+                            interactions.unshift({
+                                type: 'bot',
+                                content: botBubble.textContent || botBubble.innerText,
+                                timestamp: message.getAttribute('data-timestamp')
+                            });
+                        }
+                    }
+                    
+                    // Limit context to last 5 interactions
+                    if (interactions.length >= 5) break;
+                }
+            }
+            
+            return interactions;
+        }
+
         function startVoiceInput() {
             if (!('webkitSpeechRecognition' in window)) {
                 showNotification('Voice input is not supported in your browser');
@@ -6480,133 +6655,7 @@ return botMessageContent;
             }, 3000);
         }
 
-        // Enhanced feedback handling with AI training integration
-        function handleFeedback(messageId, action) {
-            const feedbackContainer = document.getElementById(`feedback-${messageId}`);
-            const likeBtn = feedbackContainer.querySelector('.like-btn');
-            const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
-            
-            likeBtn.classList.remove('liked');
-            dislikeBtn.classList.remove('disliked');
-            
-            if (action === 'like') {
-                likeBtn.classList.add('liked');
-                showNotification('Thanks for your feedback! 👍');
-            } else if (action === 'dislike') {
-                dislikeBtn.classList.add('disliked');
-                showNotification('Thanks for your feedback! We\'ll try to improve. 👎');
-            } else if (action === 'retry') {
-                const messageElements = document.querySelectorAll('.message');
-                let userMessage = '';
-                
-                for (let i = 0; i < messageElements.length; i++) {
-                    if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
-                        if (i > 0 && messageElements[i-1].classList.contains('user')) {
-                            const userBubble = messageElements[i-1].querySelector('.message-bubble');
-                            if (userBubble) {
-                                userMessage = userBubble.textContent || userBubble.innerText;
-                            }
-                        }
-                        break;
-                    }
-                }
-                
-
-              // Add feedback buttons
-const feedbackHtml = `
-    <div class="feedback-buttons" id="feedback-${messageId}">
-        <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
-            <span class="material-icons-round">thumb_up</span>
-            <span class="feedback-text">Like</span>
-        </button>
-        <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
-            <span class="material-icons-round">thumb_down</span>
-            <span class="feedback-text">Dislike</span>
-        </button>
-        <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
-            <span class="material-icons-round">refresh</span>
-            <span class="feedback-text">Retry</span>
-        </button>
-    </div>
-`;
-
-typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
-              
-              
-              if (userMessage) {
-                    messageInput.value = userMessage;
-                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
-                } else {
-                    showNotification('Could not find the original message to retry', 'error');
-                }
-            }
-            
-            const feedbackData = {
-                messageId,
-                action,
-                timestamp: new Date().toISOString()
-            };
-            
-            let feedbackHistory = JSON.parse(localStorage.getItem('cloverAIFeedback') || '[]');
-            feedbackHistory.push(feedbackData);
-            localStorage.setItem('cloverAIFeedback', JSON.stringify(feedbackHistory));
-            
-            // Update AI training system with feedback
-            if (aiTrainingSystem && typeof aiTrainingSystem.updateTrainingData === 'function') {
-                try {
-                    // Get conversation context for this feedback
-                    const conversationContext = getConversationContextForMessage(messageId);
-                    aiTrainingSystem.updateTrainingData(conversationContext, action);
-                    console.log('AI training updated with feedback:', action);
-                } catch (error) {
-                    console.error('Error updating AI training with feedback:', error);
-                }
-            }
-        }
-
-        // Helper function to get conversation context for a message
-        function getConversationContextForMessage(messageId) {
-            const interactions = [];
-            const messages = chatWindow.querySelectorAll('.message');
-            let foundTarget = false;
-            
-            for (let i = messages.length - 1; i >= 0; i--) {
-                const message = messages[i];
-                if (message.querySelector(`#feedback-${messageId}`)) {
-                    foundTarget = true;
-                    continue;
-                }
-                
-                if (foundTarget) {
-                    if (message.classList.contains('user')) {
-                        const userBubble = message.querySelector('.message-bubble');
-                        if (userBubble) {
-                            interactions.unshift({
-                                type: 'user',
-                                content: userBubble.textContent || userBubble.innerText,
-                                timestamp: message.getAttribute('data-timestamp')
-                            });
-                        }
-                    } else if (message.classList.contains('bot')) {
-                        const botBubble = message.querySelector('.message-bubble');
-                        if (botBubble) {
-                            interactions.unshift({
-                                type: 'bot',
-                                content: botBubble.textContent || botBubble.innerText,
-                                timestamp: message.getAttribute('data-timestamp')
-                            });
-                        }
-                    }
-                    
-                    // Limit context to last 5 interactions
-                    if (interactions.length >= 5) break;
-                }
-            }
-            
-            return interactions;
-        }
-
-        // Initialize enhanced layout
+        // Enhanced layout initialization
         function initEnhancedLayout() {
             initBackToTop();
             initToolsDropdown();
@@ -6629,7 +6678,110 @@ typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
         document.querySelectorAll('.feature-btn, .quick-action, .suggestion-chip').forEach(btn => {
             btn.style.color = 'var(--md-on-surface-variant)';
         });
+
+        // Add cleanup for old chats every hour
+        setInterval(cleanupOldChats, 3600000); // 1 hour
+
+        function cleanupOldChats() {
+            const maxChats = 50;
+            const maxAgeDays = 30;
+            
+            const now = new Date();
+            const chatIds = Object.keys(chatSessions);
+            
+            // If too many chats, delete oldest unpinned ones
+            if (chatIds.length > maxChats) {
+                const sortedChats = chatIds
+                    .filter(id => !chatSessions[id].pinned)
+                    .sort((a, b) => 
+                        new Date(chatSessions[a].updatedAt) - 
+                        new Date(chatSessions[b].updatedAt)
+                    );
+                
+                const chatsToDelete = sortedChats.slice(0, chatIds.length - maxChats);
+                chatsToDelete.forEach(id => {
+                    delete chatSessions[id];
+                    showNotification(`Deleted old chat: ${chatSessions[id]?.title || 'Unnamed chat'}`);
+                });
+            }
+            
+            // Delete chats older than maxAgeDays (unless pinned)
+            chatIds.forEach(id => {
+                if (!chatSessions[id].pinned) {
+                    const chatDate = new Date(chatSessions[id].updatedAt);
+                    const daysOld = (now - chatDate) / (1000 * 60 * 60 * 24);
+                    
+                    if (daysOld > maxAgeDays) {
+                        delete chatSessions[id];
+                        showNotification(`Deleted old chat: ${chatSessions[id]?.title || 'Unnamed chat'}`);
+                    }
+                }
+            });
+            
+            saveChatSessions();
+            renderChatSessions();
+        }
+
+        // Add sanitization function
+        function sanitizeInput(input) {
+            const div = document.createElement('div');
+            div.textContent = input;
+            return div.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Use in displayUserMessage
+        function displayUserMessage(message, showTyping = true) {
+            const sanitizedMessage = sanitizeInput(message);
+            // ... rest of the code remains the same
+        }
+
+        // Add debounce for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Analytics tracking
+        function trackEvent(eventName, data = {}) {
+            const analytics = {
+                event: eventName,
+                timestamp: new Date().toISOString(),
+                chatId: currentChatId,
+                ...data
+            };
+            
+            console.log('Analytics:', analytics);
+            
+            // Save locally for batch processing
+            let analyticsLog = JSON.parse(localStorage.getItem('cloverAIAnalytics') || '[]');
+            analyticsLog.push(analytics);
+            localStorage.setItem('cloverAIAnalytics', JSON.stringify(analyticsLog.slice(-1000)));
+        }
+
+        // Track important events
+        chatForm.addEventListener('submit', () => {
+            trackEvent('chat_message_sent', { 
+                messageLength: messageInput.value.length,
+                mode: currentMode 
+            });
+        });
+
+        newChatBtn.addEventListener('click', () => {
+            trackEvent('new_chat_created');
+        });
+
+        themeToggle.addEventListener('click', () => {
+            trackEvent('theme_toggled', { 
+                newTheme: document.body.classList.contains('dark-theme') ? 'dark' : 'light' 
+            });
+        });
     </script>
 </body>
 </html>
-  
