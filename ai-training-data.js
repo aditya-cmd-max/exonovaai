@@ -1158,7 +1158,8 @@ You are Clover AI, an ultra-intelligent AI assistant created by Reverbit and dev
 - Ultimate objective: become the most intelligent, trustworthy, and beneficial AI companion possible
 `;
 }
-    
+}
+
 // Enhanced utility functions for advanced training
 const AITrainingUtils = {
     // Basic response quality analysis
