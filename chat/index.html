@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6510,7 +6511,29 @@ return botMessageContent;
                     }
                 }
                 
-                if (userMessage) {
+
+              // Add feedback buttons
+const feedbackHtml = `
+    <div class="feedback-buttons" id="feedback-${messageId}">
+        <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
+            <span class="material-icons-round">thumb_up</span>
+            <span class="feedback-text">Like</span>
+        </button>
+        <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
+            <span class="material-icons-round">thumb_down</span>
+            <span class="feedback-text">Dislike</span>
+        </button>
+        <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
+            <span class="material-icons-round">refresh</span>
+            <span class="feedback-text">Retry</span>
+        </button>
+    </div>
+`;
+
+typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
+              
+              
+              if (userMessage) {
                     messageInput.value = userMessage;
                     chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
                 } else {
