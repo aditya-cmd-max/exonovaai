@@ -98,6 +98,7 @@
             /* Sidebar */
             --sidebar-width: 320px;
             --sidebar-min-width: 72px;
+            --sidebar-sticky-top: 104px; /* Header height (80px) + padding (24px) */
         }
 
         /* Dark Theme - Reverbit Style */
@@ -295,6 +296,7 @@
             z-index: 100;
             backdrop-filter: blur(10px);
             box-shadow: var(--md-elevation-1);
+            height: 80px;
         }
 
         .logo-container {
@@ -996,7 +998,7 @@
             transform: rotate(15deg);
         }
 
-        /* Improved Layout Structure - UPDATED FOR STICKY SIDEBAR */
+        /* Improved Layout Structure - FIXED STICKY SIDEBAR */
         .app-container {
             display: flex;
             flex: 1;
@@ -1007,9 +1009,10 @@
             gap: var(--md-spacing-xl);
             min-height: calc(100vh - 80px);
             position: relative;
+            align-items: flex-start;
         }
 
-        /* Sidebar - STICKY FOR DESKTOP - Reverbit Style */
+        /* Sidebar - STICKY FOR DESKTOP - FIXED */
         .sidebar {
             width: var(--sidebar-width);
             min-width: var(--sidebar-min-width);
@@ -1024,82 +1027,13 @@
             gap: var(--md-spacing-xl);
             overflow-y: auto;
             transition: var(--md-transition);
-            resize: horizontal;
             position: sticky;
-            top: calc(80px + var(--md-spacing-lg)); /* Header height + padding */
-            height: calc(100vh - 80px - var(--md-spacing-lg) * 2); /* Full height minus header and padding */
-            max-height: calc(100vh - 80px - var(--md-spacing-lg) * 2);
+            top: var(--sidebar-sticky-top);
+            height: calc(100vh - var(--sidebar-sticky-top) - var(--md-spacing-lg));
+            max-height: calc(100vh - var(--sidebar-sticky-top) - var(--md-spacing-lg));
             flex-shrink: 0;
             align-self: flex-start;
-        }
-
-        /* Remove hover effect for sidebar resize when collapsed */
-        .sidebar.collapsed::after {
-            display: none;
-        }
-
-        /* Sidebar Layout Fixes */
-        .sidebar {
-            position: sticky;
-            top: calc(80px + var(--md-spacing-lg));
-            align-self: flex-start;
-        }
-
-        .sidebar-section {
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-            position: relative;
-        }
-
-        /* First section: Chat Sessions */
-        .sidebar-section:first-child {
-            flex: 0 0 auto;
-        }
-
-        /* Second section: Feature buttons - take remaining space */
-        .sidebar-section:nth-child(2) {
-            flex: 1;
-            min-height: 0;
-            margin-top: auto;
-            padding-top: var(--md-spacing-md);
-            border-top: 1px solid var(--md-outline-variant);
-        }
-
-        /* Chat sessions container - fixed height with scroll */
-        .chat-sessions-container {
-            flex: 1;
-            min-height: 200px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        /* Make feature buttons visible at bottom */
-        .feature-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-sm);
-        }
-
-        /* Resize Handle - Only show when not collapsed */
-        .sidebar:not(.collapsed)::after {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: 50%;
-            bottom: 50%;
-            height: 40px;
-            width: 8px;
-            cursor: col-resize;
-            z-index: 10;
-            background: var(--md-outline);
-            border-radius: 4px;
-            opacity: 0;
-            transition: var(--md-transition);
-        }
-
-        .sidebar:not(.collapsed):hover::after {
-            opacity: 1;
+            overflow-x: hidden;
         }
 
         /* Collapsed Sidebar Styles */
@@ -1391,7 +1325,7 @@
             border-left-color: var(--md-secondary);
         }
 
-        /* Main Content - UPDATED FOR STICKY SIDEBAR */
+        /* Main Content - FIXED */
         .main-content {
             flex: 1;
             display: flex;
@@ -1400,6 +1334,7 @@
             min-width: 0;
             width: 100%;
             position: relative;
+            min-height: calc(100vh - 80px - var(--md-spacing-lg) * 2);
         }
 
         /* Chat Header - Reverbit Style */
@@ -1519,6 +1454,7 @@
             display: flex;
             gap: var(--md-spacing-lg);
             animation: fadeIn 0.3s ease-out;
+            align-items: flex-start;
         }
 
         .message.user {
@@ -1844,6 +1780,82 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+
+        /* Web Search Indicator Styles - NEW */
+        .web-search-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-xs);
+            background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+            color: var(--md-on-primary);
+            padding: var(--md-spacing-xs) var(--md-spacing-sm);
+            border-radius: var(--md-radius-pill);
+            font-family: var(--md-font-heading);
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: var(--md-spacing-sm);
+            animation: slideIn 0.3s ease-out;
+            width: fit-content;
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .web-search-indicator .material-icons-round {
+            font-size: 14px;
+        }
+
+        .web-search-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--md-on-primary);
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--md-transition);
+            padding: 0;
+        }
+
+        .web-search-close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Rotating logo animation - NEW */
+        .ai-logo-rotating {
+            animation: rotate 2s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(180deg);
+            }
+            50% {
+                transform: rotate(360deg);
+            }
+            75% {
+                transform: rotate(540deg);
+            }
+            100% {
+                transform: rotate(720deg);
+            }
         }
 
         /* Tools Dropdown */
@@ -2603,6 +2615,523 @@
             transform: rotate(90deg);
         }
 
+        /* Typing animation styles */
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background-color: var(--md-on-surface);
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .message.bot .message-content.typing-animation {
+            opacity: 0;
+        }
+
+        .message.bot .message-content.typing-animation.typing-active {
+            opacity: 1;
+        }
+
+        /* Improved AI Message Formatting */
+        .ai-response-fullwidth {
+            width: 100%;
+            flex: 1;
+        }
+
+        .message.bot .message-bubble {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+            border-bottom-left-radius: var(--md-radius-small);
+            border: 1px solid var(--md-outline);
+            max-width: 100%;
+            flex: 1;
+        }
+
+        .message.bot .message-content {
+            font-family: var(--md-font-body);
+            line-height: 1.7;
+            font-size: 1rem;
+            color: var(--md-on-surface);
+        }
+
+        /* Clean formatting - remove weird symbols */
+        .message.bot .message-content hr {
+            border: none;
+            height: 1px;
+            background: var(--md-outline);
+            margin: var(--md-spacing-lg) 0;
+        }
+
+        .message.bot .message-content blockquote {
+            border-left: 4px solid var(--md-primary);
+            padding-left: var(--md-spacing-md);
+            margin: var(--md-spacing-md) 0;
+            color: var(--md-on-surface-variant);
+            font-style: italic;
+        }
+
+        /* Proper list styling */
+        .message.bot .message-content ul,
+        .message.bot .message-content ol {
+            margin: var(--md-spacing-md) 0 var(--md-spacing-md) var(--md-spacing-xl);
+            padding: 0;
+        }
+
+        .message.bot .message-content li {
+            margin-bottom: var(--md-spacing-sm);
+            padding-left: var(--md-spacing-sm);
+        }
+
+        .message.bot .message-content ul li {
+            list-style-type: disc;
+        }
+
+        .message.bot .message-content ol li {
+            list-style-type: decimal;
+        }
+
+        /* Headings */
+        .message.bot .message-content h1,
+        .message.bot .message-content h2,
+        .message.bot .message-content h3,
+        .message.bot .message-content h4 {
+            margin: var(--md-spacing-lg) 0 var(--md-spacing-md) 0;
+            font-weight: 600;
+            color: var(--md-on-surface);
+            font-family: var(--md-font-heading);
+        }
+
+        .message.bot .message-content h1 { font-size: 1.5rem; }
+        .message.bot .message-content h2 { font-size: 1.25rem; }
+        .message.bot .message-content h3 { font-size: 1.125rem; }
+        .message.bot .message-content h4 { font-size: 1rem; }
+
+        /* Tables */
+        .message.bot .message-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--md-spacing-md) 0;
+            font-size: 0.95rem;
+        }
+
+        .message.bot .message-content th,
+        .message.bot .message-content td {
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            border: 1px solid var(--md-outline);
+            text-align: left;
+        }
+
+        .message.bot .message-content th {
+            background: var(--md-surface);
+            font-weight: 600;
+        }
+
+        .message.bot .message-content tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .dark-theme .message.bot .message-content tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Better spacing */
+        .message.bot .message-content p {
+            margin-bottom: var(--md-spacing-md);
+        }
+
+        .message.bot .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Clean badges/tags */
+        .message.bot .message-content .badge,
+        .message.bot .message-content .tag {
+            display: inline-block;
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin: 0 4px 4px 0;
+            font-weight: 500;
+        }
+
+        /* Keyboard shortcuts */
+        .message.bot .message-content kbd {
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 0 var(--md-outline);
+        }
+
+        /* Note boxes */
+        .message.bot .message-content .note {
+            background: rgba(13, 138, 114, 0.1);
+            border-left: 4px solid var(--md-secondary);
+            padding: var(--md-spacing-md);
+            margin: var(--md-spacing-md) 0;
+            border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+        }
+
+        .dark-theme .message.bot .message-content .note {
+            background: rgba(13, 138, 114, 0.15);
+        }
+
+        .message.bot .message-content .warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: var(--md-spacing-md);
+            margin: var(--md-spacing-md) 0;
+            border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+        }
+
+        .dark-theme .message.bot .message-content .warning {
+            background: rgba(255, 193, 7, 0.15);
+        }
+
+        .message.bot .message-content .info {
+            background: rgba(33, 150, 243, 0.1);
+            border-left: 4px solid #2196f3;
+            padding: var(--md-spacing-md);
+            margin: var(--md-spacing-md) 0;
+            border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+        }
+
+        .dark-theme .message.bot .message-content .info {
+            background: rgba(33, 150, 243, 0.15);
+        }
+      
+        /* Add this to your CSS to prevent any smooth scrolling during typing */
+        .chat-window {
+            scroll-behavior: auto;
+        }
+
+        .typing-active {
+            pointer-events: none;
+        }
+
+        /* Ensure no transitions cause shaking */
+        .message, .message-bubble, .ai-response-fullwidth {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        /* Font Options - Reverbit Style */
+        .font-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--md-spacing-sm);
+        }
+
+        .font-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--md-spacing-md) var(--md-spacing-lg);
+            background: var(--md-surface-variant);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-radius-medium);
+            font-family: var(--md-font-heading);
+                    font-size: 1rem;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            transition: var(--md-transition);
+            text-align: left;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .font-option:hover {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            transform: translateX(4px);
+            border-left-color: var(--md-primary);
+        }
+
+        .font-option.active {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border-color: var(--md-primary);
+            border-left-color: var(--md-primary);
+        }
+
+        .font-option span:first-child {
+            font-family: inherit;
+            font-weight: 500;
+        }
+
+        .font-option .check-icon {
+            font-size: 1.25rem;
+            opacity: 0;
+            transition: var(--md-transition);
+        }
+
+        .font-option.active .check-icon {
+            opacity: 1;
+        }
+
+        /* Set specific font families for preview */
+        .font-option[data-font="Lora"] { font-family: 'Lora', serif; }
+        .font-option[data-font="Inter"] { font-family: 'Inter', sans-serif; }
+        .font-option[data-font="Roboto"] { font-family: 'Roboto', sans-serif; }
+        .font-option[data-font="Open Sans"] { font-family: 'Open Sans', sans-serif; }
+        .font-option[data-font="Montserrat"] { font-family: 'Montserrat', sans-serif; }
+        .font-option[data-font="Source Sans Pro"] { font-family: 'Source Sans Pro', sans-serif; }
+
+        /* "New" badge for font selection */
+        .new-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--md-primary);
+            color: white;
+            font-family: var(--md-font-heading);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        .dark-theme .new-badge {
+            background: var(--md-primary-light);
+            color: var(--md-on-primary);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Enhanced AI Response Formatting */
+        .message.bot .message-content {
+            font-family: var(--md-font-body);
+            line-height: 1.7;
+            font-size: 1rem;
+            color: var(--md-on-surface);
+        }
+
+        /* AI Headings */
+        .ai-heading {
+            font-family: var(--md-font-heading);
+            font-weight: 600;
+            color: var(--md-on-surface);
+            margin: 1.5em 0 0.75em 0;
+            padding-bottom: 0.25em;
+            border-bottom: 1px solid var(--md-outline-variant);
+        }
+
+        .ai-heading-1 {
+            font-size: 1.5rem;
+            border-bottom-width: 2px;
+            border-color: var(--md-primary);
+        }
+
+        .ai-heading-2 {
+            font-size: 1.25rem;
+        }
+
+        .ai-heading-3 {
+            font-size: 1.125rem;
+        }
+
+        /* AI Paragraphs */
+        .ai-paragraph {
+            margin-bottom: 1.25em;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .ai-paragraph:last-child {
+            margin-bottom: 0;
+        }
+
+        /* AI Lists */
+        .ai-list {
+            margin: 1em 0 1em 1.5em;
+            padding: 0;
+            counter-reset: list-item;
+        }
+
+        .ai-list-item {
+            margin-bottom: 0.5em;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 0.5em;
+            counter-increment: list-item;
+        }
+
+        .ai-list-item::before {
+            content: "•";
+            color: var(--md-primary);
+            font-weight: bold;
+            position: absolute;
+            left: -1em;
+        }
+
+        .ai-numbered-item::before {
+            content: counter(list-item) ".";
+            color: var(--md-secondary);
+        }
+
+        /* AI Tables */
+        .ai-table-container {
+            overflow-x: auto;
+            margin: 1.5em 0;
+            border-radius: var(--md-radius-medium);
+            border: 1px solid var(--md-outline);
+            background: var(--md-surface);
+        }
+
+        .ai-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            min-width: 500px;
+        }
+
+        .ai-table-header {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface);
+            font-weight: 600;
+            padding: 0.75em 1em;
+            text-align: left;
+            border-bottom: 2px solid var(--md-outline);
+            font-family: var(--md-font-heading);
+        }
+
+        .ai-table-cell {
+            padding: 0.75em 1em;
+            border-bottom: 1px solid var(--md-outline-variant);
+            border-right: 1px solid var(--md-outline-variant);
+        }
+
+        .ai-table-row:hover {
+            background: var(--md-surface-variant);
+        }
+
+        .ai-table-row:last-child .ai-table-cell {
+            border-bottom: none;
+        }
+
+        .ai-table-cell:last-child {
+            border-right: none;
+        }
+
+        /* AI Note boxes */
+        .ai-note {
+            background: rgba(13, 138, 114, 0.1);
+            border-left: 4px solid var(--md-secondary);
+            padding: 1em;
+            margin: 1.5em 0;
+            border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+            font-size: 0.95rem;
+        }
+
+        .dark-theme .ai-note {
+            background: rgba(13, 138, 114, 0.15);
+        }
+
+        .ai-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 1em;
+            margin: 1.5em 0;
+            border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+            font-size: 0.95rem;
+        }
+
+        .dark-theme .ai-warning {
+            background: rgba(255, 193, 7, 0.15);
+        }
+
+        .ai-info {
+            background: rgba(33, 150, 243, 0.1);
+            border-left: 4px solid #2196f3;
+            padding: 1em;
+            margin: 1.5em 0;
+            border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+            font-size: 0.95rem;
+        }
+
+        .dark-theme .ai-info {
+            background: rgba(33, 150, 243, 0.15);
+        }
+
+        /* AI Keyboard shortcuts */
+        .ai-kbd {
+            background: var(--md-surface);
+            border: 1px solid var(--md-outline);
+            border-radius: 4px;
+            padding: 0.2em 0.5em;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            box-shadow: 0 2px 0 var(--md-outline-variant);
+        }
+
+        /* AI Badges/Tags */
+        .ai-badge {
+            display: inline-block;
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            padding: 0.2em 0.8em;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin: 0 0.25em 0.25em 0;
+            font-weight: 500;
+            vertical-align: middle;
+        }
+
+        /* Responsive adjustments for AI formatting */
+        @media (max-width: 768px) {
+            .ai-heading-1 {
+                font-size: 1.25rem;
+            }
+            
+            .ai-heading-2 {
+                font-size: 1.125rem;
+            }
+            
+            .ai-heading-3 {
+                font-size: 1rem;
+            }
+            
+            .ai-table-container {
+                margin: 1em -0.5em;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            
+            .ai-table {
+                min-width: 100%;
+            }
+            
+            .ai-table-header,
+            .ai-table-cell {
+                padding: 0.5em 0.75em;
+                font-size: 0.9rem;
+            }
+            
+            .font-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Mobile-specific adjustments */
         @media (max-width: 768px) {
             .app-container {
@@ -2850,523 +3379,6 @@
                 font-size: 2rem;
             }
         }
-      
-      
-      
-      /* Typing animation styles */
-.typing-cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1em;
-    background-color: var(--md-on-surface);
-    margin-left: 2px;
-    animation: blink 1s infinite;
-    vertical-align: middle;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-.message.bot .message-content.typing-animation {
-    opacity: 0;
-}
-
-.message.bot .message-content.typing-animation.typing-active {
-    opacity: 1;
-}
-
-/* Improved AI Message Formatting */
-.ai-response-fullwidth {
-    width: 100%;
-}
-
-.message.bot .message-bubble {
-    background: var(--md-surface-variant);
-    color: var(--md-on-surface-variant);
-    border-bottom-left-radius: var(--md-radius-small);
-    border: 1px solid var(--md-outline);
-    max-width: 100%;
-}
-
-.message.bot .message-content {
-    font-family: var(--md-font-body);
-    line-height: 1.7;
-    font-size: 1rem;
-    color: var(--md-on-surface);
-}
-
-/* Clean formatting - remove weird symbols */
-.message.bot .message-content hr {
-    border: none;
-    height: 1px;
-    background: var(--md-outline);
-    margin: var(--md-spacing-lg) 0;
-}
-
-.message.bot .message-content blockquote {
-    border-left: 4px solid var(--md-primary);
-    padding-left: var(--md-spacing-md);
-    margin: var(--md-spacing-md) 0;
-    color: var(--md-on-surface-variant);
-    font-style: italic;
-}
-
-/* Proper list styling */
-.message.bot .message-content ul,
-.message.bot .message-content ol {
-    margin: var(--md-spacing-md) 0 var(--md-spacing-md) var(--md-spacing-xl);
-    padding: 0;
-}
-
-.message.bot .message-content li {
-    margin-bottom: var(--md-spacing-sm);
-    padding-left: var(--md-spacing-sm);
-}
-
-.message.bot .message-content ul li {
-    list-style-type: disc;
-}
-
-.message.bot .message-content ol li {
-    list-style-type: decimal;
-}
-
-/* Headings */
-.message.bot .message-content h1,
-.message.bot .message-content h2,
-.message.bot .message-content h3,
-.message.bot .message-content h4 {
-    margin: var(--md-spacing-lg) 0 var(--md-spacing-md) 0;
-    font-weight: 600;
-    color: var(--md-on-surface);
-    font-family: var(--md-font-heading);
-}
-
-.message.bot .message-content h1 { font-size: 1.5rem; }
-.message.bot .message-content h2 { font-size: 1.25rem; }
-.message.bot .message-content h3 { font-size: 1.125rem; }
-.message.bot .message-content h4 { font-size: 1rem; }
-
-/* Tables */
-.message.bot .message-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--md-spacing-md) 0;
-    font-size: 0.95rem;
-}
-
-.message.bot .message-content th,
-.message.bot .message-content td {
-    padding: var(--md-spacing-sm) var(--md-spacing-md);
-    border: 1px solid var(--md-outline);
-    text-align: left;
-}
-
-.message.bot .message-content th {
-    background: var(--md-surface);
-    font-weight: 600;
-}
-
-.message.bot .message-content tr:nth-child(even) {
-    background: rgba(0, 0, 0, 0.02);
-}
-
-.dark-theme .message.bot .message-content tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-/* Better spacing */
-.message.bot .message-content p {
-    margin-bottom: var(--md-spacing-md);
-}
-
-.message.bot .message-content p:last-child {
-    margin-bottom: 0;
-}
-
-/* Clean badges/tags */
-.message.bot .message-content .badge,
-.message.bot .message-content .tag {
-    display: inline-block;
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    margin: 0 4px 4px 0;
-    font-weight: 500;
-}
-
-/* Keyboard shortcuts */
-.message.bot .message-content kbd {
-    background: var(--md-surface);
-    border: 1px solid var(--md-outline);
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-family: monospace;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 0 var(--md-outline);
-}
-
-/* Note boxes */
-.message.bot .message-content .note {
-    background: rgba(13, 138, 114, 0.1);
-    border-left: 4px solid var(--md-secondary);
-    padding: var(--md-spacing-md);
-    margin: var(--md-spacing-md) 0;
-    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
-}
-
-.dark-theme .message.bot .message-content .note {
-    background: rgba(13, 138, 114, 0.15);
-}
-
-.message.bot .message-content .warning {
-    background: rgba(255, 193, 7, 0.1);
-    border-left: 4px solid #ffc107;
-    padding: var(--md-spacing-md);
-    margin: var(--md-spacing-md) 0;
-    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
-}
-
-.dark-theme .message.bot .message-content .warning {
-    background: rgba(255, 193, 7, 0.15);
-}
-
-.message.bot .message-content .info {
-    background: rgba(33, 150, 243, 0.1);
-    border-left: 4px solid #2196f3;
-    padding: var(--md-spacing-md);
-    margin: var(--md-spacing-md) 0;
-    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
-}
-
-.dark-theme .message.bot .message-content .info {
-    background: rgba(33, 150, 243, 0.15);
-}
-      
-      /* Add this to your CSS to prevent any smooth scrolling during typing */
-.chat-window {
-    scroll-behavior: auto;
-}
-
-.typing-active {
-    pointer-events: none;
-}
-
-/* Ensure no transitions cause shaking */
-.message, .message-bubble, .ai-response-fullwidth {
-    transition: none !important;
-    animation: none !important;
-}
-
-/* Font Options - Reverbit Style */
-.font-options {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--md-spacing-sm);
-}
-
-.font-option {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--md-spacing-md) var(--md-spacing-lg);
-    background: var(--md-surface-variant);
-    border: 1px solid var(--md-outline);
-    border-radius: var(--md-radius-medium);
-    font-family: var(--md-font-heading);
-            font-size: 1rem;
-    color: var(--md-on-surface-variant);
-    cursor: pointer;
-    transition: var(--md-transition);
-    text-align: left;
-    border-left: 4px solid transparent;
-    position: relative;
-}
-
-.font-option:hover {
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-    transform: translateX(4px);
-    border-left-color: var(--md-primary);
-}
-
-.font-option.active {
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-    border-color: var(--md-primary);
-    border-left-color: var(--md-primary);
-}
-
-.font-option span:first-child {
-    font-family: inherit;
-    font-weight: 500;
-}
-
-.font-option .check-icon {
-    font-size: 1.25rem;
-    opacity: 0;
-    transition: var(--md-transition);
-}
-
-.font-option.active .check-icon {
-    opacity: 1;
-}
-
-/* Set specific font families for preview */
-.font-option[data-font="Lora"] { font-family: 'Lora', serif; }
-.font-option[data-font="Inter"] { font-family: 'Inter', sans-serif; }
-.font-option[data-font="Roboto"] { font-family: 'Roboto', sans-serif; }
-.font-option[data-font="Open Sans"] { font-family: 'Open Sans', sans-serif; }
-.font-option[data-font="Montserrat"] { font-family: 'Montserrat', sans-serif; }
-.font-option[data-font="Source Sans Pro"] { font-family: 'Source Sans Pro', sans-serif; }
-
-/* "New" badge for font selection */
-.new-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--md-primary);
-    color: white;
-    font-family: var(--md-font-heading);
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    animation: pulse 1.5s infinite;
-}
-
-.dark-theme .new-badge {
-    background: var(--md-primary-light);
-    color: var(--md-on-primary);
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-/* Enhanced AI Response Formatting */
-.message.bot .message-content {
-    font-family: var(--md-font-body);
-    line-height: 1.7;
-    font-size: 1rem;
-    color: var(--md-on-surface);
-}
-
-/* AI Headings */
-.ai-heading {
-    font-family: var(--md-font-heading);
-    font-weight: 600;
-    color: var(--md-on-surface);
-    margin: 1.5em 0 0.75em 0;
-    padding-bottom: 0.25em;
-    border-bottom: 1px solid var(--md-outline-variant);
-}
-
-.ai-heading-1 {
-    font-size: 1.5rem;
-    border-bottom-width: 2px;
-    border-color: var(--md-primary);
-}
-
-.ai-heading-2 {
-    font-size: 1.25rem;
-}
-
-.ai-heading-3 {
-    font-size: 1.125rem;
-}
-
-/* AI Paragraphs */
-.ai-paragraph {
-    margin-bottom: 1.25em;
-    line-height: 1.7;
-    text-align: justify;
-}
-
-.ai-paragraph:last-child {
-    margin-bottom: 0;
-}
-
-/* AI Lists */
-.ai-list {
-    margin: 1em 0 1em 1.5em;
-    padding: 0;
-    counter-reset: list-item;
-}
-
-.ai-list-item {
-    margin-bottom: 0.5em;
-    line-height: 1.6;
-    position: relative;
-    padding-left: 0.5em;
-    counter-increment: list-item;
-}
-
-.ai-list-item::before {
-    content: "•";
-    color: var(--md-primary);
-    font-weight: bold;
-    position: absolute;
-    left: -1em;
-}
-
-.ai-numbered-item::before {
-    content: counter(list-item) ".";
-    color: var(--md-secondary);
-}
-
-/* AI Tables */
-.ai-table-container {
-    overflow-x: auto;
-    margin: 1.5em 0;
-    border-radius: var(--md-radius-medium);
-    border: 1px solid var(--md-outline);
-    background: var(--md-surface);
-}
-
-.ai-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-    min-width: 500px;
-}
-
-.ai-table-header {
-    background: var(--md-surface-variant);
-    color: var(--md-on-surface);
-    font-weight: 600;
-    padding: 0.75em 1em;
-    text-align: left;
-    border-bottom: 2px solid var(--md-outline);
-    font-family: var(--md-font-heading);
-}
-
-.ai-table-cell {
-    padding: 0.75em 1em;
-    border-bottom: 1px solid var(--md-outline-variant);
-    border-right: 1px solid var(--md-outline-variant);
-}
-
-.ai-table-row:hover {
-    background: var(--md-surface-variant);
-}
-
-.ai-table-row:last-child .ai-table-cell {
-    border-bottom: none;
-}
-
-.ai-table-cell:last-child {
-    border-right: none;
-}
-
-/* AI Note boxes */
-.ai-note {
-    background: rgba(13, 138, 114, 0.1);
-    border-left: 4px solid var(--md-secondary);
-    padding: 1em;
-    margin: 1.5em 0;
-    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
-    font-size: 0.95rem;
-}
-
-.dark-theme .ai-note {
-    background: rgba(13, 138, 114, 0.15);
-}
-
-.ai-warning {
-    background: rgba(255, 193, 7, 0.1);
-    border-left: 4px solid #ffc107;
-    padding: 1em;
-    margin: 1.5em 0;
-    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
-    font-size: 0.95rem;
-}
-
-.dark-theme .ai-warning {
-    background: rgba(255, 193, 7, 0.15);
-}
-
-.ai-info {
-    background: rgba(33, 150, 243, 0.1);
-    border-left: 4px solid #2196f3;
-    padding: 1em;
-    margin: 1.5em 0;
-    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
-    font-size: 0.95rem;
-}
-
-.dark-theme .ai-info {
-    background: rgba(33, 150, 243, 0.15);
-}
-
-/* AI Keyboard shortcuts */
-.ai-kbd {
-    background: var(--md-surface);
-    border: 1px solid var(--md-outline);
-    border-radius: 4px;
-    padding: 0.2em 0.5em;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 0.9em;
-    box-shadow: 0 2px 0 var(--md-outline-variant);
-}
-
-/* AI Badges/Tags */
-.ai-badge {
-    display: inline-block;
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-    padding: 0.2em 0.8em;
-    border-radius: 12px;
-    font-size: 0.85em;
-    margin: 0 0.25em 0.25em 0;
-    font-weight: 500;
-    vertical-align: middle;
-}
-
-/* Responsive adjustments for AI formatting */
-@media (max-width: 768px) {
-    .ai-heading-1 {
-        font-size: 1.25rem;
-    }
-    
-    .ai-heading-2 {
-        font-size: 1.125rem;
-    }
-    
-    .ai-heading-3 {
-        font-size: 1rem;
-    }
-    
-    .ai-table-container {
-        margin: 1em -0.5em;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-    }
-    
-    .ai-table {
-        min-width: 100%;
-    }
-    
-    .ai-table-header,
-    .ai-table-cell {
-        padding: 0.5em 0.75em;
-        font-size: 0.9rem;
-    }
-    
-    .font-options {
-        grid-template-columns: 1fr;
-    }
-}
       
     </style>
 </head>
@@ -3655,7 +3667,7 @@
     </header>
 
     <div class="app-container">
-        <!-- Sidebar - Desktop Only - NOW STICKY -->
+        <!-- Sidebar - Desktop Only - FIXED STICKY -->
         <aside class="sidebar" id="sidebar">
             <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
                 <span class="material-icons-round" id="sidebar-toggle-icon">chevron_left</span>
@@ -4013,6 +4025,7 @@
         let chatToDelete = null;
         let isSidebarCollapsed = false;
         let feedbackButtonsInitialized = false;
+        let webSearchIndicator = null; // NEW: Web search indicator element
         
         // Customization state
         let userSettings = {
@@ -4220,6 +4233,55 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             });
         }
 
+        // NEW: Web Search Indicator Functions
+        function showWebSearchIndicator() {
+            // Remove existing indicator if any
+            hideWebSearchIndicator();
+            
+            // Create web search indicator
+            webSearchIndicator = document.createElement('div');
+            webSearchIndicator.className = 'web-search-indicator';
+            webSearchIndicator.innerHTML = `
+                <span class="material-icons-round">search</span>
+                <span>Web Search Enabled</span>
+                <button class="web-search-close-btn" id="web-search-close-btn" title="Disable web search">
+                    <span class="material-icons-round">close</span>
+                </button>
+            `;
+            
+            // Insert the indicator before the input container
+            const inputContainer = document.querySelector('.input-container');
+            inputContainer.parentNode.insertBefore(webSearchIndicator, inputContainer);
+            
+            // Add event listener to close button
+            const closeBtn = document.getElementById('web-search-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', toggleWebSearch);
+            }
+        }
+
+        function hideWebSearchIndicator() {
+            if (webSearchIndicator && webSearchIndicator.parentNode) {
+                webSearchIndicator.remove();
+                webSearchIndicator = null;
+            }
+        }
+
+        function toggleWebSearch() {
+            webSearchEnabled = !webSearchEnabled;
+            
+            if (webSearchEnabled) {
+                showWebSearchIndicator();
+                showNotification('Web search enabled - I will search for up-to-date information');
+            } else {
+                hideWebSearchIndicator();
+                showNotification('Web search disabled');
+            }
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
+        }
+
         function handleToolAction(action) {
             switch(action) {
                 case 'web-search':
@@ -4227,21 +4289,24 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     break;
                 case 'brainstorm':
                     setMode('brainstorm');
+                    showNotification('Brainstorm mode activated');
                     break;
                 case 'explain-code':
                     setMode('explain');
+                    showNotification('Code explanation mode activated');
                     break;
                 case 'summarize':
                     setMode('summarize');
+                    showNotification('Summarize mode activated');
                     break;
                 case 'translate':
                     setMode('translate');
+                    showNotification('Translate mode activated');
                     break;
             }
             
             // Focus on input after selecting tool
             messageInput.focus();
-            showNotification(`${action.replace('-', ' ')} mode activated`);
         }
 
         // Banner Management Functions
@@ -4592,12 +4657,12 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     '<span class="material-icons-round">person</span>';
                 
                 messageElement.innerHTML = `
+                    <div class="message-avatar">
+                        ${avatarHTML}
+                    </div>
                     <div class="message-bubble">
                         <div class="message-content">${escapeHtml(text)}</div>
                         ${userSettings.timestamps ? `<div class="message-timestamp">${timeString}</div>` : ''}
-                    </div>
-                    <div class="message-avatar">
-                        ${avatarHTML}
                     </div>
                 `;
             } else {
@@ -4605,6 +4670,9 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 const botMessageContent = createBotMessageContent(text, messageId);
                 
                 messageElement.innerHTML = `
+                    <div class="message-avatar">
+                        <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo">
+                    </div>
                     <div class="ai-response-fullwidth">
                         ${botMessageContent}
                         ${userSettings.timestamps ? `<div class="message-timestamp">${timeString}</div>` : ''}
@@ -4834,12 +4902,12 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 }
                 
                 messageElement.innerHTML = `
+                    <div class="message-avatar">
+                        <span class="material-icons-round">person</span>
+                    </div>
                     <div class="message-bubble">
                         ${fileContent}
                         ${userSettings.timestamps ? `<div class="message-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>` : ''}
-                    </div>
-                    <div class="message-avatar">
-                        <span class="material-icons-round">person</span>
                     </div>
                 `;
                 
@@ -5053,53 +5121,11 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
         }
 
-        // Sidebar Resize and Toggle Functions - Improved for sticky sidebar
+        // Sidebar Resize and Toggle Functions - FIXED
         function initializeSidebarResize() {
             const sidebar = document.getElementById('sidebar');
             let isResizing = false;
             let startX, startWidth;
-
-            // Add resize handle functionality
-            sidebar.addEventListener('mousedown', function(e) {
-                // Don't allow resize if sidebar is collapsed
-                if (isSidebarCollapsed) return;
-                
-                // Check if click is near the right edge
-                const rect = sidebar.getBoundingClientRect();
-                if (e.clientX > rect.right - 10) {
-                    isResizing = true;
-                    startX = e.clientX;
-                    startWidth = parseInt(getComputedStyle(sidebar).width);
-                    
-                    document.body.style.cursor = 'col-resize';
-                    document.body.style.userSelect = 'none';
-                    
-                    function onMouseMove(e) {
-                        if (!isResizing) return;
-                        
-                        const newWidth = Math.max(250, Math.min(500, startWidth + (e.clientX - startX)));
-                        sidebar.style.width = newWidth + 'px';
-                        document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
-                        
-                        // Update sticky position calculations
-                        updateSidebarStickyPosition();
-                    }
-                    
-                    function onMouseUp() {
-                        isResizing = false;
-                        document.body.style.cursor = '';
-                        document.body.style.userSelect = '';
-                        document.removeEventListener('mousemove', onMouseMove);
-                        document.removeEventListener('mouseup', onMouseUp);
-                        
-                        // Save sidebar width
-                        localStorage.setItem('cloverAISidebarWidth', sidebar.style.width);
-                    }
-                    
-                    document.addEventListener('mousemove', onMouseMove);
-                    document.addEventListener('mouseup', onMouseUp);
-                }
-            });
 
             // Toggle sidebar collapse/expand
             sidebarToggle.addEventListener('click', function() {
@@ -5144,13 +5170,16 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 // Apply saved width if not collapsed
                 sidebar.style.width = savedSidebarWidth;
                 document.documentElement.style.setProperty('--sidebar-width', savedSidebarWidth);
+            } else {
+                // Default width
+                sidebar.style.width = 'var(--sidebar-width)';
             }
             
             // Initial position update
             setTimeout(updateSidebarStickyPosition, 100);
         }
 
-        // Function to update sidebar sticky position
+        // Function to update sidebar sticky position - FIXED
         function updateSidebarStickyPosition() {
             const sidebar = document.getElementById('sidebar');
             const headerHeight = 80; // Height of app-header
@@ -5187,6 +5216,15 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             // Apply AI training and web search enhancements
             applyRequestEnhancements(modifiedHistory);
+            
+            // Add web search context if enabled
+            if (webSearchEnabled) {
+                const lastMessage = modifiedHistory[modifiedHistory.length - 1];
+                if (lastMessage && lastMessage.role === "user") {
+                    // Add web search instruction to the user message
+                    lastMessage.parts[0].text = `[Web Search Enabled] Please search for the most up-to-date information about: ${lastMessage.parts[0].text}`;
+                }
+            }
             
             const payload = { contents: modifiedHistory };
             abortController = new AbortController();
@@ -5673,19 +5711,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             closeMobileSidebar();
         }
 
-        function toggleWebSearch() {
-            webSearchEnabled = !webSearchEnabled;
-            
-            if (webSearchEnabled) {
-                showNotification('Web search enabled - I will search for up-to-date information');
-            } else {
-                showNotification('Web search disabled');
-            }
-            
-            // Close mobile sidebar if open
-            closeMobileSidebar();
-        }
-
         function updateUIForMode() {
             switch (currentMode) {
                 case 'brainstorm':
@@ -5821,12 +5846,12 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
             
             messageElement.innerHTML = `
+                <div class="message-avatar">
+                    ${avatarHTML}
+                </div>
                 <div class="message-bubble">
                     ${messageContent}
                     ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
-                </div>
-                <div class="message-avatar">
-                    ${avatarHTML}
                 </div>
             `;
             
@@ -5855,6 +5880,9 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
                 messageElement.innerHTML = `
+                    <div class="message-avatar">
+                        <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo">
+                    </div>
                     <div class="ai-response-fullwidth">
                         ${botMessageContent}
                         ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
@@ -5879,36 +5907,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 return;
             }
             
-            // NEW CHAT RESPONSES - with optional typing animation
+            // NEW CHAT RESPONSES - with rotating logo
             const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
             
-            // If typing animation is disabled, display normally
-            if (!userSettings.typingAnimation) {
-                const botMessageContent = createBotMessageContent(message, messageId);
-                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
-                messageElement.innerHTML = `
-                    <div class="ai-response-fullwidth">
-                        ${botMessageContent}
-                        ${userSettings.timestamps ? `<div class="message-timestamp">${timestamp}</div>` : ''}
-                    </div>
-                `;
-                
-                addTimestampToMessage(messageElement);
-                chatWindow.appendChild(messageElement);
-                playAIResponseSound();
-                
-                setTimeout(() => {
-                    applyHighlighting(messageElement);
-                }, 100);
-                
-                checkAndAddDateSeparator();
-                messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                return;
-            }
-            
-            // WITH TYPING ANIMATION (only for new responses)
+            // Create message with rotating logo
             messageElement.innerHTML = `
+                <div class="message-avatar">
+                    <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo" class="ai-logo-rotating">
+                </div>
                 <div class="ai-response-fullwidth">
                     <div class="message-content typing-animation" id="typing-content-${messageId}">
                         <span class="typing-cursor"></span>
@@ -6109,6 +6115,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             const typingElement = document.getElementById(`typing-content-${messageId}`);
             const timestampElement = document.getElementById(`timestamp-${messageId}`);
             const chatWindow = document.getElementById('chat-window');
+            const logoElement = document.querySelector(`#typing-content-${messageId}`)?.closest('.message')?.querySelector('.message-avatar img');
             
             if (!typingElement) return;
             
@@ -6165,13 +6172,18 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     // Update the element with final content
                     typingElement.innerHTML = finalHtml;
                     
+                    // Remove rotating class from logo
+                    if (logoElement) {
+                        logoElement.classList.remove('ai-logo-rotating');
+                    }
+                    
                     // Add timestamp
                     if (timestampElement) {
                         const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                         timestampElement.textContent = timestamp;
                     }
                     
-                    // Add feedback buttons - FIXED
+                    // Add feedback buttons
                     const feedbackHtml = `
                         <div class="feedback-buttons" id="feedback-${messageId}">
                             <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
@@ -6446,6 +6458,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             return terms;
         }
 
+        // NEW: Updated showTypingIndicator function to use rotating logo
         function showTypingIndicator() {
             if (userSettings.typingAnimation) {
                 const typingElement = document.createElement('div');
@@ -6453,7 +6466,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 typingElement.id = 'typing-indicator';
                 typingElement.innerHTML = `
                     <div class="message-avatar">
-                        <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo">
+                        <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo" class="ai-logo-rotating">
                     </div>
                     <div class="typing-dots">
                         <div class="typing-dot"></div>
