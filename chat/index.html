@@ -996,7 +996,7 @@
             transform: rotate(15deg);
         }
 
-        /* Improved Layout Structure */
+        /* Improved Layout Structure - UPDATED FOR STICKY SIDEBAR */
         .app-container {
             display: flex;
             flex: 1;
@@ -1005,11 +1005,11 @@
             width: 100%;
             padding: var(--md-spacing-lg);
             gap: var(--md-spacing-xl);
-            height: calc(100vh - 80px);
+            min-height: calc(100vh - 80px);
             position: relative;
         }
 
-        /* Sidebar - Fixed and Unscrollable - Reverbit Style */
+        /* Sidebar - STICKY FOR DESKTOP - Reverbit Style */
         .sidebar {
             width: var(--sidebar-width);
             min-width: var(--sidebar-min-width);
@@ -1022,15 +1022,67 @@
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-xl);
-            overflow: hidden;
+            overflow-y: auto;
             transition: var(--md-transition);
             resize: horizontal;
-            position: relative;
-            min-height: 400px;
+            position: sticky;
+            top: calc(80px + var(--md-spacing-lg)); /* Header height + padding */
+            height: calc(100vh - 80px - var(--md-spacing-lg) * 2); /* Full height minus header and padding */
+            max-height: calc(100vh - 80px - var(--md-spacing-lg) * 2);
+            flex-shrink: 0;
+            align-self: flex-start;
         }
 
-        /* Resize Handle */
-        .sidebar::after {
+        /* Remove hover effect for sidebar resize when collapsed */
+        .sidebar.collapsed::after {
+            display: none;
+        }
+
+        /* Sidebar Layout Fixes */
+        .sidebar {
+            position: sticky;
+            top: calc(80px + var(--md-spacing-lg));
+            align-self: flex-start;
+        }
+
+        .sidebar-section {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            position: relative;
+        }
+
+        /* First section: Chat Sessions */
+        .sidebar-section:first-child {
+            flex: 0 0 auto;
+        }
+
+        /* Second section: Feature buttons - take remaining space */
+        .sidebar-section:nth-child(2) {
+            flex: 1;
+            min-height: 0;
+            margin-top: auto;
+            padding-top: var(--md-spacing-md);
+            border-top: 1px solid var(--md-outline-variant);
+        }
+
+        /* Chat sessions container - fixed height with scroll */
+        .chat-sessions-container {
+            flex: 1;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Make feature buttons visible at bottom */
+        .feature-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+        }
+
+        /* Resize Handle - Only show when not collapsed */
+        .sidebar:not(.collapsed)::after {
             content: '';
             position: absolute;
             right: -4px;
@@ -1046,7 +1098,7 @@
             transition: var(--md-transition);
         }
 
-        .sidebar:hover::after {
+        .sidebar:not(.collapsed):hover::after {
             opacity: 1;
         }
 
@@ -1066,7 +1118,6 @@
         .sidebar.collapsed .search-chat-container,
         .sidebar.collapsed .chat-session-title,
         .sidebar.collapsed .feature-btn span:not(.material-icons-round),
-        .sidebar.collapsed .quick-action span:not(.material-icons-round),
         .sidebar.collapsed .chat-session-pin,
         .sidebar.collapsed .chat-session-delete {
             display: none;
@@ -1077,7 +1128,6 @@
         }
 
         .sidebar.collapsed .feature-btn,
-        .sidebar.collapsed .quick-action,
         .sidebar.collapsed .chat-session {
             justify-content: center;
             padding: var(--md-spacing-md);
@@ -1129,41 +1179,7 @@
             flex-shrink: 0;
         }
 
-        .sidebar-section:first-child {
-            flex: 0 0 auto;
-        }
-
-        .sidebar-section:not(:first-child) {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-            overflow: hidden;
-        }
-
-        .sidebar-section:not(:first-child) .feature-buttons,
-        .sidebar-section:not(:first-child) .quick-actions {
-            flex: 1;
-            overflow-y: auto;
-            min-height: 0;
-            max-height: none;
-        }
-
         /* Chat Sessions with Separate Scroll */
-        .chat-sessions-container {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-sm);
-            max-height: 200px;
-            min-height: 150px;
-            overflow-y: auto;
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-medium);
-            padding: var(--md-spacing-sm);
-            background: var(--md-surface);
-            flex-shrink: 0;
-        }
-
         .chat-sessions {
             display: flex;
             flex-direction: column;
@@ -1176,34 +1192,26 @@
             max-height: 180px;
         }
 
-        /* Improved Scrollbar Styling */
+        /* Improved Scrollbar Styling - Simplified */
         .sidebar::-webkit-scrollbar,
-        .chat-sessions-container::-webkit-scrollbar,
-        .feature-buttons::-webkit-scrollbar,
-        .quick-actions::-webkit-scrollbar {
+        .chat-sessions-container::-webkit-scrollbar {
             width: 6px;
         }
 
         .sidebar::-webkit-scrollbar-track,
-        .chat-sessions-container::-webkit-scrollbar-track,
-        .feature-buttons::-webkit-scrollbar-track,
-        .quick-actions::-webkit-scrollbar-track {
+        .chat-sessions-container::-webkit-scrollbar-track {
             background: var(--md-surface-variant);
             border-radius: 3px;
         }
 
         .sidebar::-webkit-scrollbar-thumb,
-        .chat-sessions-container::-webkit-scrollbar-thumb,
-        .feature-buttons::-webkit-scrollbar-thumb,
-        .quick-actions::-webkit-scrollbar-thumb {
+        .chat-sessions-container::-webkit-scrollbar-thumb {
             background: var(--md-outline);
             border-radius: 3px;
         }
 
         .sidebar::-webkit-scrollbar-thumb:hover,
-        .chat-sessions-container::-webkit-scrollbar-thumb:hover,
-        .feature-buttons::-webkit-scrollbar-thumb:hover,
-        .quick-actions::-webkit-scrollbar-thumb:hover {
+        .chat-sessions-container::-webkit-scrollbar-thumb:hover {
             background: var(--md-primary);
         }
 
@@ -1383,46 +1391,14 @@
             border-left-color: var(--md-secondary);
         }
 
-        /* Quick Actions - Reverbit Style */
-        .quick-actions {
-            display: flex;
-            flex-direction: column;
-            gap: var(--md-spacing-sm);
-        }
-
-        .quick-action {
-            display: flex;
-            align-items: center;
-            gap: var(--md-spacing-md);
-            padding: var(--md-spacing-md);
-            background: var(--md-surface);
-            color: var(--md-on-surface) !important;
-            border: 1px solid var(--md-outline);
-            border-radius: var(--md-radius-medium);
-            font-family: var(--md-font-heading);
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--md-transition);
-            text-align: left;
-            border-left: 4px solid transparent;
-        }
-
-        .quick-action:hover {
-            background: var(--md-surface-variant);
-            border-color: var(--md-primary);
-            color: var(--md-on-surface) !important;
-            transform: translateX(4px);
-            border-left-color: var(--md-primary);
-        }
-
-        /* Main Content */
+        /* Main Content - UPDATED FOR STICKY SIDEBAR */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: var(--md-spacing-xl);
             min-width: 0;
-            height: 100%;
+            width: 100%;
             position: relative;
         }
 
@@ -2637,7 +2613,7 @@
             }
             
             .sidebar {
-                display: none;
+                display: none; /* Hide desktop sidebar on mobile */
             }
             
             .main-content {
@@ -3102,7 +3078,7 @@
     border: 1px solid var(--md-outline);
     border-radius: var(--md-radius-medium);
     font-family: var(--md-font-heading);
-    font-size: 1rem;
+            font-size: 1rem;
     color: var(--md-on-surface-variant);
     cursor: pointer;
     transition: var(--md-transition);
@@ -3596,27 +3572,7 @@
                 </div>
             </div>
 
-            <div class="sidebar-section">
-                <h3 class="sidebar-title">Quick Actions</h3>
-                <div class="quick-actions">
-                    <button class="quick-action" data-prompt="Create a study schedule for exam preparation">
-                        <span class="material-icons-round">schedule</span>
-                        <span>Study Schedule</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Write a professional email template">
-                        <span class="material-icons-round">email</span>
-                        <span>Email Template</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Explain machine learning in simple terms">
-                        <span class="material-icons-round">psychology</span>
-                        <span>ML Explanation</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Create a workout plan for beginners">
-                        <span class="material-icons-round">fitness_center</span>
-                        <span>Workout Plan</span>
-                    </button>
-                </div>
-            </div>
+            <!-- Quick Actions section REMOVED -->
 
             <div class="sidebar-section">
                 <h3 class="sidebar-title">Tools</h3>
@@ -3699,7 +3655,7 @@
     </header>
 
     <div class="app-container">
-        <!-- Sidebar - Desktop Only -->
+        <!-- Sidebar - Desktop Only - NOW STICKY -->
         <aside class="sidebar" id="sidebar">
             <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
                 <span class="material-icons-round" id="sidebar-toggle-icon">chevron_left</span>
@@ -3737,27 +3693,7 @@
                 </div>
             </div>
 
-            <div class="sidebar-section">
-                <h3 class="sidebar-title">Quick Actions</h3>
-                <div class="quick-actions">
-                    <button class="quick-action" data-prompt="Create a study schedule for exam preparation">
-                        <span class="material-icons-round">schedule</span>
-                        <span>Study Schedule</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Write a professional email template">
-                        <span class="material-icons-round">email</span>
-                        <span>Email Template</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Explain machine learning in simple terms">
-                        <span class="material-icons-round">psychology</span>
-                        <span>ML Explanation</span>
-                    </button>
-                    <button class="quick-action" data-prompt="Create a workout plan for beginners">
-                        <span class="material-icons-round">fitness_center</span>
-                        <span>Workout Plan</span>
-                    </button>
-                </div>
-            </div>
+            <!-- Quick Actions section REMOVED -->
 
             <div class="sidebar-section">
                 <h3 class="sidebar-title">Tools</h3>
@@ -3990,7 +3926,6 @@
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notification-text');
         const suggestionChips = document.querySelectorAll('.suggestion-chip');
-        const quickActions = document.querySelectorAll('.quick-action');
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('.material-icons-round');
         const dynamicWelcomeTitle = document.getElementById('dynamic-welcome-title');
@@ -4144,7 +4079,7 @@ CRITICAL REAL-TIME INFORMATION:
 - Day of Week: ${now.toLocaleDateString('en-US', { weekday: 'long' })}
 - Month: ${now.toLocaleDateString('en-US', { month: 'long' })}
 
-IMPORTANT: When users ask about time, date, or current information, you MUST provide accurate information based on the current context above. Use the exact dates and times provided here. Do not make up dates or times. But remember that you need to tell the Date and Time only when asked, not unnecessarily`;
+IMPORTANT: When users ask about time, date, or current information, you MUST provide accurate information based on the current context above. Use the exact dates and times provided here. Do not make up dates or times.`;
 
             // Add user name if set
             if (userSettings.userName && userSettings.userName.trim() !== '') {
@@ -4355,28 +4290,35 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Date management functions
+        // Date management functions - UPDATED FIX
         function getFormattedDate(date) {
             const today = new Date();
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
             
-            if (date.toDateString() === today.toDateString()) {
+            // Compare dates (ignore time)
+            const inputDate = new Date(date);
+            inputDate.setHours(0, 0, 0, 0);
+            const todayDate = new Date(today);
+            todayDate.setHours(0, 0, 0, 0);
+            const yesterdayDate = new Date(yesterday);
+            yesterdayDate.setHours(0, 0, 0, 0);
+            
+            if (inputDate.getTime() === todayDate.getTime()) {
                 return 'Today';
-            } else if (date.toDateString() === yesterday.toDateString()) {
+            } else if (inputDate.getTime() === yesterdayDate.getTime()) {
                 return 'Yesterday';
             } else {
-                return date.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
+                // Format as DD/MM/YYYY
+                const day = String(inputDate.getDate()).padStart(2, '0');
+                const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+                const year = inputDate.getFullYear();
+                return `${day}/${month}/${year}`;
             }
         }
 
         function checkAndAddDateSeparator() {
-            const messages = chatWindow.querySelectorAll('.message');
+            const messages = chatWindow.querySelectorAll('.message:not(.date-separator)');
             const dateSeparators = chatWindow.querySelectorAll('.date-separator');
             
             // Remove existing date separators
@@ -4385,16 +4327,17 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             let lastDate = null;
             
             messages.forEach((message, index) => {
-                // Skip if it's a date separator
-                if (message.classList.contains('date-separator')) return;
-                
                 // Get message timestamp from data attribute or use current time
                 const messageTime = message.getAttribute('data-timestamp') ? 
                     new Date(message.getAttribute('data-timestamp')) : new Date();
-                const messageDate = messageTime.toDateString();
                 
-                if (messageDate !== lastDate) {
-                    lastDate = messageDate;
+                // Get just the date part (ignoring time)
+                const messageDate = new Date(messageTime);
+                messageDate.setHours(0, 0, 0, 0);
+                const dateString = messageDate.toISOString().split('T')[0];
+                
+                if (dateString !== lastDate) {
+                    lastDate = dateString;
                     const dateSeparator = createDateSeparator(messageTime);
                     
                     // Insert date separator before the current message
@@ -4567,7 +4510,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             closeMobileSidebar();
         }
 
-        // Load a specific chat
+        // Load a specific chat - UPDATED with proper timestamp handling
         function loadChat(chatId) {
             if (!chatSessions[chatId]) return;
             
@@ -4589,17 +4532,22 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             if (chat.history.length <= 1) {
                 if (welcomeSection) {
                     chatWindow.appendChild(welcomeSection.cloneNode(true));
-                    // Update welcome message when loading chat
                     updateWelcomeMessage();
                 }
             } else {
-                // Recreate messages from history (excluding system message)
+                // Recreate messages from history with proper timestamps
                 for (let i = 1; i < chat.history.length; i++) {
                     const message = chat.history[i];
+                    // Create a timestamp based on message order (older messages first)
+                    const timestamp = new Date(chat.createdAt);
+                    timestamp.setMinutes(timestamp.getMinutes() + i); // Increment for each message
+                    
                     if (message.role === "user") {
-                        displayUserMessage(message.parts[0].text, false);
+                        const messageElement = createMessageElement(message.parts[0].text, 'user', timestamp);
+                        chatWindow.appendChild(messageElement);
                     } else if (message.role === "model") {
-                        displayBotMessage(message.parts[0].text, false);
+                        const messageElement = createMessageElement(message.parts[0].text, 'bot', timestamp, false);
+                        chatWindow.appendChild(messageElement);
                     }
                 }
             }
@@ -4628,6 +4576,45 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             // Close mobile sidebar if open
             closeMobileSidebar();
+        }
+
+        // Helper function to create message elements with timestamps
+        function createMessageElement(text, type, timestamp, showTyping = true) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${type}`;
+            
+            const messageTime = new Date(timestamp);
+            const timeString = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            if (type === 'user') {
+                let avatarHTML = userSettings.profilePicture ? 
+                    `<img src="${userSettings.profilePicture}" alt="User Profile">` :
+                    '<span class="material-icons-round">person</span>';
+                
+                messageElement.innerHTML = `
+                    <div class="message-bubble">
+                        <div class="message-content">${escapeHtml(text)}</div>
+                        ${userSettings.timestamps ? `<div class="message-timestamp">${timeString}</div>` : ''}
+                    </div>
+                    <div class="message-avatar">
+                        ${avatarHTML}
+                    </div>
+                `;
+            } else {
+                const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const botMessageContent = createBotMessageContent(text, messageId);
+                
+                messageElement.innerHTML = `
+                    <div class="ai-response-fullwidth">
+                        ${botMessageContent}
+                        ${userSettings.timestamps ? `<div class="message-timestamp">${timeString}</div>` : ''}
+                    </div>
+                `;
+            }
+            
+            // Store the timestamp
+            messageElement.setAttribute('data-timestamp', messageTime.toISOString());
+            return messageElement;
         }
 
         // Render chat sessions in sidebar
@@ -5066,10 +5053,11 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
         }
 
-        // Sidebar Resize and Toggle Functions - Improved
+        // Sidebar Resize and Toggle Functions - Improved for sticky sidebar
         function initializeSidebarResize() {
             const sidebar = document.getElementById('sidebar');
             let isResizing = false;
+            let startX, startWidth;
 
             // Add resize handle functionality
             sidebar.addEventListener('mousedown', function(e) {
@@ -5078,24 +5066,23 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 
                 // Check if click is near the right edge
                 const rect = sidebar.getBoundingClientRect();
-                if (e.clientX > rect.right - 15) {
+                if (e.clientX > rect.right - 10) {
                     isResizing = true;
+                    startX = e.clientX;
+                    startWidth = parseInt(getComputedStyle(sidebar).width);
+                    
                     document.body.style.cursor = 'col-resize';
                     document.body.style.userSelect = 'none';
                     
                     function onMouseMove(e) {
                         if (!isResizing) return;
                         
-                        const newWidth = Math.max(
-                            200, // Minimum usable width
-                            Math.min(
-                                500, // Maximum width
-                                e.clientX - rect.left
-                            )
-                        );
-                        
+                        const newWidth = Math.max(250, Math.min(500, startWidth + (e.clientX - startX)));
                         sidebar.style.width = newWidth + 'px';
                         document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
+                        
+                        // Update sticky position calculations
+                        updateSidebarStickyPosition();
                     }
                     
                     function onMouseUp() {
@@ -5106,8 +5093,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                         document.removeEventListener('mouseup', onMouseUp);
                         
                         // Save sidebar width
-                        const currentWidth = parseInt(getComputedStyle(sidebar).width);
-                        localStorage.setItem('cloverAISidebarWidth', currentWidth);
+                        localStorage.setItem('cloverAISidebarWidth', sidebar.style.width);
                     }
                     
                     document.addEventListener('mousemove', onMouseMove);
@@ -5129,14 +5115,20 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     sidebarToggleIcon.textContent = 'chevron_left';
                     // Restore previous width or use default
                     const savedWidth = localStorage.getItem('cloverAISidebarWidth');
-                    const width = savedWidth ? savedWidth + 'px' : '320px';
+                    const width = savedWidth ? savedWidth : '320px';
                     sidebar.style.width = width;
                     document.documentElement.style.setProperty('--sidebar-width', width);
                 }
                 
+                // Update sticky position
+                updateSidebarStickyPosition();
+                
                 // Save sidebar state
                 localStorage.setItem('cloverAISidebarCollapsed', isSidebarCollapsed);
             });
+
+            // Update sidebar sticky position on window resize
+            window.addEventListener('resize', updateSidebarStickyPosition);
 
             // Load sidebar state
             const savedSidebarState = localStorage.getItem('cloverAISidebarCollapsed');
@@ -5150,9 +5142,34 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 document.documentElement.style.setProperty('--sidebar-width', 'var(--sidebar-min-width)');
             } else if (savedSidebarWidth) {
                 // Apply saved width if not collapsed
-                sidebar.style.width = savedSidebarWidth + 'px';
-                document.documentElement.style.setProperty('--sidebar-width', savedSidebarWidth + 'px');
+                sidebar.style.width = savedSidebarWidth;
+                document.documentElement.style.setProperty('--sidebar-width', savedSidebarWidth);
             }
+            
+            // Initial position update
+            setTimeout(updateSidebarStickyPosition, 100);
+        }
+
+        // Function to update sidebar sticky position
+        function updateSidebarStickyPosition() {
+            const sidebar = document.getElementById('sidebar');
+            const headerHeight = 80; // Height of app-header
+            const padding = 24; // var(--md-spacing-lg)
+            
+            // Calculate top position based on header height and padding
+            const topPosition = headerHeight + padding;
+            
+            // Update CSS custom property
+            document.documentElement.style.setProperty('--sidebar-sticky-top', `${topPosition}px`);
+            
+            // Also update the sidebar's top value directly
+            sidebar.style.top = `${topPosition}px`;
+            
+            // Calculate and update height
+            const windowHeight = window.innerHeight;
+            const sidebarHeight = windowHeight - topPosition - padding;
+            sidebar.style.height = `${sidebarHeight}px`;
+            sidebar.style.maxHeight = `${sidebarHeight}px`;
         }
 
         // Enhanced getBotResponse function with AI training integration
@@ -5508,15 +5525,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         suggestionChips.forEach(chip => {
             chip.addEventListener('click', () => {
                 const prompt = chip.getAttribute('data-prompt');
-                messageInput.value = prompt;
-                messageInput.focus();
-                chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
-            });
-        });
-
-        quickActions.forEach(action => {
-            action.addEventListener('click', () => {
-                const prompt = action.getAttribute('data-prompt');
                 messageInput.value = prompt;
                 messageInput.focus();
                 chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
@@ -5955,7 +5963,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
             }
 
-            // Add feedback buttons with only icons
+            // Add feedback buttons with only icons - FIXED
             botMessageContent += `
                 <div class="feedback-buttons" id="feedback-${messageId}">
                     <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
@@ -5976,12 +5984,18 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             return botMessageContent;
         }
 
-        // Initialize feedback buttons
+        // Initialize feedback buttons - UPDATED FIX
         function initFeedbackButtons() {
-            if (feedbackButtonsInitialized) return;
-            
+            // Remove existing event listeners first
             const feedbackButtons = document.querySelectorAll('.feedback-btn');
             feedbackButtons.forEach(button => {
+                // Clone and replace to remove old event listeners
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+            });
+            
+            // Add new event listeners
+            document.querySelectorAll('.feedback-btn').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const action = this.getAttribute('data-action');
@@ -5989,8 +6003,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     handleFeedback(messageId, action);
                 });
             });
-            
-            feedbackButtonsInitialized = true;
         }
 
         // Enhanced text formatting function
@@ -6159,7 +6171,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                         timestampElement.textContent = timestamp;
                     }
                     
-                    // Add feedback buttons
+                    // Add feedback buttons - FIXED
                     const feedbackHtml = `
                         <div class="feedback-buttons" id="feedback-${messageId}">
                             <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
@@ -6498,6 +6510,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             const likeBtn = feedbackContainer.querySelector('.like-btn');
             const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
+            const retryBtn = feedbackContainer.querySelector('.retry-btn');
             
             // Reset all buttons
             likeBtn.classList.remove('liked');
@@ -6510,18 +6523,27 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 dislikeBtn.classList.add('disliked');
                 showNotification('Thanks for your feedback! We\'ll try to improve. 👎');
             } else if (action === 'retry') {
+                showNotification('Retrying response...');
+                
+                // Find the user message that came before this bot message
                 const messageElements = document.querySelectorAll('.message');
                 let userMessage = '';
                 
-                // Find the user message that came before this bot message
+                // Find the bot message with this feedback ID
                 for (let i = 0; i < messageElements.length; i++) {
                     if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
-                        // Look for the previous user message
+                        // Remove the bot message
+                        messageElements[i].remove();
+                        
+                        // Find the previous user message
                         for (let j = i - 1; j >= 0; j--) {
                             if (messageElements[j].classList.contains('user')) {
                                 const userBubble = messageElements[j].querySelector('.message-bubble .message-content');
                                 if (userBubble) {
                                     userMessage = userBubble.textContent || userBubble.innerText;
+                                    
+                                    // Remove the user message too for clean retry
+                                    messageElements[j].remove();
                                     break;
                                 }
                             }
@@ -6531,12 +6553,15 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 }
                 
                 if (userMessage) {
-                    messageInput.value = userMessage;
-                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+                    // Set the message in input and resend
+                    setTimeout(() => {
+                        messageInput.value = userMessage;
+                        chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+                    }, 500);
                 } else {
                     showNotification('Could not find the original message to retry', 'error');
                 }
-                return; // Don't save retry as feedback
+                return;
             }
             
             // Save feedback to localStorage
@@ -6549,60 +6574,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             let feedbackHistory = JSON.parse(localStorage.getItem('cloverAIFeedback') || '[]');
             feedbackHistory.push(feedbackData);
             localStorage.setItem('cloverAIFeedback', JSON.stringify(feedbackHistory));
-            
-            // Update AI training system with feedback
-            if (aiTrainingSystem && typeof aiTrainingSystem.updateTrainingData === 'function') {
-                try {
-                    // Get conversation context for this feedback
-                    const conversationContext = getConversationContextForMessage(messageId);
-                    aiTrainingSystem.updateTrainingData(conversationContext, action);
-                    console.log('AI training updated with feedback:', action);
-                } catch (error) {
-                    console.error('Error updating AI training with feedback:', error);
-                }
-            }
-        }
-
-        // Helper function to get conversation context for a message
-        function getConversationContextForMessage(messageId) {
-            const interactions = [];
-            const messages = chatWindow.querySelectorAll('.message');
-            let foundTarget = false;
-            
-            for (let i = messages.length - 1; i >= 0; i--) {
-                const message = messages[i];
-                if (message.querySelector(`#feedback-${messageId}`)) {
-                    foundTarget = true;
-                    continue;
-                }
-                
-                if (foundTarget) {
-                    if (message.classList.contains('user')) {
-                        const userBubble = message.querySelector('.message-bubble .message-content');
-                        if (userBubble) {
-                            interactions.unshift({
-                                type: 'user',
-                                content: userBubble.textContent || userBubble.innerText,
-                                timestamp: message.getAttribute('data-timestamp')
-                            });
-                        }
-                    } else if (message.classList.contains('bot')) {
-                        const botBubble = message.querySelector('.message-bubble .message-content');
-                        if (botBubble) {
-                            interactions.unshift({
-                                type: 'bot',
-                                content: botBubble.textContent || botBubble.innerText,
-                                timestamp: message.getAttribute('data-timestamp')
-                            });
-                        }
-                    }
-                    
-                    // Limit context to last 5 interactions
-                    if (interactions.length >= 5) break;
-                }
-            }
-            
-            return interactions;
         }
 
         function startVoiceInput() {
@@ -6675,7 +6646,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         showBanner();
 
         // Force button text visibility
-        document.querySelectorAll('.feature-btn, .quick-action, .suggestion-chip').forEach(btn => {
+        document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
             btn.style.color = 'var(--md-on-surface-variant)';
         });
 
@@ -6729,12 +6700,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             return div.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
-        // Use in displayUserMessage
-        function displayUserMessage(message, showTyping = true) {
-            const sanitizedMessage = sanitizeInput(message);
-            // ... rest of the code remains the same
-        }
-
         // Add debounce for search
         function debounce(func, wait) {
             let timeout;
@@ -6782,6 +6747,9 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 newTheme: document.body.classList.contains('dark-theme') ? 'dark' : 'light' 
             });
         });
+
+        // Make functions available globally
+        window.copyCode = copyCode;
     </script>
 </body>
 </html>
