@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,7 @@
     <!-- Google Fonts - Using Reverbit Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <!-- AI Training System -->
     <script src="../ai-training-data.js"></script>
@@ -3078,6 +3077,312 @@
     transition: none !important;
     animation: none !important;
 }
+
+/* Font Options - Reverbit Style */
+.font-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--md-spacing-sm);
+}
+
+.font-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--md-spacing-md) var(--md-spacing-lg);
+    background: var(--md-surface-variant);
+    border: 1px solid var(--md-outline);
+    border-radius: var(--md-radius-medium);
+    font-family: var(--md-font-heading);
+    font-size: 1rem;
+    color: var(--md-on-surface-variant);
+    cursor: pointer;
+    transition: var(--md-transition);
+    text-align: left;
+    border-left: 4px solid transparent;
+    position: relative;
+}
+
+.font-option:hover {
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    transform: translateX(4px);
+    border-left-color: var(--md-primary);
+}
+
+.font-option.active {
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    border-color: var(--md-primary);
+    border-left-color: var(--md-primary);
+}
+
+.font-option span:first-child {
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.font-option .check-icon {
+    font-size: 1.25rem;
+    opacity: 0;
+    transition: var(--md-transition);
+}
+
+.font-option.active .check-icon {
+    opacity: 1;
+}
+
+/* Set specific font families for preview */
+.font-option[data-font="Lora"] { font-family: 'Lora', serif; }
+.font-option[data-font="Inter"] { font-family: 'Inter', sans-serif; }
+.font-option[data-font="Roboto"] { font-family: 'Roboto', sans-serif; }
+.font-option[data-font="Open Sans"] { font-family: 'Open Sans', sans-serif; }
+.font-option[data-font="Montserrat"] { font-family: 'Montserrat', sans-serif; }
+.font-option[data-font="Source Sans Pro"] { font-family: 'Source Sans Pro', sans-serif; }
+
+/* "New" badge for font selection */
+.new-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--md-primary);
+    color: white;
+    font-family: var(--md-font-heading);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    animation: pulse 1.5s infinite;
+}
+
+.dark-theme .new-badge {
+    background: var(--md-primary-light);
+    color: var(--md-on-primary);
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Enhanced AI Response Formatting */
+.message.bot .message-content {
+    font-family: var(--md-font-body);
+    line-height: 1.7;
+    font-size: 1rem;
+    color: var(--md-on-surface);
+}
+
+/* AI Headings */
+.ai-heading {
+    font-family: var(--md-font-heading);
+    font-weight: 600;
+    color: var(--md-on-surface);
+    margin: 1.5em 0 0.75em 0;
+    padding-bottom: 0.25em;
+    border-bottom: 1px solid var(--md-outline-variant);
+}
+
+.ai-heading-1 {
+    font-size: 1.5rem;
+    border-bottom-width: 2px;
+    border-color: var(--md-primary);
+}
+
+.ai-heading-2 {
+    font-size: 1.25rem;
+}
+
+.ai-heading-3 {
+    font-size: 1.125rem;
+}
+
+/* AI Paragraphs */
+.ai-paragraph {
+    margin-bottom: 1.25em;
+    line-height: 1.7;
+    text-align: justify;
+}
+
+.ai-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+/* AI Lists */
+.ai-list {
+    margin: 1em 0 1em 1.5em;
+    padding: 0;
+    counter-reset: list-item;
+}
+
+.ai-list-item {
+    margin-bottom: 0.5em;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 0.5em;
+    counter-increment: list-item;
+}
+
+.ai-list-item::before {
+    content: "•";
+    color: var(--md-primary);
+    font-weight: bold;
+    position: absolute;
+    left: -1em;
+}
+
+.ai-numbered-item::before {
+    content: counter(list-item) ".";
+    color: var(--md-secondary);
+}
+
+/* AI Tables */
+.ai-table-container {
+    overflow-x: auto;
+    margin: 1.5em 0;
+    border-radius: var(--md-radius-medium);
+    border: 1px solid var(--md-outline);
+    background: var(--md-surface);
+}
+
+.ai-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    min-width: 500px;
+}
+
+.ai-table-header {
+    background: var(--md-surface-variant);
+    color: var(--md-on-surface);
+    font-weight: 600;
+    padding: 0.75em 1em;
+    text-align: left;
+    border-bottom: 2px solid var(--md-outline);
+    font-family: var(--md-font-heading);
+}
+
+.ai-table-cell {
+    padding: 0.75em 1em;
+    border-bottom: 1px solid var(--md-outline-variant);
+    border-right: 1px solid var(--md-outline-variant);
+}
+
+.ai-table-row:hover {
+    background: var(--md-surface-variant);
+}
+
+.ai-table-row:last-child .ai-table-cell {
+    border-bottom: none;
+}
+
+.ai-table-cell:last-child {
+    border-right: none;
+}
+
+/* AI Note boxes */
+.ai-note {
+    background: rgba(13, 138, 114, 0.1);
+    border-left: 4px solid var(--md-secondary);
+    padding: 1em;
+    margin: 1.5em 0;
+    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+    font-size: 0.95rem;
+}
+
+.dark-theme .ai-note {
+    background: rgba(13, 138, 114, 0.15);
+}
+
+.ai-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid #ffc107;
+    padding: 1em;
+    margin: 1.5em 0;
+    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+    font-size: 0.95rem;
+}
+
+.dark-theme .ai-warning {
+    background: rgba(255, 193, 7, 0.15);
+}
+
+.ai-info {
+    background: rgba(33, 150, 243, 0.1);
+    border-left: 4px solid #2196f3;
+    padding: 1em;
+    margin: 1.5em 0;
+    border-radius: 0 var(--md-radius-small) var(--md-radius-small) 0;
+    font-size: 0.95rem;
+}
+
+.dark-theme .ai-info {
+    background: rgba(33, 150, 243, 0.15);
+}
+
+/* AI Keyboard shortcuts */
+.ai-kbd {
+    background: var(--md-surface);
+    border: 1px solid var(--md-outline);
+    border-radius: 4px;
+    padding: 0.2em 0.5em;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.9em;
+    box-shadow: 0 2px 0 var(--md-outline-variant);
+}
+
+/* AI Badges/Tags */
+.ai-badge {
+    display: inline-block;
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    padding: 0.2em 0.8em;
+    border-radius: 12px;
+    font-size: 0.85em;
+    margin: 0 0.25em 0.25em 0;
+    font-weight: 500;
+    vertical-align: middle;
+}
+
+/* Responsive adjustments for AI formatting */
+@media (max-width: 768px) {
+    .ai-heading-1 {
+        font-size: 1.25rem;
+    }
+    
+    .ai-heading-2 {
+        font-size: 1.125rem;
+    }
+    
+    .ai-heading-3 {
+        font-size: 1rem;
+    }
+    
+    .ai-table-container {
+        margin: 1em -0.5em;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+    
+    .ai-table {
+        min-width: 100%;
+    }
+    
+    .ai-table-header,
+    .ai-table-cell {
+        padding: 0.5em 0.75em;
+        font-size: 0.9rem;
+    }
+    
+    .font-options {
+        grid-template-columns: 1fr;
+    }
+}
       
     </style>
 </head>
@@ -3190,6 +3495,37 @@
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
+                </div>
+            </div>
+            
+            <!-- NEW: Font Selection Section -->
+            <div class="customization-section">
+                <h3 class="section-title">Chat Font <span class="new-badge">New</span></h3>
+                <div class="font-options">
+                    <button class="font-option active" data-font="Lora">
+                        <span>Lora</span>
+                        <span class="material-icons-round check-icon">check</span>
+                    </button>
+                    <button class="font-option" data-font="Inter">
+                        <span>Inter</span>
+                        <span class="material-icons-round check-icon">check</span>
+                    </button>
+                    <button class="font-option" data-font="Roboto">
+                        <span>Roboto</span>
+                        <span class="material-icons-round check-icon">check</span>
+                    </button>
+                    <button class="font-option" data-font="Open Sans">
+                        <span>Open Sans</span>
+                        <span class="material-icons-round check-icon">check</span>
+                    </button>
+                    <button class="font-option" data-font="Montserrat">
+                        <span>Montserrat</span>
+                        <span class="material-icons-round check-icon">check</span>
+                    </button>
+                    <button class="font-option" data-font="Source Sans Pro">
+                        <span>Source Sans Pro</span>
+                        <span class="material-icons-round check-icon">check</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -3718,6 +4054,9 @@
         const bannerGotIt = document.getElementById('banner-got-it');
         const bannerLearnMore = document.getElementById('banner-learn-more');
 
+        // NEW: Font Selection Elements
+        const fontOptions = document.querySelectorAll('.font-option');
+
         // State variables
         let currentMode = 'chat';
         let webSearchEnabled = false;
@@ -3739,7 +4078,8 @@
             darkMode: false,
             soundEnabled: true,
             typingAnimation: true,
-            timestamps: true
+            timestamps: true,
+            chatFont: 'Lora' // NEW: Added chat font setting
         };
 
         // Initialize AI Training System
@@ -4112,6 +4452,20 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
                 typingAnimationToggle.checked = userSettings.typingAnimation;
                 timestampToggle.checked = userSettings.timestamps;
                 
+                // NEW: Set chat font
+                if (userSettings.chatFont) {
+                    // Update font options UI
+                    fontOptions.forEach(option => {
+                        option.classList.remove('active');
+                        if (option.getAttribute('data-font') === userSettings.chatFont) {
+                            option.classList.add('active');
+                        }
+                    });
+                    
+                    // Apply the font
+                    applyChatFont(userSettings.chatFont);
+                }
+                
                 // Update system message with user name
                 updateSystemMessage();
                 
@@ -4123,6 +4477,36 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
         // Save user settings to localStorage
         function saveUserSettings() {
             localStorage.setItem('cloverAIUserSettings', JSON.stringify(userSettings));
+        }
+
+        // NEW: Function to apply chat font
+        function applyChatFont(fontName) {
+            // Remove all font classes
+            document.body.classList.remove(
+                'font-lora', 'font-inter', 'font-roboto', 
+                'font-opensans', 'font-montserrat', 'font-sourcesanspro'
+            );
+            
+            // Add selected font class
+            const fontClass = `font-${fontName.toLowerCase().replace(' ', '')}`;
+            document.body.classList.add(fontClass);
+            
+            // Update CSS variable for future messages
+            document.documentElement.style.setProperty('--md-font-body', fontName);
+            
+            // Apply font to all existing bot messages
+            const botMessages = document.querySelectorAll('.message.bot .message-content');
+            botMessages.forEach(message => {
+                message.style.fontFamily = fontName;
+            });
+            
+            // Apply font to welcome section
+            const welcomeSubtitle = document.querySelector('.welcome-subtitle');
+            if (welcomeSubtitle) {
+                welcomeSubtitle.style.fontFamily = fontName;
+            }
+            
+            console.log('Applied font:', fontName);
         }
 
         // Initialize chat sessions from localStorage
@@ -4486,6 +4870,7 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             userSettings.soundEnabled = soundToggle.checked;
             userSettings.typingAnimation = typingAnimationToggle.checked;
             userSettings.timestamps = timestampToggle.checked;
+            // Font is already updated in the click handler
             
             // Save settings
             saveUserSettings();
@@ -4849,41 +5234,33 @@ Remember to format your responses cleanly without markdown symbols. Use proper s
             }
         }
 
-  // Helper function: Clean bot message - remove weird symbols and format properly
-function cleanBotMessage(message) {
-    // Remove markdown headers (###, ##, #)
-    let cleaned = message.replace(/^#+\s+/gm, '');
-    
-    // Remove horizontal rules (---, ***, ___)
-    cleaned = cleaned.replace(/^[-*_]{3,}$/gm, '');
-    
-    // Remove excessive newlines (more than 2 consecutive)
-    cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
-    
-    // Convert markdown bold to HTML bold
-    cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-    
-    // Convert markdown italic to HTML italic
-    cleaned = cleaned.replace(/\*(.*?)\*/g, '<i>$1</i>');
-    
-    // REMOVE MARKDOWN UNDERLINE SYNTAX - ADD THESE LINES:
-    cleaned = cleaned.replace(/__(.*?)__/g, '$1'); // Remove double underscore underline
-    cleaned = cleaned.replace(/_(.*?)_/g, '$1'); // Remove single underscore underline
-    
-    // Remove any remaining markdown symbols
-    cleaned = cleaned.replace(/\[.*?\]\(.*?\)/g, ''); // Remove links
-    cleaned = cleaned.replace(/`{1,3}/g, ''); // Remove inline code ticks
-    
-    // Also remove HTML underline tags if present
-    cleaned = cleaned.replace(/<u>(.*?)<\/u>/gi, '$1');
-    
-    // Ensure proper spacing
-    cleaned = cleaned.replace(/\s+\./g, '.');
-    cleaned = cleaned.replace(/\s+,/g, ',');
-    cleaned = cleaned.replace(/\s+!/g, '!');
-    cleaned = cleaned.replace(/\s+\?/g, '?');
-    
- 
+        // Helper function: Clean bot message - remove weird symbols and format properly
+        function cleanBotMessage(message) {
+            // Remove markdown headers (###, ##, #)
+            let cleaned = message.replace(/^#+\s+/gm, '');
+            
+            // Remove horizontal rules (---, ***, ___)
+            cleaned = cleaned.replace(/^[-*_]{3,}$/gm, '');
+            
+            // Remove excessive newlines (more than 2 consecutive)
+            cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+            
+            // Convert markdown bold to HTML bold
+            cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            
+            // Convert markdown italic to HTML italic
+            cleaned = cleaned.replace(/\*(.*?)\*/g, '<i>$1</i>');
+            
+            // REMOVE MARKDOWN UNDERLINE SYNTAX
+            cleaned = cleaned.replace(/__(.*?)__/g, '$1'); // Remove double underscore underline
+            cleaned = cleaned.replace(/_(.*?)_/g, '$1'); // Remove single underscore underline
+            
+            // Remove any remaining markdown symbols
+            cleaned = cleaned.replace(/\[.*?\]\(.*?\)/g, ''); // Remove links
+            cleaned = cleaned.replace(/`{1,3}/g, ''); // Remove inline code ticks
+            
+            // Also remove HTML underline tags if present
+            cleaned = cleaned.replace(/<u>(.*?)<\/u>/gi, '$1');
             
             // Ensure proper spacing
             cleaned = cleaned.replace(/\s+\./g, '.');
@@ -5013,6 +5390,24 @@ function cleanBotMessage(message) {
                 if (theme !== 'default') {
                     document.body.classList.add(`theme-${theme}`);
                 }
+            });
+        });
+        
+        // NEW: Font selection event listeners
+        fontOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Remove active class from all font options
+                fontOptions.forEach(opt => opt.classList.remove('active'));
+                
+                // Add active class to clicked font
+                option.classList.add('active');
+                
+                // Update user settings
+                const selectedFont = option.getAttribute('data-font');
+                userSettings.chatFont = selectedFont;
+                
+                // Apply font preview
+                applyChatFont(selectedFont);
             });
         });
         
@@ -5539,39 +5934,72 @@ function cleanBotMessage(message) {
             return botMessageContent;
         }
 
-        // Improved text formatting function
+        // Enhanced text formatting function
         function formatTextWithLineBreaks(text) {
-            // Remove any remaining markdown artifacts
-            text = text.replace(/^#+\s+/gm, '');
-            text = text.replace(/^[-*_]{3,}$/gm, '');
+            if (!text) return '';
             
-            // Convert HTML-like tags to actual HTML
-            text = text.replace(/<b>(.*?)<\/b>/g, '<b>$1</b>');
-            text = text.replace(/<i>(.*?)<\/i>/g, '<i>$1</i>');
-            text = text.replace(/<u>(.*?)<\/u>/g, '<u>$1</u>');
+            let formatted = text;
             
-            // Convert lists
-            text = text.replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>');
-            text = text.replace(/^\s*\d+\.\s+(.*)$/gm, '<li>$1</li>');
+            // Convert markdown-style headings to proper HTML headings
+            formatted = formatted.replace(/^###\s+(.*?)$/gm, '<h3 class="ai-heading ai-heading-3">$1</h3>');
+            formatted = formatted.replace(/^##\s+(.*?)$/gm, '<h2 class="ai-heading ai-heading-2">$1</h2>');
+            formatted = formatted.replace(/^#\s+(.*?)$/gm, '<h1 class="ai-heading ai-heading-1">$1</h1>');
             
-            // Convert line breaks
-            text = text.replace(/\n\n/g, '</p><p>');
-            text = text.replace(/\n/g, '<br>');
+            // Convert bullet lists
+            formatted = formatted.replace(/^\s*[-*•]\s+(.*)$/gm, '<li class="ai-list-item">$1</li>');
             
-            // Wrap in paragraph tags
-            if (!text.startsWith('<p>')) {
-                text = '<p>' + text + '</p>';
-            }
+            // Convert numbered lists
+            let listCounter = 1;
+            formatted = formatted.replace(/^\s*\d+\.\s+(.*)$/gm, (match, content) => {
+                return `<li class="ai-list-item ai-numbered-item">${content}</li>`;
+            });
             
-            // Convert list items to proper lists
-            const lines = text.split('</p><p>');
+            // Convert simple tables (basic markdown table support)
+            const tableRegex = /\|(.+)\|\n\|[-:|]+\|\n((?:\|.+\|\n?)+)/g;
+            formatted = formatted.replace(tableRegex, (match, headers, rows) => {
+                const headerCells = headers.split('|').filter(cell => cell.trim()).map(cell => 
+                    `<th class="ai-table-header">${cell.trim()}</th>`
+                ).join('');
+                
+                const rowLines = rows.trim().split('\n');
+                const tableRows = rowLines.map(row => {
+                    const cells = row.split('|').filter(cell => cell.trim()).map(cell => 
+                        `<td class="ai-table-cell">${cell.trim()}</td>`
+                    ).join('');
+                    return `<tr class="ai-table-row">${cells}</tr>`;
+                }).join('');
+                
+                return `<div class="ai-table-container"><table class="ai-table"><thead><tr>${headerCells}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
+            });
+            
+            // Convert code blocks (already handled separately, but keep as fallback)
+            formatted = formatted.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                return `<div class="code-block">
+                    <div class="code-header">
+                        <span><span class="material-icons-round">code</span> ${lang || 'plaintext'}</span>
+                        <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
+                            <span class="material-icons-round">content_copy</span>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                    <div class="code-content" id="${uniqueId}">${escapeHtml(code)}</div>
+                </div>`;
+            });
+            
+            // Convert paragraphs
+            const lines = formatted.split('\n\n');
             let result = '';
             let inList = false;
             
-            for (let line of lines) {
-                if (line.includes('<li>')) {
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                // Check if this line contains list items
+                if (line.includes('<li class="ai-list-item">')) {
                     if (!inList) {
-                        result += '<ul>';
+                        result += '<ul class="ai-list">';
                         inList = true;
                     }
                     result += line;
@@ -5580,13 +6008,27 @@ function cleanBotMessage(message) {
                         result += '</ul>';
                         inList = false;
                     }
-                    result += line;
+                    
+                    // Check if it's already a heading or table
+                    if (line.startsWith('<h1') || line.startsWith('<h2') || line.startsWith('<h3') || 
+                        line.startsWith('<div class="ai-table-container">') || 
+                        line.startsWith('<div class="code-block">')) {
+                        result += line;
+                    } else {
+                        // Regular paragraph
+                        result += `<p class="ai-paragraph">${line.replace(/\n/g, '<br>')}</p>`;
+                    }
                 }
             }
             
             if (inList) {
                 result += '</ul>';
             }
+            
+            // Convert remaining line breaks within paragraphs
+            result = result.replace(/<p class="ai-paragraph">(.*?)<\/p>/g, (match, content) => {
+                return `<p class="ai-paragraph">${content.replace(/\n/g, '<br>')}</p>`;
+            });
             
             return result;
         }
@@ -5595,6 +6037,7 @@ function cleanBotMessage(message) {
         function startTypingAnimation(messageId, fullMessage) {
             const typingElement = document.getElementById(`typing-content-${messageId}`);
             const timestampElement = document.getElementById(`timestamp-${messageId}`);
+            const chatWindow = document.getElementById('chat-window');
             
             if (!typingElement) return;
             
@@ -5617,6 +6060,12 @@ function cleanBotMessage(message) {
                 codeIndex++;
                 return placeholder;
             });
+            
+            // Function to scroll chat window to bottom
+            function scrollToBottom() {
+                // Direct scroll without animation - this prevents shaking
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
             
             // Function to type characters one by one
             function typeCharacter() {
@@ -5652,23 +6101,31 @@ function cleanBotMessage(message) {
                     }
                     
                     // Add feedback buttons
-                    const feedbackHtml = `
-                        <div class="feedback-buttons" id="feedback-${messageId}">
-                            <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
-                                <span class="material-icons-round">thumb_up</span>
-                                <span class="feedback-text">Like</span>
-                            </button>
-                            <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
-                                <span class="material-icons-round">thumb_down</span>
-                                <span class="feedback-text">Dislike</span>
-                            </button>
-                            <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
-                                <span class="material-icons-round">refresh</span>
-                                <span class="feedback-text">Retry</span>
-                            </button>
-                        </div>`;
+                   botMessageContent += `
+    <div class="feedback-buttons" id="feedback-${messageId}">
+        <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
+            <span class="material-icons-round">thumb_up</span>
+            <span class="feedback-text">Like</span>
+        </button>
+        <button class="feedback-btn dislike-btn" data-action="dislike" data-message-id="${messageId}">
+            <span class="material-icons-round">thumb_down</span>
+            <span class="feedback-text">Dislike</span>
+        </button>
+        <button class="feedback-btn retry-btn" data-action="retry" data-message-id="${messageId}">
+            <span class="material-icons-round">refresh</span>
+            <span class="feedback-text">Retry</span>
+        </button>
+    </div>
+`;
+
+return botMessageContent;
                     
                     typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
+                    
+                    // Final scroll to show complete message
+                    setTimeout(() => {
+                        scrollToBottom();
+                    }, 50);
                     
                     // Apply highlighting
                     setTimeout(() => {
@@ -5699,35 +6156,42 @@ function cleanBotMessage(message) {
                 // FASTER typing speed
                 const typingSpeed = getTypingSpeed(currentChar);
                 
-                // Scroll to keep message in view
-                typingElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                // Only scroll occasionally (every 15-20 characters) and only if user is near bottom
+                if (charIndex % 20 === 0) {
+                    const scrollBottom = chatWindow.scrollHeight - chatWindow.scrollTop - chatWindow.clientHeight;
+                    if (scrollBottom < 500) { // If user is within 500px of bottom
+                        scrollToBottom();
+                    }
+                }
                 
                 // Continue typing
                 setTimeout(typeCharacter, typingSpeed);
             }
             
-            // Start typing animation
+            // Start typing animation after a small delay
             setTimeout(() => {
+                // Initial scroll to show typing indicator
+                scrollToBottom();
                 typeCharacter();
             }, 50);
         }
 
-   // Helper function to determine typing speed based on character - ULTRA FAST VERSION
-function getTypingSpeed(char) {
-    if (char.match(/[.,;:!?]/)) {
-        // Ultra short pause for punctuation
-        return Math.random() * 5 + 5;      // 5-10ms
-    } else if (char === ' ') {
-        // Almost no pause for spaces
-        return Math.random() * 3 + 1;      // 1-4ms
-    } else if (char === '\n') {
-        // Short pause for new lines
-        return Math.random() * 10 + 10;    // 10-20ms
-    } else {
-        // Lightning fast normal typing
-        return Math.random() * 3 + 2;      // 2-5ms
-    }
-}
+        // Helper function to determine typing speed based on character - ULTRA FAST VERSION
+        function getTypingSpeed(char) {
+            if (char.match(/[.,;:!?]/)) {
+                // Ultra short pause for punctuation
+                return Math.random() * 5 + 5;      // 5-10ms
+            } else if (char === ' ') {
+                // Almost no pause for spaces
+                return Math.random() * 3 + 1;      // 1-4ms
+            } else if (char === '\n') {
+                // Short pause for new lines
+                return Math.random() * 10 + 10;    // 10-20ms
+            } else {
+                // Lightning fast normal typing
+                return Math.random() * 3 + 2;      // 2-5ms
+            }
+        }
 
         function applyHighlighting(messageElement) {
             const messageContents = messageElement.querySelectorAll('.message-content');
@@ -6143,150 +6607,6 @@ function getTypingSpeed(char) {
             btn.style.color = 'var(--md-on-surface-variant)';
         });
     </script>
-  
-  
-  
-  <script>
-  
-  // Revised typing animation function - prevents screen shaking completely
-function startTypingAnimation(messageId, fullMessage) {
-    const typingElement = document.getElementById(`typing-content-${messageId}`);
-    const timestampElement = document.getElementById(`timestamp-${messageId}`);
-    const chatWindow = document.getElementById('chat-window');
-    
-    if (!typingElement) return;
-    
-    // Add active class to start animation
-    typingElement.classList.add('typing-active');
-    
-    let charIndex = 0;
-    let htmlContent = '';
-    
-    // Process code blocks first
-    const codeBlocks = [];
-    const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
-    let processedMessage = fullMessage;
-    let codeIndex = 0;
-    
-    // Replace code blocks with placeholders
-    processedMessage = processedMessage.replace(codeBlockRegex, (match, language, code) => {
-        const placeholder = `__CODEBLOCK_${codeIndex}__`;
-        codeBlocks.push({ language, code, placeholder });
-        codeIndex++;
-        return placeholder;
-    });
-    
-    // Function to scroll chat window to bottom
-    function scrollToBottom() {
-        // Direct scroll without animation - this prevents shaking
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-    
-    // Function to type characters one by one
-    function typeCharacter() {
-        if (charIndex >= processedMessage.length) {
-            // Typing complete - replace placeholders with actual code blocks
-            let finalHtml = htmlContent;
-            
-            // Replace code block placeholders
-            codeBlocks.forEach(block => {
-                const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-                const codeBlockHtml = `
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span><span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">code</span> ${block.language || 'plaintext'}</span>
-                            <button class="copy-btn" onclick="copyCode('${uniqueId}', this)">
-                                <span class="material-icons-round">content_copy</span>
-                                <span>Copy</span>
-                            </button>
-                        </div>
-                        <div class="code-content" id="${uniqueId}">${escapeHtml(block.code)}</div>
-                    </div>`;
-                
-                finalHtml = finalHtml.replace(block.placeholder, codeBlockHtml);
-            });
-            
-            // Update the element with final content
-            typingElement.innerHTML = finalHtml;
-            
-            // Add timestamp
-            if (timestampElement) {
-                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                timestampElement.textContent = timestamp;
-            }
-            
-            // Add feedback buttons
-            const feedbackHtml = `
-                <div class="feedback-buttons" id="feedback-${messageId}">
-                    <button class="feedback-btn like-btn" onclick="handleFeedback('${messageId}', 'like')">
-                        <span class="material-icons-round">thumb_up</span>
-                        <span class="feedback-text">Like</span>
-                    </button>
-                    <button class="feedback-btn dislike-btn" onclick="handleFeedback('${messageId}', 'dislike')">
-                        <span class="material-icons-round">thumb_down</span>
-                        <span class="feedback-text">Dislike</span>
-                    </button>
-                    <button class="feedback-btn retry-btn" onclick="handleFeedback('${messageId}', 'retry')">
-                        <span class="material-icons-round">refresh</span>
-                        <span class="feedback-text">Retry</span>
-                    </button>
-                </div>`;
-            
-            typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
-            
-            // Final scroll to show complete message
-            setTimeout(() => {
-                scrollToBottom();
-            }, 50);
-            
-            // Apply highlighting
-            setTimeout(() => {
-                applyHighlighting(typingElement.closest('.message'));
-            }, 100);
-            
-            // Play AI response sound when typing is complete
-            playAIResponseSound();
-            return;
-        }
-        
-        const currentChar = processedMessage.charAt(charIndex);
-        
-        // Handle special cases
-        if (currentChar === '\n') {
-            htmlContent += '<br>';
-        } else if (currentChar === ' ' && processedMessage.charAt(charIndex + 1) === ' ') {
-            htmlContent += '&nbsp;';
-        } else {
-            htmlContent += currentChar;
-        }
-        
-        // Update the element with current content and cursor
-        typingElement.innerHTML = formatTextWithLineBreaks(htmlContent) + '<span class="typing-cursor"></span>';
-        
-        charIndex++;
-        
-        // FASTER typing speed
-        const typingSpeed = getTypingSpeed(currentChar);
-        
-        // Only scroll occasionally (every 15-20 characters) and only if user is near bottom
-        if (charIndex % 20 === 0) {
-            const scrollBottom = chatWindow.scrollHeight - chatWindow.scrollTop - chatWindow.clientHeight;
-            if (scrollBottom < 500) { // If user is within 500px of bottom
-                scrollToBottom();
-            }
-        }
-        
-        // Continue typing
-        setTimeout(typeCharacter, typingSpeed);
-    }
-    
-    // Start typing animation after a small delay
-    setTimeout(() => {
-        // Initial scroll to show typing indicator
-        scrollToBottom();
-        typeCharacter();
-    }, 50);
-}
-  </script>
 </body>
 </html>
+  
