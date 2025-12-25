@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +25,14 @@
 
     <meta name="google-site-verification" content="gVm_Dk4QJW6bhd3nyT3WJPIzHXt9SEgn8Z43IU2t27Y" />
     
+  <!-- Reverbit Auth -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+<script src="https://aditya-cmd-max.github.io/js/auth.js"></script>
+  
+  
     <style>
         /* Material Design 3 Color System - Reverbit Blue/Green Theme */
         :root {
@@ -3380,6 +3389,159 @@
             }
         }
       
+      /* Reverbit Profile Styles */
+.reverbit-profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--md-primary, #1a73e8);
+    cursor: pointer;
+    background: none;
+    padding: 0;
+    transition: transform 0.2s ease;
+    margin: 0 8px;
+}
+
+.reverbit-profile-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(var(--md-primary-rgb, 26, 115, 232), 0.3);
+}
+
+.reverbit-profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reverbit-profile-popup {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--md-surface, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--md-outline, #e0e0e0);
+    padding: 16px;
+    min-width: 280px;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    backdrop-filter: blur(10px);
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reverbit-profile-popup .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--md-outline, #e0e0e0);
+}
+
+.reverbit-profile-popup .profile-info {
+    flex: 1;
+}
+
+.reverbit-profile-popup .profile-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--md-on-surface, #202124);
+    margin-bottom: 2px;
+}
+
+.reverbit-profile-popup .profile-email {
+    font-size: 14px;
+    color: var(--md-on-surface-variant, #5f6368);
+}
+
+.reverbit-profile-popup .profile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.reverbit-profile-popup .profile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: none;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--md-on-surface, #202124);
+    text-align: left;
+    width: 100%;
+    transition: background 0.2s ease;
+    font-size: 14px;
+}
+
+.reverbit-profile-popup .profile-menu-item:hover {
+    background: var(--md-surface-variant, #f8f9fa);
+}
+
+.reverbit-profile-popup .profile-menu-item .material-icons-round {
+    font-size: 20px;
+    color: var(--md-primary, #1a73e8);
+}
+
+.reverbit-profile-popup .profile-menu-item.logout {
+    color: var(--md-error, #d93025);
+}
+
+.reverbit-profile-popup .profile-menu-item.logout .material-icons-round {
+    color: var(--md-error, #d93025);
+}
+
+/* Dark theme adjustments */
+.dark-theme .reverbit-profile-popup {
+    background: var(--md-surface, #202124);
+    border-color: var(--md-outline, #3c4043);
+}
+
+.dark-theme .reverbit-profile-popup .profile-name {
+    color: var(--md-on-surface, #ffffff);
+}
+
+.dark-theme .reverbit-profile-popup .profile-email {
+    color: var(--md-on-surface-variant, #e8eaed);
+}
+
+.dark-theme .reverbit-profile-popup .profile-menu-item:hover {
+    background: var(--md-surface-variant, #303134);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .reverbit-profile-avatar {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .reverbit-profile-popup {
+        position: fixed;
+        top: 70px;
+        right: 16px;
+        left: 16px;
+        min-width: auto;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+}
+      
       
       /* Update the sidebar-section layout */
 .sidebar-section {
@@ -3946,7 +4108,25 @@
     </div>
 
     <script>
-        // Enhanced splash screen functionality
+      
+      
+      // Check if user is authenticated
+document.addEventListener('DOMContentLoaded', async () => {
+    await window.ReverbitAuth.init();
+    
+    if (!window.ReverbitAuth.isAuthenticated()) {
+        // Redirect to sign in page or show auth modal
+        const continueAnyway = confirm('You need to be signed in to use this app. Would you like to sign in?');
+        if (continueAnyway) {
+            window.location.href = 'https://aditya-cmd-max.github.io/signin'; // Your sign in page
+        }
+    }
+});
+      
+      
+      
+      
+      // Enhanced splash screen functionality
         document.addEventListener('DOMContentLoaded', function() {
             const splash = document.getElementById('splash-screen');
             
