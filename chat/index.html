@@ -614,27 +614,77 @@
             border-top: 1px solid var(--md-outline);
         }
 
-        /* REMOVED: Profile Picture Section from customization panel */
-
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-            display: none;
-            background: transparent;
-            border: none;
-            color: var(--md-on-surface);
-            cursor: pointer;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            transition: var(--md-transition);
-            align-items: center;
-            justify-content: center;
-            background: var(--md-surface-variant);
+        /* Profile Picture Section */
+        .profile-picture-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-md);
         }
 
-        .mobile-menu-btn:hover {
-            background: var(--md-primary-container);
-            color: var(--md-primary);
+        .profile-picture-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--md-spacing-md);
+        }
+
+        .profile-picture-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--md-surface-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 4px solid var(--md-surface);
+            transition: var(--md-transition);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .profile-picture-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture-preview .material-icons-round {
+            font-size: 48px;
+            color: var(--md-on-surface-variant);
+        }
+
+        .profile-picture-actions {
+            display: flex;
+            gap: var(--md-spacing-sm);
+        }
+
+        .profile-picture-btn {
+            padding: var(--md-spacing-sm) var(--md-spacing-md);
+            border-radius: var(--md-radius-medium);
+            border: none;
+            font-family: var(--md-font-heading);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--md-transition);
+            display: flex;
+            align-items: center;
+            gap: var(--md-spacing-sm);
+        }
+
+        .profile-picture-btn.primary {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+        }
+
+        .profile-picture-btn.secondary {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+        }
+
+        .profile-picture-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--md-elevation-2);
         }
 
         /* Mobile Sidebar Overlay */
@@ -3566,7 +3616,28 @@
                 </div>
             </div>
             
-            <!-- Profile Picture Section REMOVED -->
+            <div class="customization-section profile-picture-section">
+                <h3 class="section-title">Profile Picture</h3>
+                <div class="profile-picture-container">
+                    <div class="profile-picture-preview" id="profile-picture-preview">
+                        <span class="material-icons-round">person</span>
+                    </div>
+                    <div class="profile-picture-actions">
+                        <button class="profile-picture-btn primary" id="upload-profile-picture-btn">
+                            <span class="material-icons-round">add_photo_alternate</span>
+                            <span>Upload</span>
+                        </button>
+                        <button class="profile-picture-btn secondary" id="remove-profile-picture-btn">
+                            <span class="material-icons-round">delete</span>
+                            <span>Remove</span>
+                        </button>
+                    </div>
+                    <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+                    <p style="font-size: 0.875rem; color: var(--md-on-surface-variant); text-align: center;">
+                        Your profile picture will appear next to your messages
+                    </p>
+                </div>
+            </div>
             
             <div class="customization-section">
                 <h3 class="section-title">Theme Color</h3>
@@ -4036,7 +4107,25 @@
     </div>
 
     <script>
-        // Enhanced splash screen functionality
+      
+      
+      // Check if user is authenticated
+document.addEventListener('DOMContentLoaded', async () => {
+    await window.ReverbitAuth.init();
+    
+    if (!window.ReverbitAuth.isAuthenticated()) {
+        // Redirect to sign in page or show auth modal
+        const continueAnyway = confirm('You need to be signed in to use this app. Would you like to sign in?');
+        if (continueAnyway) {
+            window.location.href = 'https://aditya-cmd-max.github.io/signin'; // Your sign in page
+        }
+    }
+});
+      
+      
+      
+      
+      // Enhanced splash screen functionality
         document.addEventListener('DOMContentLoaded', function() {
             const splash = document.getElementById('splash-screen');
             
@@ -4097,6 +4186,12 @@
         const timestampToggle = document.getElementById('timestamp-toggle');
         const saveCustomizationBtn = document.getElementById('save-customization-btn');
         
+        // Profile Picture Elements
+        const profilePicturePreview = document.getElementById('profile-picture-preview');
+        const uploadProfilePictureBtn = document.getElementById('upload-profile-picture-btn');
+        const removeProfilePictureBtn = document.getElementById('remove-profile-picture-btn');
+        const profilePictureInput = document.getElementById('profile-picture-input');
+        
         // Mobile Menu Elements
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileSidebar = document.getElementById('mobile-sidebar');
@@ -4148,6 +4243,7 @@
         let abortController = null;
         let currentFileData = null;
         let currentChatId = null;
+        let chatSessions = {};
         let searchTerm = '';
         let showPinnedOnly = false;
         let chatToDelete = null;
@@ -4158,6 +4254,7 @@
         // Customization state
         let userSettings = {
             userName: '',
+            profilePicture: null,
             theme: 'default',
             darkMode: false,
             soundEnabled: true,
@@ -4175,22 +4272,23 @@
             parts: [{ text: "" }]
         };
 
-        // Function to update system message with current date/time - FIXED VERSION
-        function updateSystemMessageWithCurrentTime() {
-            const now = new Date();
-            const currentDate = now.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            const currentTime = now.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
-            const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      
+      // Function to update system message with current date/time - FIXED VERSION
+function updateSystemMessageWithCurrentTime() {
+    const now = new Date();
+    const currentDate = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    const currentTime = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    });
+    const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             
             // Enhanced system prompt with real-time date/time
             let systemPrompt = `You are Clover AI, an advanced AI assistant created under a project- 'Reverbit' https://aditya-cmd-max.github.io/reverbit/. Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation.
@@ -4559,6 +4657,11 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 // Apply settings to UI
                 userNameInput.value = userSettings.userName || '';
                 
+                // Set profile picture
+                if (userSettings.profilePicture) {
+                    profilePicturePreview.innerHTML = `<img src="${userSettings.profilePicture}" alt="Profile Picture">`;
+                }
+                
                 // Set theme
                 document.body.classList.remove('theme-blue', 'theme-green', 'theme-orange', 'theme-pink', 'theme-teal', 'theme-gradient');
                 if (userSettings.theme !== 'default') {
@@ -4648,339 +4751,166 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             console.log('Applied font:', fontName);
         }
 
-        // Initialize chat sessions from Firestore
-        async function initializeChatSessions() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                // Show login prompt
-                chatSessionsContainer.innerHTML = '<div class="no-chats-found">Please sign in to view chats</div>';
-                mobileChatSessionsContainer.innerHTML = '<div class="no-chats-found">Please sign in to view chats</div>';
-                return;
+        // Initialize chat sessions from localStorage
+        function initializeChatSessions() {
+            const savedSessions = localStorage.getItem('cloverAIChatSessions');
+            if (savedSessions) {
+                chatSessions = JSON.parse(savedSessions);
             }
             
-            // Migrate old chats if needed
-            await migrateLocalChatsToFirestore();
-            
-            // Load user chats
-            await loadUserChats();
-            
-            // Create a default chat if no chats exist
-            const chatsExist = await checkIfUserHasChats();
-            if (!chatsExist) {
-                await createNewChat();
+            // If no sessions exist, create a default one
+            if (Object.keys(chatSessions).length === 0) {
+                createNewChat();
+            } else {
+                // Load the most recent chat
+                const chatIds = Object.keys(chatSessions);
+                currentChatId = chatIds[chatIds.length - 1];
+                loadChat(currentChatId);
             }
-        }
-
-        // Check if user has any chats
-        async function checkIfUserHasChats() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) return false;
             
-            try {
-                const snapshot = await window.ReverbitAuth.db.collection('chats')
-                    .where('userId', '==', user.uid)
-                    .limit(1)
-                    .get();
-                
-                return !snapshot.empty;
-            } catch (error) {
-                console.error('Error checking chats:', error);
-                return false;
-            }
-        }
-
-        // Get user chat count
-        async function getUserChatCount() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) return 0;
-            
-            try {
-                const snapshot = await window.ReverbitAuth.db.collection('chats')
-                    .where('userId', '==', user.uid)
-                    .get();
-                
-                return snapshot.size;
-            } catch (error) {
-                console.error('Error counting chats:', error);
-                return 0;
-            }
+            renderChatSessions();
         }
 
         // Create a new chat session
-        async function createNewChat() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                console.error('No user logged in');
-                showNotification('Please sign in to create chats', 'error');
-                return;
-            }
-            
+        function createNewChat() {
             const chatId = 'chat_' + Date.now();
-            const chatTitle = 'Chat ' + ((await getUserChatCount()) + 1);
+            const chatTitle = 'Chat ' + (Object.keys(chatSessions).length + 1);
             
-            // Update system message with current time
-            updateSystemMessageWithCurrentTime();
+            chatSessions[chatId] = {
+                id: chatId,
+                title: chatTitle,
+                history: [systemMessage],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                pinned: false
+            };
             
-            try {
-                // Create chat document in Firestore
-                await window.ReverbitAuth.db.collection('chats').doc(chatId).set({
-                    id: chatId,
-                    title: chatTitle,
-                    userId: user.uid,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    pinned: false
-                });
-                
-                // Add system message as first message
-                await saveMessageToChat(chatId, {
-                    role: "model",
-                    parts: [{ text: systemMessage.parts[0].text }]
-                }, false, 0);
-                
-                currentChatId = chatId;
-                currentChatTitle.textContent = chatTitle;
-                
-                // Clear chat window and show welcome
-                const welcomeSection = chatWindow.querySelector('.welcome-section');
-                chatWindow.innerHTML = '';
-                
-                if (welcomeSection) {
-                    chatWindow.appendChild(welcomeSection.cloneNode(true));
-                    updateWelcomeMessage();
-                }
-                
-                // Load user chats to update sidebar
-                await loadUserChats();
-                
-                showNotification('New chat created');
-                
-                // Close mobile sidebar if open
-                closeMobileSidebar();
-                
-            } catch (error) {
-                console.error('Error creating chat:', error);
-                showNotification('Failed to create chat', 'error');
-            }
-        }
-
-        // Load a specific chat
-        async function loadChat(chatId) {
-            await loadChatMessages(chatId);
+            currentChatId = chatId;
+            saveChatSessions();
+            renderChatSessions();
+            loadChat(chatId);
+            showNotification('New chat created');
+            
+            // Update welcome message for new chat
+            updateWelcomeMessage();
             
             // Close mobile sidebar if open
             closeMobileSidebar();
         }
 
-        // Load chat messages from Firestore
-        async function loadChatMessages(chatId) {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                console.error('No user logged in');
-                return;
-            }
+        // Load a specific chat - UPDATED with proper timestamp handling
+        function loadChat(chatId) {
+            if (!chatSessions[chatId]) return;
             
-            try {
-                // Verify user owns this chat
-                const chatDoc = await window.ReverbitAuth.db.collection('chats').doc(chatId).get();
-                if (!chatDoc.exists) {
-                    showNotification('Chat not found', 'error');
-                    return;
-                }
-                
-                const chatData = chatDoc.data();
-                if (chatData.userId !== user.uid) {
-                    showNotification('Access denied', 'error');
-                    return;
-                }
-                
-                currentChatId = chatId;
-                currentChatTitle.textContent = chatData.title;
-                
-                // Clear chat window
-                const welcomeSection = chatWindow.querySelector('.welcome-section');
-                chatWindow.innerHTML = '';
-                
-                // Only show welcome if no messages
-                let hasMessages = false;
-                
-                // Load messages from Firestore
-                const querySnapshot = await window.ReverbitAuth.db.collection('chats').doc(chatId)
-                    .collection('messages')
-                    .orderBy('order', 'asc')
-                    .get();
-                
-                if (querySnapshot.empty) {
-                    if (welcomeSection) {
-                        chatWindow.appendChild(welcomeSection.cloneNode(true));
-                        updateWelcomeMessage();
-                    }
-                    return;
-                }
-                
-                // Display each message
-                querySnapshot.forEach((doc) => {
-                    const message = doc.data();
-                    const timestamp = message.timestamp?.toDate() || new Date();
-                    
-                    const messageElement = createMessageElement(
-                        message.parts[0].text,
-                        message.role === 'user' ? 'user' : 'bot',
-                        timestamp,
-                        false // Don't animate loaded messages
-                    );
-                    
-                    chatWindow.appendChild(messageElement);
-                    hasMessages = true;
-                });
-                
-                // If no messages, show welcome
-                if (!hasMessages && welcomeSection) {
+            const chat = chatSessions[chatId];
+            currentChatId = chatId;
+            currentChatTitle.textContent = chat.title;
+            
+            // Update system message with current time before loading
+            updateSystemMessageWithCurrentTime();
+            
+            // Update the first message (system message) with current time
+            chat.history[0] = systemMessage;
+            
+            // Clear chat window and rebuild from history
+            const welcomeSection = chatWindow.querySelector('.welcome-section');
+            chatWindow.innerHTML = '';
+            
+            // Only show welcome if it's a new chat
+            if (chat.history.length <= 1) {
+                if (welcomeSection) {
                     chatWindow.appendChild(welcomeSection.cloneNode(true));
                     updateWelcomeMessage();
                 }
-                
-                // Scroll to bottom
-                setTimeout(() => {
-                    chatWindow.scrollTop = chatWindow.scrollHeight;
-                }, 100);
-                
-                // Initialize feedback buttons
-                setTimeout(() => {
-                    initFeedbackButtons();
-                }, 100);
-                
-                // Check and add date separators
-                setTimeout(() => {
-                    checkAndAddDateSeparator();
-                }, 100);
-                
-                // Reattach event listeners to suggestion chips
-                document.querySelectorAll('.suggestion-chip').forEach(chip => {
-                    chip.addEventListener('click', () => {
-                        const prompt = chip.getAttribute('data-prompt');
-                        messageInput.value = prompt;
-                        messageInput.focus();
-                        chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
-                    });
-                });
-                
-            } catch (error) {
-                console.error('Error loading messages:', error);
-                showNotification('Failed to load chat', 'error');
-            }
-        }
-
-        // Save message to Firestore
-        async function saveMessageToChat(chatId, messageData, isUser = true, customOrder = null) {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                console.error('No user logged in');
-                return false;
-            }
-            
-            try {
-                const messagesRef = window.ReverbitAuth.db.collection('chats').doc(chatId).collection('messages');
-                
-                // Get current count for ordering
-                let order;
-                if (customOrder !== null) {
-                    order = customOrder;
-                } else {
-                    const countSnapshot = await messagesRef.orderBy('order', 'desc').limit(1).get();
-                    if (countSnapshot.empty) {
-                        order = 0;
-                    } else {
-                        const lastOrder = countSnapshot.docs[0].data().order;
-                        order = lastOrder + 1;
+            } else {
+                // Recreate messages from history with proper timestamps
+                for (let i = 1; i < chat.history.length; i++) {
+                    const message = chat.history[i];
+                    // Create a timestamp based on message order (older messages first)
+                    const timestamp = new Date(chat.createdAt);
+                    timestamp.setMinutes(timestamp.getMinutes() + i); // Increment for each message
+                    
+                    if (message.role === "user") {
+                        const messageElement = createMessageElement(message.parts[0].text, 'user', timestamp);
+                        chatWindow.appendChild(messageElement);
+                    } else if (message.role === "model") {
+                        const messageElement = createMessageElement(message.parts[0].text, 'bot', timestamp, false);
+                        chatWindow.appendChild(messageElement);
                     }
                 }
-                
-                // Save message
-                await messagesRef.add({
-                    ...messageData,
-                    userId: user.uid,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    order: order
-                });
-                
-                // Update chat's updatedAt timestamp
-                await window.ReverbitAuth.db.collection('chats').doc(chatId).update({
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                return true;
-            } catch (error) {
-                console.error('Error saving message:', error);
-                return false;
-            }
-        }
-
-        // Load user chats from Firestore
-        async function loadUserChats() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                // Show login prompt
-                chatSessionsContainer.innerHTML = '<div class="no-chats-found">Please sign in to view chats</div>';
-                mobileChatSessionsContainer.innerHTML = '<div class="no-chats-found">Please sign in to view chats</div>';
-                return;
             }
             
-            try {
-                let query = window.ReverbitAuth.db.collection('chats')
-                    .where('userId', '==', user.uid);
-                
-                // Apply pin filter if active
-                if (showPinnedOnly) {
-                    query = query.where('pinned', '==', true);
-                }
-                
-                const querySnapshot = await query
-                    .orderBy('updatedAt', 'desc')
-                    .get();
-                
-                // Clear current sessions
-                chatSessionsContainer.innerHTML = '';
-                mobileChatSessionsContainer.innerHTML = '';
-                
-                if (querySnapshot.empty) {
-                    noChatsFound.style.display = 'block';
-                    mobileNoChatsFound.style.display = 'block';
-                    return;
-                }
-                
-                noChatsFound.style.display = 'none';
-                mobileNoChatsFound.style.display = 'none';
-                
-                // Apply search filter locally
-                const chats = [];
-                querySnapshot.forEach((doc) => {
-                    const chat = { id: doc.id, ...doc.data() };
-                    
-                    // Apply search filter if searchTerm exists
-                    if (!searchTerm || chat.title.toLowerCase().includes(searchTerm)) {
-                        chats.push(chat);
-                    }
+            // Initialize feedback buttons after loading chat
+            setTimeout(() => {
+                initFeedbackButtons();
+            }, 100);
+            
+            // Check and add date separators after loading chat
+            setTimeout(() => {
+                checkAndAddDateSeparator();
+            }, 100);
+            
+            // Reattach event listeners to suggestion chips
+            document.querySelectorAll('.suggestion-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const prompt = chip.getAttribute('data-prompt');
+                    messageInput.value = prompt;
+                    messageInput.focus();
+                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
                 });
+            });
+            
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
+        }
+
+        // Helper function to create message elements with timestamps
+        function createMessageElement(text, type, timestamp, showTyping = true) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${type}`;
+            
+            const messageTime = new Date(timestamp);
+            const timeString = messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            if (type === 'user') {
+                let avatarHTML = userSettings.profilePicture ? 
+                    `<img src="${userSettings.profilePicture}" alt="User Profile">` :
+                    '<span class="material-icons-round">person</span>';
                 
-                // Sort by updatedAt (Firestore already returns sorted, but we re-sort after filtering)
-                chats.sort((a, b) => {
-                    return b.updatedAt?.toMillis() - a.updatedAt?.toMillis();
-                });
+                messageElement.innerHTML = `
+                    <div class="message-avatar">
+                        ${avatarHTML}
+                    </div>
+                    <div class="message-bubble">
+                        <div class="message-content">${escapeHtml(text)}</div>
+                        ${userSettings.timestamps ? `<div class="message-timestamp">${timeString}</div>` : ''}
+                    </div>
+                `;
+            } else {
+                const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const botMessageContent = createBotMessageContent(text, messageId);
                 
-                // Render each chat
-                chats.forEach((chat) => {
-                    const sessionElement = createChatSessionElement(chat, searchTerm);
-                    
-                    // Add to both desktop and mobile containers
-                    chatSessionsContainer.appendChild(sessionElement.cloneNode(true));
-                    mobileChatSessionsContainer.appendChild(sessionElement);
-                });
-                
-            } catch (error) {
-                console.error('Error loading chats:', error);
-                showNotification('Failed to load chats', 'error');
+                messageElement.innerHTML = `
+                    <div class="message-avatar">
+                        <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo">
+                    </div>
+                    <div class="ai-response-fullwidth">
+                        ${botMessageContent}
+                        ${userSettings.timestamps ? `<div class="message-timestamp">${timeString}</div>` : ''}
+                    </div>
+                `;
             }
+            
+            // Store the timestamp
+            messageElement.setAttribute('data-timestamp', messageTime.toISOString());
+            return messageElement;
+        }
+
+        // Render chat sessions in sidebar
+        function renderChatSessions() {
+            filterChatSessions();
         }
 
         // Create chat session element with search highlighting, pin and delete functionality
@@ -5034,35 +4964,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         }
 
         // Toggle pin status for a chat
-        async function togglePinChat(chatId) {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                showNotification('Please sign in to pin chats', 'error');
-                return;
-            }
-            
-            try {
-                const chatRef = window.ReverbitAuth.db.collection('chats').doc(chatId);
-                const chatDoc = await chatRef.get();
-                
-                if (!chatDoc.exists) return;
-                
-                const chatData = chatDoc.data();
-                if (chatData.userId !== user.uid) return;
-                
-                const newPinnedState = !chatData.pinned;
-                
-                await chatRef.update({
-                    pinned: newPinnedState,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                await loadUserChats();
-                showNotification(newPinnedState ? 'Chat pinned' : 'Chat unpinned');
-                
-            } catch (error) {
-                console.error('Error toggling pin:', error);
-                showNotification('Failed to update pin status', 'error');
+        function togglePinChat(chatId) {
+            const chat = chatSessions[chatId];
+            if (chat) {
+                chat.pinned = !chat.pinned;
+                chat.updatedAt = new Date().toISOString();
+                saveChatSessions();
+                renderChatSessions();
+                showNotification(chat.pinned ? 'Chat pinned' : 'Chat unpinned');
             }
         }
 
@@ -5071,63 +4980,47 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             showPinnedOnly = !showPinnedOnly;
             pinFilterBtn.classList.toggle('active', showPinnedOnly);
             mobilePinFilterBtn.classList.toggle('active', showPinnedOnly);
-            loadUserChats();
+            renderChatSessions();
             showNotification(showPinnedOnly ? 'Showing pinned chats only' : 'Showing all chats');
         }
 
         // Delete a chat session
-        async function deleteChatConfirmed(chatId) {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                showNotification('Please sign in to delete chats', 'error');
+        function deleteChatConfirmed(chatId) {
+            // Check if chat exists
+            if (!chatSessions[chatId]) {
+                showNotification('Chat not found', 'error');
                 return;
             }
             
+            // Prevent deleting the only chat
+            if (Object.keys(chatSessions).length <= 1) {
+                showNotification('Cannot delete the only chat', 'error');
+                return;
+            }
+            
+            const chatTitle = chatSessions[chatId].title;
+            
             try {
-                // Verify user owns this chat
-                const chatDoc = await window.ReverbitAuth.db.collection('chats').doc(chatId).get();
-                if (!chatDoc.exists) {
-                    showNotification('Chat not found', 'error');
-                    return;
-                }
+                const wasCurrentChat = currentChatId === chatId;
                 
-                const chatData = chatDoc.data();
-                if (chatData.userId !== user.uid) {
-                    showNotification('Access denied', 'error');
-                    return;
-                }
-                
-                // Delete messages subcollection first
-                const messagesSnapshot = await window.ReverbitAuth.db.collection('chats')
-                    .doc(chatId).collection('messages').get();
-                
-                const batch = window.ReverbitAuth.db.batch();
-                messagesSnapshot.docs.forEach(doc => {
-                    batch.delete(doc.ref);
-                });
-                
-                // Delete the chat document
-                batch.delete(window.ReverbitAuth.db.collection('chats').doc(chatId));
-                
-                await batch.commit();
+                // Delete the chat
+                delete chatSessions[chatId];
+                saveChatSessions();
                 
                 // Handle current chat deletion
-                if (currentChatId === chatId) {
-                    const remainingChats = await getRemainingChats();
-                    if (remainingChats.length > 0) {
-                        // Switch to the most recent chat
-                        currentChatId = remainingChats[0].id;
-                        await loadChatMessages(currentChatId);
-                    } else {
-                        // No chats left, create new one
-                        currentChatId = null;
-                        await createNewChat();
-                    }
+                if (wasCurrentChat) {
+                    const remainingChats = Object.keys(chatSessions);
+                    // Switch to the most recent chat (last in the array after sorting)
+                    const sortedChats = remainingChats.sort((a, b) => 
+                        new Date(chatSessions[b].updatedAt) - new Date(chatSessions[a].updatedAt)
+                    );
+                    currentChatId = sortedChats[0];
+                    loadChat(currentChatId);
                 }
                 
                 // Update UI
-                await loadUserChats();
-                showNotification(`Chat "${chatData.title}" has been deleted`);
+                renderChatSessions();
+                showNotification(`"${chatTitle}" has been deleted`);
                 
             } catch (error) {
                 console.error('Error deleting chat:', error);
@@ -5135,38 +5028,53 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
         }
 
-        // Get remaining chats after deletion
-        async function getRemainingChats() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) return [];
-            
+        // Save chat sessions to localStorage
+        function saveChatSessions() {
             try {
-                const snapshot = await window.ReverbitAuth.db.collection('chats')
-                    .where('userId', '==', user.uid)
-                    .orderBy('updatedAt', 'desc')
-                    .get();
-                
-                const chats = [];
-                snapshot.forEach(doc => {
-                    chats.push({ id: doc.id, ...doc.data() });
-                });
-                
-                return chats;
-            } catch (error) {
-                console.error('Error getting remaining chats:', error);
-                return [];
+                localStorage.setItem('cloverAIChatSessions', JSON.stringify(chatSessions));
+            } catch (e) {
+                console.error("Error saving chat sessions:", e);
+                if (e.name === 'QuotaExceededError') {
+                    showNotification('Storage limit reached. Some chats may not be saved.', 'error');
+                }
             }
         }
 
-        // Profile Picture Functions - REMOVED (now using ReverbitAuth profile)
-
-        // Helper function to get authenticated profile picture
-        function getAuthenticatedProfilePicture() {
-            const userProfile = window.ReverbitAuth?.getUserProfile();
-            if (userProfile && userProfile.photoURL) {
-                return userProfile.photoURL;
+        // Profile Picture Functions
+        function handleProfilePictureUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.match('image.*')) {
+                showNotification('Please upload an image file');
+                return;
             }
-            return null;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('Image size should be less than 5MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                userSettings.profilePicture = e.target.result;
+                profilePicturePreview.innerHTML = `<img src="${e.target.result}" alt="Profile Picture">`;
+                saveUserSettings();
+                showNotification('Profile picture updated');
+            };
+            
+            reader.onerror = function() {
+                showNotification('Error reading the image file', 'error');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function removeProfilePicture() {
+            userSettings.profilePicture = null;
+            profilePicturePreview.innerHTML = '<span class="material-icons-round">person</span>';
+            saveUserSettings();
+            showNotification('Profile picture removed');
         }
 
         // File Upload Function
@@ -5218,9 +5126,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 
                 messageElement.innerHTML = `
                     <div class="message-avatar">
-                        ${getAuthenticatedProfilePicture() ? 
-                            `<img src="${getAuthenticatedProfilePicture()}" alt="User Profile">` : 
-                            '<span class="material-icons-round">person</span>'}
+                        <span class="material-icons-round">person</span>
                     </div>
                     <div class="message-bubble">
                         ${fileContent}
@@ -5308,14 +5214,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             searchChatInput.addEventListener('input', (e) => {
                 searchTerm = e.target.value.trim().toLowerCase();
                 updateClearButtonVisibility();
-                loadUserChats();
+                filterChatSessions();
             });
 
             // Mobile search
             mobileSearchChatInput.addEventListener('input', (e) => {
                 searchTerm = e.target.value.trim().toLowerCase();
                 updateClearButtonVisibility();
-                loadUserChats();
+                filterChatSessions();
             });
 
             // Clear search buttons
@@ -5343,19 +5249,60 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             searchChatInput.value = '';
             mobileSearchChatInput.value = '';
             updateClearButtonVisibility();
-            loadUserChats();
+            filterChatSessions();
+        }
+
+        // Filter chat sessions based on search term and pin filter
+        function filterChatSessions() {
+            const allChats = Object.values(chatSessions);
+            let filteredChats = allChats;
+
+            // Apply pin filter
+            if (showPinnedOnly) {
+                filteredChats = filteredChats.filter(chat => chat.pinned);
+            }
+
+            // Apply search filter
+            if (searchTerm) {
+                filteredChats = filteredChats.filter(chat => 
+                    chat.title.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Update desktop sidebar
+            renderFilteredChatSessions(filteredChats, chatSessionsContainer, noChatsFound);
+            
+            // Update mobile sidebar
+            renderFilteredChatSessions(filteredChats, mobileChatSessionsContainer, mobileNoChatsFound);
+        }
+
+        // Render filtered chat sessions
+        function renderFilteredChatSessions(filteredChats, container, noResultsElement) {
+            container.innerHTML = '';
+            
+            if (filteredChats.length === 0) {
+                noResultsElement.style.display = 'block';
+                return;
+            }
+            
+            noResultsElement.style.display = 'none';
+            
+            filteredChats
+                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                .forEach(chat => {
+                    const sessionElement = createChatSessionElement(chat, searchTerm);
+                    container.appendChild(sessionElement);
+                });
         }
 
         // Modal Functions
         function openRenameModal() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                showNotification('Please sign in to rename chats', 'error');
-                return;
+            const chat = chatSessions[currentChatId];
+            if (chat) {
+                renameChatInput.value = chat.title;
+                renameModal.classList.add('active');
+                setTimeout(() => renameChatInput.focus(), 300);
             }
-            
-            renameModal.classList.add('active');
-            setTimeout(() => renameChatInput.focus(), 300);
         }
 
         function closeRenameModal() {
@@ -5363,9 +5310,12 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         }
 
         function openDeleteModal(chatId) {
-            chatToDelete = chatId;
-            deleteModalMessage.textContent = `Are you sure you want to delete this chat? This action cannot be undone.`;
-            deleteModal.classList.add('active');
+            const chat = chatSessions[chatId];
+            if (chat) {
+                chatToDelete = chatId;
+                deleteModalMessage.textContent = `Are you sure you want to delete "${chat.title}"? This action cannot be undone.`;
+                deleteModal.classList.add('active');
+            }
         }
 
         function closeDeleteModal() {
@@ -5373,37 +5323,23 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             chatToDelete = null;
         }
 
-        async function handleRenameConfirm() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                showNotification('Please sign in to rename chats', 'error');
-                closeRenameModal();
-                return;
-            }
-            
+        function handleRenameConfirm() {
             const newTitle = renameChatInput.value.trim();
             if (newTitle && newTitle !== '') {
-                try {
-                    await window.ReverbitAuth.db.collection('chats').doc(currentChatId).update({
-                        title: newTitle,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    currentChatTitle.textContent = newTitle;
-                    await loadUserChats();
-                    showNotification('Chat renamed');
-                    closeRenameModal();
-                    
-                } catch (error) {
-                    console.error('Error renaming chat:', error);
-                    showNotification('Failed to rename chat', 'error');
-                }
+                const chat = chatSessions[currentChatId];
+                chat.title = newTitle;
+                chat.updatedAt = new Date().toISOString();
+                currentChatTitle.textContent = chat.title;
+                saveChatSessions();
+                renderChatSessions();
+                showNotification('Chat renamed');
+                closeRenameModal();
             }
         }
 
-        async function handleDeleteConfirm() {
+        function handleDeleteConfirm() {
             if (chatToDelete) {
-                await deleteChatConfirmed(chatToDelete);
+                deleteChatConfirmed(chatToDelete);
                 closeDeleteModal();
             }
         }
@@ -5494,40 +5430,23 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             isProcessing = true;
             toggleSendButton(true);
             
+            const currentChat = chatSessions[currentChatId];
+            let modifiedHistory = [...currentChat.history];
+            
             // Update system message with current time
             updateSystemMessageWithCurrentTime();
+            modifiedHistory[0] = systemMessage;
             
-            // Get the last user message to use as context
-            const messagesSnapshot = await window.ReverbitAuth.db.collection('chats').doc(currentChatId)
-                .collection('messages')
-                .orderBy('order', 'desc')
-                .limit(5)
-                .get();
+            // Apply AI training and web search enhancements
+            applyRequestEnhancements(modifiedHistory);
             
-            // Build conversation history
-            const modifiedHistory = [systemMessage];
-            const messages = [];
-            messagesSnapshot.docs.forEach(doc => {
-                messages.push(doc.data());
-            });
-            
-            // Reverse to get chronological order
-            messages.reverse();
-            
-            // Add last few messages to history
-            messages.forEach(message => {
-                if (message.role === "user" || message.role === "model") {
-                    modifiedHistory.push({
-                        role: message.role,
-                        parts: message.parts
-                    });
+            // Add web search context if enabled
+            if (webSearchEnabled) {
+                const lastMessage = modifiedHistory[modifiedHistory.length - 1];
+                if (lastMessage && lastMessage.role === "user") {
+                    // Add web search instruction to the user message
+                    lastMessage.parts[0].text = `[Web Search Enabled] Please search for the most up-to-date information about: ${lastMessage.parts[0].text}`;
                 }
-            });
-            
-            // Apply web search context if enabled
-            const lastMessage = modifiedHistory[modifiedHistory.length - 1];
-            if (webSearchEnabled && lastMessage && lastMessage.role === "user") {
-                lastMessage.parts[0].text = `[Web Search Enabled] Please search for the most up-to-date information about: ${lastMessage.parts[0].text}`;
             }
             
             const payload = { contents: modifiedHistory };
@@ -5554,15 +5473,49 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     throw new Error(result.error);
                 }
 
-                await processSuccessfulResponse(result, modifiedHistory);
+                await processSuccessfulResponse(result, currentChat, modifiedHistory);
                 
             } catch (error) {
                 await handleResponseError(error);
             }
         }
 
-        // Process successful API response
-        async function processSuccessfulResponse(result, modifiedHistory) {
+        // Helper function: Apply AI training and web search enhancements
+        function applyRequestEnhancements(modifiedHistory) {
+            const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+            
+            if (!lastUserMessage || lastUserMessage.role !== "user" || !lastUserMessage.parts[0].text) {
+                return;
+            }
+
+            // Check if user is asking about time/date
+            const userMessage = lastUserMessage.parts[0].text.toLowerCase();
+            const timeKeywords = ['time', 'date', 'today', 'now', 'current', 'what day', 'what time'];
+            const isTimeQuery = timeKeywords.some(keyword => userMessage.includes(keyword));
+            
+            // Apply AI training enhancements
+            if (aiTrainingSystem) {
+                const enhancements = aiTrainingSystem.enhanceResponseQuality(
+                    lastUserMessage.parts[0].text,
+                    modifiedHistory.slice(0, -1),
+                    userSettings
+                );
+                console.log('AI Training Enhancements:', enhancements);
+            }
+
+            // Apply web search enhancement
+            if (webSearchEnabled) {
+                lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
+            }
+            
+            // If it's a time query, ensure the AI knows to use current time
+            if (isTimeQuery) {
+                lastUserMessage.parts[0].text += " (Please provide accurate current date and time information based on the context provided)";
+            }
+        }
+
+        // Helper function: Process successful API response
+        async function processSuccessfulResponse(result, currentChat, modifiedHistory) {
             hideTypingIndicator();
             isProcessing = false;
             toggleSendButton(false);
@@ -5576,28 +5529,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 // Display the bot message
                 displayBotMessage(cleanedMessage);
                 
-                // Save AI response to Firestore
-                await saveMessageToChat(currentChatId, {
-                    role: "model",
-                    parts: [{ text: cleanedMessage }]
-                }, false);
-                
-                // Update chat list to show updated timestamp
-                await loadUserChats();
+                // Update chat history with cleaned message
+                currentChat.history.push({ role: "model", parts: [{ text: cleanedMessage }] });
+                currentChat.updatedAt = new Date().toISOString();
+                saveChatSessions();
+                renderChatSessions();
                 
                 // Update AI training system
-                if (aiTrainingSystem) {
-                    const lastUserMessage = modifiedHistory[modifiedHistory.length - 2];
-                    if (lastUserMessage && lastUserMessage.role === "user") {
-                        const qualityMetrics = {
-                            responseLength: cleanedMessage.length,
-                            hasCode: cleanedMessage.includes('```'),
-                            hasLists: cleanedMessage.includes('•') || cleanedMessage.match(/\d\./g),
-                            readabilityScore: calculateReadabilityScore(cleanedMessage)
-                        };
-                        console.log('Response Quality Metrics:', qualityMetrics);
-                    }
-                }
+                updateAITrainingSystem(modifiedHistory, cleanedMessage);
                 
                 // Initialize feedback buttons after displaying message
                 setTimeout(() => {
@@ -5614,27 +5553,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
         }
 
-        // Helper function: Calculate readability score
-        function calculateReadabilityScore(text) {
-            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-            const words = text.split(/\s+/).filter(w => w.length > 0);
-            
-            if (sentences.length === 0 || words.length === 0) return 0;
-            
-            const avgSentenceLength = words.length / sentences.length;
-            const avgWordLength = words.join('').length / words.length;
-            
-            // Simple readability score (higher is better)
-            let score = 100;
-            if (avgSentenceLength > 25) score -= 20;
-            if (avgWordLength > 5.5) score -= 15;
-            if (text.includes('```')) score += 10; // Code blocks are good
-            if (text.includes('•') || text.includes('1.')) score += 10; // Lists are good
-            
-            return Math.max(0, Math.min(100, score));
-        }
-
-        // Helper function: Clean bot message
+        // Helper function: Clean bot message - remove weird symbols and format properly
         function cleanBotMessage(message) {
             // Remove markdown headers (###, ##, #)
             let cleaned = message.replace(/^#+\s+/gm, '');
@@ -5669,6 +5588,21 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             cleaned = cleaned.replace(/\s+\?/g, '?');
             
             return cleaned.trim();
+        }
+
+        // Helper function: Update AI training system
+        function updateAITrainingSystem(modifiedHistory, botMessage) {
+            if (aiTrainingSystem && typeof AITrainingUtils !== 'undefined') {
+                const lastUserMessage = modifiedHistory[modifiedHistory.length - 1];
+                if (lastUserMessage.role === "user") {
+                    const qualityMetrics = AITrainingUtils.analyzeResponseQuality(
+                        lastUserMessage.parts[0].text,
+                        botMessage,
+                        null
+                    );
+                    console.log('Response Quality Metrics:', qualityMetrics);
+                }
+            }
         }
 
         // Helper function: Handle errors
@@ -5738,6 +5672,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         
         voiceInputBtn.addEventListener('click', startVoiceInput);
         fileInput.addEventListener('change', handleFileUpload);
+        
+        // Profile Picture Event Listeners
+        uploadProfilePictureBtn.addEventListener('click', () => {
+            profilePictureInput.click();
+        });
+        
+        profilePictureInput.addEventListener('change', handleProfilePictureUpload);
+        removeProfilePictureBtn.addEventListener('click', removeProfilePicture);
         
         // Customization event listeners
         customizationBtn.addEventListener('click', openCustomizationPanel);
@@ -5912,7 +5854,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
         });
 
-        // Updated Chat Form Handler with Firestore
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -5922,9 +5863,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             const userMessage = messageInput.value.trim();
             if (userMessage || currentFileData) {
-                // Display message locally first
                 displayUserMessage(userMessage);
-                
                 let apiPrompt = userMessage;
                 
                 // Apply mode-specific formatting
@@ -5943,40 +5882,26 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 messageInput.style.height = 'auto';
                 sendBtn.disabled = true;
                 
-                // Check if user is authenticated
-                const user = window.ReverbitAuth?.getUser();
-                if (!user) {
-                    showNotification('Please sign in to save chat', 'error');
-                    return;
-                }
-                
-                // If no current chat, create one
-                if (!currentChatId) {
-                    await createNewChat();
-                    if (!currentChatId) return; // Chat creation failed
-                }
-                
-                // Save user message to Firestore
+                // Add to current chat history
+                const currentChat = chatSessions[currentChatId];
                 if (currentFileData) {
-                    await saveMessageToChat(currentChatId, { 
+                    currentChat.history.push({ 
                         role: "user", 
                         parts: [
                             { text: apiPrompt || "Please analyze this file and provide information about it." },
                             { inline_data: currentFileData }
                         ] 
-                    }, true);
+                    });
                     currentFileData = null;
                 } else {
-                    await saveMessageToChat(currentChatId, { 
-                        role: "user", 
-                        parts: [{ text: apiPrompt }] 
-                    }, true);
+                    currentChat.history.push({ role: "user", parts: [{ text: apiPrompt }] });
                 }
                 
-                // Update chat list to show updated timestamp
-                await loadUserChats();
+                currentChat.updatedAt = new Date().toISOString();
+                saveChatSessions();
+                renderChatSessions();
                 
-                // Get AI response
+                // Get response
                 await getBotResponse();
                 setMode('chat');
             }
@@ -6024,7 +5949,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     messageInput.placeholder = 'Enter text to translate...';
                     break;
                 default:
-                    messageInput.placeholder = 'Message Clover AI... (Enter to send, Shift+Enter for new line)';
+                    messageInput.placeholder = 'Ask Anything...';
                     break;
             }
         }
@@ -6057,98 +5982,70 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             showNotification('Response stopped');
         }
 
-        async function clearCurrentChat() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                showNotification('Please sign in to clear chats', 'error');
-                return;
+        function clearCurrentChat() {
+            const currentChat = chatSessions[currentChatId];
+            const welcomeSection = chatWindow.querySelector('.welcome-section');
+            chatWindow.innerHTML = '';
+            
+            if (welcomeSection) {
+                chatWindow.appendChild(welcomeSection);
+                // Update welcome message when clearing chat
+                updateWelcomeMessage();
             }
             
-            try {
-                // Clear messages from Firestore
-                const messagesSnapshot = await window.ReverbitAuth.db.collection('chats')
-                    .doc(currentChatId).collection('messages').get();
-                
-                const batch = window.ReverbitAuth.db.batch();
-                messagesSnapshot.docs.forEach(doc => {
-                    batch.delete(doc.ref);
+            // Reset chat history to just system message
+            currentChat.history = [systemMessage];
+            currentChat.updatedAt = new Date().toISOString();
+            currentFileData = null;
+            saveChatSessions();
+            
+            // Reattach event listeners
+            document.querySelectorAll('.suggestion-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const prompt = chip.getAttribute('data-prompt');
+                    messageInput.value = prompt;
+                    messageInput.focus();
+                    chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
                 });
-                
-                await batch.commit();
-                
-                // Add system message back
-                updateSystemMessageWithCurrentTime();
-                await saveMessageToChat(currentChatId, {
-                    role: "model",
-                    parts: [{ text: systemMessage.parts[0].text }]
-                }, false, 0);
-                
-                // Clear chat window locally
-                const welcomeSection = chatWindow.querySelector('.welcome-section');
-                chatWindow.innerHTML = '';
-                
-                if (welcomeSection) {
-                    chatWindow.appendChild(welcomeSection);
-                    updateWelcomeMessage();
-                }
-                
-                currentFileData = null;
-                
-                showNotification('Chat cleared successfully');
-                
-                // Close mobile sidebar if open
-                closeMobileSidebar();
-                
-            } catch (error) {
-                console.error('Error clearing chat:', error);
-                showNotification('Failed to clear chat', 'error');
-            }
+            });
+            
+            showNotification('Chat cleared successfully');
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
         }
 
-        async function exportCurrentChat() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) {
-                showNotification('Please sign in to export chats', 'error');
-                return;
-            }
+        function exportCurrentChat() {
+            const currentChat = chatSessions[currentChatId];
             
-            try {
-                // Load messages from Firestore
-                const querySnapshot = await window.ReverbitAuth.db.collection('chats').doc(currentChatId)
-                    .collection('messages')
-                    .orderBy('order', 'asc')
-                    .get();
-                
-                const chatText = [];
-                querySnapshot.forEach((doc) => {
-                    const message = doc.data();
-                    if (message.role === 'user') {
-                        chatText.push(`You: ${message.parts[0].text}`);
-                    } else if (message.role === 'model') {
-                        chatText.push(`Clover AI: ${message.parts[0].text}`);
+            // Filter out the system message (first message in history)
+            const chatText = currentChat.history
+                .filter((entry, index) => index > 0) // Skip the first message (system message)
+                .map(entry => {
+                    if (entry.role === 'user') {
+                        return `You: ${entry.parts[0].text}`;
+                    } else if (entry.role === 'model') {
+                        return `Clover AI: ${entry.parts[0].text}`;
                     }
-                });
-                
-                const finalText = chatText.join('\n\n');
-                const blob = new Blob([finalText], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `clover-ai-${currentChatTitle.textContent}-${new Date().toISOString().split('T')[0]}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                showNotification('Chat exported successfully');
-                
-                // Close mobile sidebar if open
-                closeMobileSidebar();
-                
-            } catch (error) {
-                console.error('Error exporting chat:', error);
-                showNotification('Failed to export chat', 'error');
-            }
+                    return '';
+                })
+                .filter(text => text !== '')
+                .join('\n\n');
+            
+            const blob = new Blob([chatText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `clover-ai-${currentChat.title}-${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Chat exported successfully');
+            
+            // Close mobile sidebar if open
+            closeMobileSidebar();
         }
 
         function displayUserMessage(message, showTyping = true) {
@@ -6163,11 +6060,10 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             // Add timestamp
             const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
-            // Use authenticated profile picture if available
+            // Use profile picture if available, otherwise use default avatar
             let avatarHTML = '';
-            const profilePicture = getAuthenticatedProfilePicture();
-            if (profilePicture) {
-                avatarHTML = `<img src="${profilePicture}" alt="User Profile">`;
+            if (userSettings.profilePicture) {
+                avatarHTML = `<img src="${userSettings.profilePicture}" alt="User Profile">`;
             } else {
                 avatarHTML = '<span class="material-icons-round">person</span>';
             }
@@ -6637,7 +6533,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                             
                             highlight.addEventListener('mouseleave', function() {
                                 this.style.transform = 'scale(1)';
-                                this.style.box-shadow = '0 1px 2px rgba(25, 118, 210, 0.2)';
+                                this.style.boxShadow = '0 1px 2px rgba(25, 118, 210, 0.2)';
                             });
                         });
                     }, 2000);
@@ -6972,170 +6868,65 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             initToolsDropdown();
         }
 
-        // Migration function for localStorage chats to Firestore
-        async function migrateLocalChatsToFirestore() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) return;
-            
-            // Check if migration already done
-            const migrationKey = `chatMigration_${user.uid}`;
-            if (localStorage.getItem(migrationKey)) {
-                return; // Already migrated
-            }
-            
-            const oldChats = localStorage.getItem('cloverAIChatSessions');
-            if (!oldChats) {
-                localStorage.setItem(migrationKey, 'true');
-                return;
-            }
-            
-            try {
-                const chatSessions = JSON.parse(oldChats);
-                const chatCount = Object.keys(chatSessions).length;
-                
-                if (chatCount === 0) {
-                    localStorage.setItem(migrationKey, 'true');
-                    return;
-                }
-                
-                showNotification(`Migrating ${chatCount} chats to cloud storage...`);
-                
-                for (const [chatId, chat] of Object.entries(chatSessions)) {
-                    // Check if chat already exists in Firestore
-                    const existingChat = await window.ReverbitAuth.db.collection('chats').doc(chatId).get();
-                    if (existingChat.exists) {
-                        continue; // Skip if already exists
-                    }
-                    
-                    // Convert dates
-                    const createdAt = chat.createdAt ? new Date(chat.createdAt) : firebase.firestore.FieldValue.serverTimestamp();
-                    const updatedAt = chat.updatedAt ? new Date(chat.updatedAt) : firebase.firestore.FieldValue.serverTimestamp();
-                    
-                    // Save chat to Firestore
-                    await window.ReverbitAuth.db.collection('chats').doc(chatId).set({
-                        ...chat,
-                        id: chatId,
-                        userId: user.uid,
-                        createdAt: createdAt,
-                        updatedAt: updatedAt,
-                        pinned: chat.pinned || false,
-                        migratedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // Save messages to subcollection
-                    if (chat.history && chat.history.length > 0) {
-                        const batch = window.ReverbitAuth.db.batch();
-                        
-                        chat.history.forEach((message, index) => {
-                            const messageRef = window.ReverbitAuth.db.collection('chats').doc(chatId)
-                                .collection('messages').doc(`msg_${index}`);
-                            
-                            batch.set(messageRef, {
-                                ...message,
-                                userId: user.uid,
-                                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                                order: index
-                            });
-                        });
-                        
-                        await batch.commit();
-                    }
-                }
-                
-                // Mark as migrated and clear localStorage
-                localStorage.setItem(migrationKey, 'true');
-                localStorage.removeItem('cloverAIChatSessions');
-                
-                showNotification('Chats migrated to cloud storage successfully!');
-                
-            } catch (error) {
-                console.error('Migration failed:', error);
-                showNotification('Chat migration failed. Old chats preserved in browser.', 'error');
-            }
-        }
-
         // Initialize the app
-        async function initializeApp() {
-            // Wait for auth to be ready
-            if (window.ReverbitAuth) {
-                await window.ReverbitAuth.init();
+        initializeAITrainingSystem();
+        loadUserSettings();
+        initializeChatSessions();
+        initializeSearch();
+        initializeSidebarResize();
+        initEnhancedLayout();
+        updateUIForMode();
+        sendBtn.disabled = true;
+        
+        // Show banner (if not seen before)
+        showBanner();
+
+        // Force button text visibility
+        document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
+            btn.style.color = 'var(--md-on-surface-variant)';
+        });
+
+        // Add cleanup for old chats every hour
+        setInterval(cleanupOldChats, 3600000); // 1 hour
+
+        function cleanupOldChats() {
+            const maxChats = 50;
+            const maxAgeDays = 30;
+            
+            const now = new Date();
+            const chatIds = Object.keys(chatSessions);
+            
+            // If too many chats, delete oldest unpinned ones
+            if (chatIds.length > maxChats) {
+                const sortedChats = chatIds
+                    .filter(id => !chatSessions[id].pinned)
+                    .sort((a, b) => 
+                        new Date(chatSessions[a].updatedAt) - 
+                        new Date(chatSessions[b].updatedAt)
+                    );
                 
-                // Check authentication
-                const user = window.ReverbitAuth.getUser();
-                if (!user) {
-                    // Redirect to sign in page or show auth modal
-                    const continueAnyway = confirm('You need to be signed in to use this app. Would you like to sign in?');
-                    if (continueAnyway) {
-                        window.location.href = 'https://aditya-cmd-max.github.io/signin';
-                        return;
-                    }
-                }
+                const chatsToDelete = sortedChats.slice(0, chatIds.length - maxChats);
+                chatsToDelete.forEach(id => {
+                    delete chatSessions[id];
+                    showNotification(`Deleted old chat: ${chatSessions[id]?.title || 'Unnamed chat'}`);
+                });
             }
             
-            // Initialize AI and other systems
-            initializeAITrainingSystem();
-            loadUserSettings();
-            
-            // Initialize chat sessions from Firestore
-            await initializeChatSessions();
-            
-            // Initialize the rest
-            initializeSearch();
-            initializeSidebarResize();
-            initEnhancedLayout();
-            updateUIForMode();
-            sendBtn.disabled = true;
-            
-            // Show banner (if not seen before)
-            showBanner();
-            
-            // Force button text visibility
-            document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
-                btn.style.color = 'var(--md-on-surface-variant)';
+            // Delete chats older than maxAgeDays (unless pinned)
+            chatIds.forEach(id => {
+                if (!chatSessions[id].pinned) {
+                    const chatDate = new Date(chatSessions[id].updatedAt);
+                    const daysOld = (now - chatDate) / (1000 * 60 * 60 * 24);
+                    
+                    if (daysOld > maxAgeDays) {
+                        delete chatSessions[id];
+                        showNotification(`Deleted old chat: ${chatSessions[id]?.title || 'Unnamed chat'}`);
+                    }
+                }
             });
             
-            // Add cleanup for old chats every hour
-            setInterval(cleanupOldChats, 3600000); // 1 hour
-        }
-
-        // Cleanup old chats
-        async function cleanupOldChats() {
-            const user = window.ReverbitAuth?.getUser();
-            if (!user) return;
-            
-            try {
-                const maxChats = 50;
-                const maxAgeDays = 30;
-                
-                const now = new Date();
-                const thirtyDaysAgo = new Date(now.getTime() - (maxAgeDays * 24 * 60 * 60 * 1000));
-                
-                // Get all chats sorted by updatedAt
-                const snapshot = await window.ReverbitAuth.db.collection('chats')
-                    .where('userId', '==', user.uid)
-                    .orderBy('updatedAt', 'asc')
-                    .get();
-                
-                if (snapshot.size <= maxChats) return;
-                
-                // Delete oldest unpinned chats
-                const chatsToDelete = [];
-                snapshot.forEach(doc => {
-                    const chat = doc.data();
-                    if (!chat.pinned) {
-                        chatsToDelete.push(doc.ref);
-                    }
-                });
-                
-                // Keep at least maxChats chats
-                const deleteCount = Math.max(0, chatsToDelete.length - maxChats);
-                for (let i = 0; i < deleteCount; i++) {
-                    await chatsToDelete[i].delete();
-                }
-                
-            } catch (error) {
-                console.error('Error cleaning up old chats:', error);
-            }
+            saveChatSessions();
+            renderChatSessions();
         }
 
         // Add sanitization function
@@ -7195,9 +6986,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
 
         // Make functions available globally
         window.copyCode = copyCode;
-        
-        // Initialize the app
-        initializeApp();
     </script>
 </body>
 </html>
