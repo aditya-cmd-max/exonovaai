@@ -4249,7 +4249,7 @@
         </div>
     </div>
 
-    <script>
+<script>
     // Enhanced splash screen functionality
     document.addEventListener('DOMContentLoaded', function() {
         const splash = document.getElementById('splash-screen');
@@ -4278,80 +4278,76 @@
         async init() {
             console.log('Initializing authentication system...');
             
-            // Check if user is already authenticated via URL parameters
-            this.checkURLForAuth();
+            // Wait for ReverbitAuth to be available and initialized
+            await this.waitForReverbitAuth();
             
-            // Check localStorage for auth status
-            this.loadAuthFromStorage();
+            // Check auth status from ReverbitAuth
+            this.checkReverbitAuthStatus();
             
             // Start periodic auth check
             this.startAuthCheck();
             
-            // Listen for auth messages from popup
-            window.addEventListener('message', this.handleAuthMessage.bind(this));
-            
-            // Listen for storage changes (auth from other tabs)
-            window.addEventListener('storage', this.handleStorageChange.bind(this));
+            // Update UI based on auth status
+            this.updateUI();
         },
         
-        // Check URL for auth parameters (for OAuth callback)
-        checkURLForAuth() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            const user = urlParams.get('user');
-            
-            if (token && user) {
-                try {
-                    this.userData = JSON.parse(decodeURIComponent(user));
-                    this.isAuthenticated = true;
-                    this.saveAuthToStorage();
-                    
-                    // Clean URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    
-                    console.log('Authenticated via URL parameters');
-                    this.updateUI();
-                    return true;
-                } catch (error) {
-                    console.error('Error parsing auth data:', error);
-                }
-            }
-            return false;
-        },
-        
-        // Load auth status from localStorage
-        loadAuthFromStorage() {
-            try {
-                const authData = localStorage.getItem('cloverAIAuth');
-                if (authData) {
-                    const parsedData = JSON.parse(authData);
-                    
-                    // Check if token is still valid (not expired)
-                    if (parsedData.expiresAt && parsedData.expiresAt > Date.now()) {
-                        this.userData = parsedData.user;
-                        this.isAuthenticated = true;
-                        console.log('Loaded auth from storage');
+        // Wait for ReverbitAuth to be available
+        async waitForReverbitAuth() {
+            return new Promise((resolve) => {
+                const checkAuth = () => {
+                    if (window.ReverbitAuth && window.ReverbitAuth.initialized) {
+                        console.log('ReverbitAuth found and initialized');
+                        resolve();
                     } else {
-                        // Token expired, clear it
-                        localStorage.removeItem('cloverAIAuth');
-                        console.log('Auth token expired');
+                        console.log('Waiting for ReverbitAuth...');
+                        setTimeout(checkAuth, 100);
+                    }
+                };
+                checkAuth();
+            });
+        },
+        
+        // Check auth status from ReverbitAuth
+        checkReverbitAuthStatus() {
+            try {
+                if (window.ReverbitAuth && window.ReverbitAuth.getUser) {
+                    const user = window.ReverbitAuth.getUser();
+                    if (user) {
+                        this.userData = {
+                            uid: user.uid,
+                            email: user.email,
+                            name: user.displayName || user.email?.split('@')[0] || 'User',
+                            photoURL: user.photoURL
+                        };
+                        this.isAuthenticated = true;
+                        console.log('User authenticated via ReverbitAuth:', this.userData);
+                        return true;
                     }
                 }
+                
+                // Also check localStorage
+                const userData = localStorage.getItem('reverbit_user');
+                if (userData) {
+                    try {
+                        const parsedUser = JSON.parse(userData);
+                        this.userData = {
+                            uid: parsedUser.uid,
+                            email: parsedUser.email,
+                            name: parsedUser.displayName || parsedUser.email?.split('@')[0] || 'User',
+                            photoURL: parsedUser.photoURL
+                        };
+                        this.isAuthenticated = true;
+                        console.log('User authenticated via localStorage:', this.userData);
+                        return true;
+                    } catch (e) {
+                        console.error('Error parsing user data:', e);
+                    }
+                }
+                
+                return false;
             } catch (error) {
-                console.error('Error loading auth from storage:', error);
-            }
-        },
-        
-        // Save auth status to localStorage
-        saveAuthToStorage() {
-            try {
-                const authData = {
-                    user: this.userData,
-                    expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
-                };
-                localStorage.setItem('cloverAIAuth', JSON.stringify(authData));
-            } catch (error) {
-                console.error('Error saving auth to storage:', error);
+                console.error('Error checking auth status:', error);
+                return false;
             }
         },
         
@@ -4362,58 +4358,17 @@
             }, 30000); // Check every 30 seconds
         },
         
-        // Verify auth status with server
-        async verifyAuthStatus() {
-            if (!this.isAuthenticated) return;
+        // Verify auth status
+        verifyAuthStatus() {
+            const wasAuthenticated = this.isAuthenticated;
+            this.checkReverbitAuthStatus();
             
-            try {
-                // You can implement server-side verification here
-                // For now, just check localStorage
-                this.loadAuthFromStorage();
-                
-                if (!this.isAuthenticated) {
-                    this.showAuthRequired();
-                }
-            } catch (error) {
-                console.error('Auth verification error:', error);
-            }
-        },
-        
-        // Handle auth messages from popup
-        handleAuthMessage(event) {
-            // Only accept messages from the signin page
-            if (event.origin !== 'https://aditya-cmd-max.github.io') {
-                return;
-            }
-            
-            if (event.data.type === 'authSuccess') {
-                this.userData = event.data.user;
-                this.isAuthenticated = true;
-                this.saveAuthToStorage();
+            if (wasAuthenticated && !this.isAuthenticated) {
+                // User was logged out
+                this.showAuthRequired();
+            } else if (!wasAuthenticated && this.isAuthenticated) {
+                // User logged in
                 this.updateUI();
-                console.log('Authentication successful via message');
-            }
-        },
-        
-        // Handle storage changes (auth from other tabs)
-        handleStorageChange(event) {
-            if (event.key === 'cloverAIAuth') {
-                if (event.newValue) {
-                    try {
-                        const authData = JSON.parse(event.newValue);
-                        if (authData.expiresAt > Date.now()) {
-                            this.userData = authData.user;
-                            this.isAuthenticated = true;
-                            this.updateUI();
-                        }
-                    } catch (error) {
-                        console.error('Error parsing storage change:', error);
-                    }
-                } else {
-                    this.isAuthenticated = false;
-                    this.userData = null;
-                    this.showAuthRequired();
-                }
             }
         },
         
@@ -4447,7 +4402,7 @@
                     const text = authStatus.querySelector('span');
                     
                     if (dot) dot.classList.add('authenticated');
-                    if (text) text.textContent = this.userData?.email || 'Signed in';
+                    if (text) text.textContent = this.userData?.email || this.userData?.name || 'Signed in';
                 }
                 
                 // Show welcome message with user's name
@@ -4463,45 +4418,10 @@
             }
         },
         
-        // Logout function
-        logout() {
-            this.isAuthenticated = false;
-            this.userData = null;
-            localStorage.removeItem('cloverAIAuth');
-            this.updateUI();
-            showNotification('Signed out successfully');
-        },
-        
-        // Open signin in popup
+        // Open signin in popup (redirects to your signin page)
         openSignInPopup() {
-            const width = 500;
-            const height = 600;
-            const left = (window.screen.width - width) / 2;
-            const top = (window.screen.height - height) / 2;
-            
-            const popup = window.open(
-                'https://aditya-cmd-max.github.io/signin',
-                'cloverai-signin',
-                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no`
-            );
-            
-            if (popup) {
-                // Focus the popup
-                popup.focus();
-                
-                // Check for auth completion
-                const checkAuth = setInterval(() => {
-                    if (popup.closed) {
-                        clearInterval(checkAuth);
-                        this.loadAuthFromStorage();
-                        this.updateUI();
-                    }
-                }, 1000);
-            } else {
-                showNotification('Popup blocked. Please allow popups to sign in.', 'error');
-                // Fallback to redirect
-                window.location.href = 'https://aditya-cmd-max.github.io/signin';
-            }
+            // Redirect to your signin page
+            window.location.href = 'https://aditya-cmd-max.github.io/signin';
         }
     };
 
@@ -4537,11 +4457,8 @@
     async function initializeAppAfterAuth() {
         console.log('Initializing app after authentication...');
         
-        // Initialize Reverbit Auth
-        if (window.ReverbitAuth) {
-            await window.ReverbitAuth.init();
-            
-            // Check if user is authenticated
+        // Initialize Reverbit Auth (already done by AuthSystem)
+        if (window.ReverbitAuth && window.ReverbitAuth.isAuthenticated && window.ReverbitAuth.isAuthenticated()) {
             const user = window.ReverbitAuth.getUser();
             if (user) {
                 // Initialize ChatManager with Firestore
@@ -4603,10 +4520,17 @@
                     <span class="material-icons-round">logout</span>
                     <span>Sign Out</span>
                 `;
-                signOutBtn.addEventListener('click', () => {
+                signOutBtn.addEventListener('click', async () => {
                     if (confirm('Are you sure you want to sign out?')) {
-                        AuthSystem.logout();
-                        closeCustomizationPanel();
+                        if (window.ReverbitAuth && window.ReverbitAuth.logout) {
+                            await window.ReverbitAuth.logout();
+                        } else {
+                            // Fallback: clear local storage and reload
+                            localStorage.removeItem('reverbit_user');
+                            localStorage.removeItem('cloverAIUserSettings');
+                            localStorage.removeItem('cloverAIChatSessions');
+                        }
+                        location.reload();
                     }
                 });
                 customizationFooter.appendChild(signOutBtn);
@@ -4760,7 +4684,7 @@
         async init() {
             try {
                 // Check if user is authenticated
-                const user = window.ReverbitAuth ? window.ReverbitAuth.getUser() : null;
+                const user = AuthSystem.userData;
                 if (!user) {
                     console.warn('User not authenticated, chats will be stored locally only');
                     return false;
@@ -7709,6 +7633,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
     // Make functions available globally
     window.copyCode = copyCode;
 </script>
+
 
 </body>
 </html>
