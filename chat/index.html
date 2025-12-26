@@ -4451,102 +4451,118 @@
         initializeAppAfterAuth();
     }
 
-    // App initialization after authentication
-    async function initializeAppAfterAuth() {
-        console.log('Initializing app after authentication...');
-        
-        // Check for chat ID in URL
+   // App initialization after authentication
+async function initializeAppAfterAuth() {
+    console.log('Initializing app after authentication...');
+    
+    // Check for chat ID in multiple sources
+    let urlChatId = null;
+    
+    // 1. First check if we have a chat ID from the 404 redirect
+    const redirectChatId = sessionStorage.getItem('redirectChatId');
+    if (redirectChatId) {
+        urlChatId = redirectChatId;
+        sessionStorage.removeItem('redirectChatId'); // Clean up
+        console.log('Found chat ID from redirect:', urlChatId);
+    } 
+    // 2. Check current URL path
+    else {
         const urlPath = window.location.pathname;
         const urlParts = urlPath.split('/');
-        let urlChatId = null;
         
         // Look for pattern: /cloverai/chat/c/{chatId}
         const chatIndex = urlParts.indexOf('chat');
         if (chatIndex !== -1 && urlParts[chatIndex + 1] === 'c' && urlParts[chatIndex + 2]) {
             urlChatId = urlParts[chatIndex + 2];
-            console.log('Found chat ID in URL:', urlChatId);
+            console.log('Found chat ID in URL path:', urlChatId);
         }
-        
-        // Initialize Reverbit Auth (already done by AuthSystem)
-        if (window.ReverbitAuth && window.ReverbitAuth.isAuthenticated && window.ReverbitAuth.isAuthenticated()) {
-            const user = window.ReverbitAuth.getUser();
-            if (user) {
-                // Initialize ChatManager with Firestore
-                chatManager = Object.create(ChatManager);
-                const firestoreAvailable = await chatManager.init();
-                
-                if (firestoreAvailable) {
-                    console.log('Firestore chat sync enabled');
-                    setupRealTimeSync();
-                } else {
-                    console.log('Firestore not available, using local storage only');
-                }
-            } else {
-                console.log('User not authenticated in Reverbit, using local storage only');
-            }
-        }
-        
-        // Initialize AI system
-        initializeAITrainingSystem();
-        
-        // Load user settings
-        loadUserSettings();
-        
-        // Initialize chat sessions (will use Firestore if available, otherwise local storage)
-        await initializeChatSessions(urlChatId);
-        
-        // Initialize other components
-        initializeSearch();
-        initializeSidebarResize();
-        initEnhancedLayout();
-        updateUIForMode();
-        sendBtn.disabled = true;
-        
-        // Show banner (if not seen before)
-        showBanner();
-        
-        // Force button text visibility
-        document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
-            btn.style.color = 'var(--md-on-surface-variant)';
-        });
-        
-        // Add cleanup for old chats every hour
-        setInterval(cleanupOldChats, 3600000);
-        
-        // Show welcome notification
-        if (AuthSystem.userData?.name) {
-            showNotification(`Welcome back, ${AuthSystem.userData.name}!`);
-        }
-        
-        // Add sign out button to customization panel
-        setTimeout(() => {
-            const customizationFooter = document.querySelector('.customization-footer');
-            if (customizationFooter) {
-                const signOutBtn = document.createElement('button');
-                signOutBtn.className = 'btn btn-text';
-                signOutBtn.style.width = '100%';
-                signOutBtn.style.marginTop = 'var(--md-spacing-md)';
-                signOutBtn.innerHTML = `
-                    <span class="material-icons-round">logout</span>
-                    <span>Sign Out</span>
-                `;
-                signOutBtn.addEventListener('click', async () => {
-                    if (confirm('Are you sure you want to sign out?')) {
-                        if (window.ReverbitAuth && window.ReverbitAuth.logout) {
-                            await window.ReverbitAuth.logout();
-                        } else {
-                            // Fallback: clear local storage and reload
-                            localStorage.removeItem('reverbit_user');
-                            localStorage.removeItem('cloverAIUserSettings');
-                            localStorage.removeItem('cloverAIChatSessions');
-                        }
-                        location.reload();
-                    }
-                });
-                customizationFooter.appendChild(signOutBtn);
-            }
-        }, 1000);
     }
+    
+    // Initialize Reverbit Auth (already done by AuthSystem)
+    if (window.ReverbitAuth && window.ReverbitAuth.isAuthenticated && window.ReverbitAuth.isAuthenticated()) {
+        const user = window.ReverbitAuth.getUser();
+        if (user) {
+            // Initialize ChatManager with Firestore
+            chatManager = Object.create(ChatManager);
+            const firestoreAvailable = await chatManager.init();
+            
+            if (firestoreAvailable) {
+                console.log('Firestore chat sync enabled');
+                setupRealTimeSync();
+            } else {
+                console.log('Firestore not available, using local storage only');
+            }
+        } else {
+            console.log('User not authenticated in Reverbit, using local storage only');
+        }
+    }
+    
+    // Initialize AI system
+    initializeAITrainingSystem();
+    
+    // Load user settings
+    loadUserSettings();
+    
+    // Initialize chat sessions (will use Firestore if available, otherwise local storage)
+    await initializeChatSessions(urlChatId);
+    
+    // If we loaded from a direct URL, update the URL in the address bar
+    if (urlChatId && currentChatId === urlChatId) {
+        updateUrlWithChatId(urlChatId);
+    }
+    
+    // Initialize other components
+    initializeSearch();
+    initializeSidebarResize();
+    initEnhancedLayout();
+    updateUIForMode();
+    sendBtn.disabled = true;
+    
+    // Show banner (if not seen before)
+    showBanner();
+    
+    // Force button text visibility
+    document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
+        btn.style.color = 'var(--md-on-surface-variant)';
+    });
+    
+    // Add cleanup for old chats every hour
+    setInterval(cleanupOldChats, 3600000);
+    
+    // Show welcome notification
+    if (AuthSystem.userData?.name) {
+        showNotification(`Welcome back, ${AuthSystem.userData.name}!`);
+    }
+    
+    // Add sign out button to customization panel
+    setTimeout(() => {
+        const customizationFooter = document.querySelector('.customization-footer');
+        if (customizationFooter) {
+            const signOutBtn = document.createElement('button');
+            signOutBtn.className = 'btn btn-text';
+            signOutBtn.style.width = '100%';
+            signOutBtn.style.marginTop = 'var(--md-spacing-md)';
+            signOutBtn.innerHTML = `
+                <span class="material-icons-round">logout</span>
+                <span>Sign Out</span>
+            `;
+            signOutBtn.addEventListener('click', async () => {
+                if (confirm('Are you sure you want to sign out?')) {
+                    if (window.ReverbitAuth && window.ReverbitAuth.logout) {
+                        await window.ReverbitAuth.logout();
+                    } else {
+                        // Fallback: clear local storage and reload
+                        localStorage.removeItem('reverbit_user');
+                        localStorage.removeItem('cloverAIUserSettings');
+                        localStorage.removeItem('cloverAIChatSessions');
+                    }
+                    location.reload();
+                }
+            });
+            customizationFooter.appendChild(signOutBtn);
+        }
+    }, 1000);
+}
 
     // ========== URL MANAGEMENT FUNCTIONS ==========
     function updateUrlWithChatId(chatId) {
