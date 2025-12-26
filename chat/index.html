@@ -4247,7 +4247,9 @@
                 </div>
             </div>
         </div>
-    </div><script>
+    </div>
+
+<script>
     // Enhanced splash screen functionality
     document.addEventListener('DOMContentLoaded', function() {
         const splash = document.getElementById('splash-screen');
@@ -4451,212 +4453,92 @@
         initializeAppAfterAuth();
     }
 
-   // App initialization after authentication
-async function initializeAppAfterAuth() {
-    console.log('Initializing app after authentication...');
-    
-    // Check for chat ID in multiple sources
-    let urlChatId = null;
-    
-    // 1. First check if we have a chat ID from the 404 redirect
-    const redirectChatId = sessionStorage.getItem('redirectChatId');
-    if (redirectChatId) {
-        urlChatId = redirectChatId;
-        sessionStorage.removeItem('redirectChatId'); // Clean up
-        console.log('Found chat ID from redirect:', urlChatId);
-    } 
-    // 2. Check current URL path
-    else {
-        const urlPath = window.location.pathname;
-        const urlParts = urlPath.split('/');
+    // App initialization after authentication
+    async function initializeAppAfterAuth() {
+        console.log('Initializing app after authentication...');
         
-        // Look for pattern: /cloverai/chat/c/{chatId}
-        const chatIndex = urlParts.indexOf('chat');
-        if (chatIndex !== -1 && urlParts[chatIndex + 1] === 'c' && urlParts[chatIndex + 2]) {
-            urlChatId = urlParts[chatIndex + 2];
-            console.log('Found chat ID in URL path:', urlChatId);
-        }
-    }
-    
-    // Initialize Reverbit Auth (already done by AuthSystem)
-    if (window.ReverbitAuth && window.ReverbitAuth.isAuthenticated && window.ReverbitAuth.isAuthenticated()) {
-        const user = window.ReverbitAuth.getUser();
-        if (user) {
-            // Initialize ChatManager with Firestore
-            chatManager = Object.create(ChatManager);
-            const firestoreAvailable = await chatManager.init();
-            
-            if (firestoreAvailable) {
-                console.log('Firestore chat sync enabled');
-                setupRealTimeSync();
-            } else {
-                console.log('Firestore not available, using local storage only');
-            }
-        } else {
-            console.log('User not authenticated in Reverbit, using local storage only');
-        }
-    }
-    
-    // Initialize AI system
-    initializeAITrainingSystem();
-    
-    // Load user settings
-    loadUserSettings();
-    
-    // Initialize chat sessions (will use Firestore if available, otherwise local storage)
-    await initializeChatSessions(urlChatId);
-    
-    // If we loaded from a direct URL, update the URL in the address bar
-    if (urlChatId && currentChatId === urlChatId) {
-        updateUrlWithChatId(urlChatId);
-    }
-    
-    // Initialize other components
-    initializeSearch();
-    initializeSidebarResize();
-    initEnhancedLayout();
-    updateUIForMode();
-    sendBtn.disabled = true;
-    
-    // Show banner (if not seen before)
-    showBanner();
-    
-    // Force button text visibility
-    document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
-        btn.style.color = 'var(--md-on-surface-variant)';
-    });
-    
-    // Add cleanup for old chats every hour
-    setInterval(cleanupOldChats, 3600000);
-    
-    // Show welcome notification
-    if (AuthSystem.userData?.name) {
-        showNotification(`Welcome back, ${AuthSystem.userData.name}!`);
-    }
-    
-    // Add sign out button to customization panel
-    setTimeout(() => {
-        const customizationFooter = document.querySelector('.customization-footer');
-        if (customizationFooter) {
-            const signOutBtn = document.createElement('button');
-            signOutBtn.className = 'btn btn-text';
-            signOutBtn.style.width = '100%';
-            signOutBtn.style.marginTop = 'var(--md-spacing-md)';
-            signOutBtn.innerHTML = `
-                <span class="material-icons-round">logout</span>
-                <span>Sign Out</span>
-            `;
-            signOutBtn.addEventListener('click', async () => {
-                if (confirm('Are you sure you want to sign out?')) {
-                    if (window.ReverbitAuth && window.ReverbitAuth.logout) {
-                        await window.ReverbitAuth.logout();
-                    } else {
-                        // Fallback: clear local storage and reload
-                        localStorage.removeItem('reverbit_user');
-                        localStorage.removeItem('cloverAIUserSettings');
-                        localStorage.removeItem('cloverAIChatSessions');
-                    }
-                    location.reload();
-                }
-            });
-            customizationFooter.appendChild(signOutBtn);
-        }
-    }, 1000);
-}
-
-    // ========== URL MANAGEMENT FUNCTIONS ==========
-    function updateUrlWithChatId(chatId) {
-        const baseUrl = 'https://aditya-cmd-max.github.io/cloverai/chat';
-        const newUrl = `${baseUrl}/c/${chatId}`;
-        
-        // Update browser history without reloading the page
-        history.pushState({ chatId: chatId }, '', newUrl);
-        
-        // Update document title
-        const chatTitle = chatSessions[chatId]?.title || 'Clover AI';
-        document.title = `${chatTitle} | Clover AI`;
-    }
-
-    function removeChatIdFromUrl() {
-        const baseUrl = 'https://aditya-cmd-max.github.io/cloverai/chat';
-        history.pushState({}, '', baseUrl);
-    }
-
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', function(event) {
-        const urlPath = window.location.pathname;
-        const urlParts = urlPath.split('/');
-        
-        // Look for pattern: /cloverai/chat/c/{chatId}
-        const chatIndex = urlParts.indexOf('chat');
-        
-        if (chatIndex !== -1 && urlParts[chatIndex + 1] === 'c' && urlParts[chatIndex + 2]) {
-            const urlChatId = urlParts[chatIndex + 2];
-            if (chatSessions[urlChatId] && urlChatId !== currentChatId) {
-                loadChat(urlChatId);
-            }
-        } else if (currentChatId) {
-            // If we navigate away from a chat URL, stay on the current chat
-            updateUrlWithChatId(currentChatId);
-        }
-    });
-
-    // Generate shareable chat link
-    function generateShareableLink(chatId) {
-        if (!chatSessions[chatId]) return null;
-        
-        const baseUrl = 'https://aditya-cmd-max.github.io/cloverai/chat';
-        const shareUrl = `${baseUrl}/c/${chatId}`;
-        
-        return {
-            url: shareUrl,
-            title: chatSessions[chatId].title,
-            shortUrl: shareUrl.replace('https://', '')
-        };
-    }
-
-    // Add share button to chat header
-    function addShareButton() {
-        const chatActions = document.querySelector('.chat-actions');
-        if (!chatActions) return;
-        
-        // Check if share button already exists
-        if (document.getElementById('share-chat-btn')) return;
-        
-        const shareBtn = document.createElement('button');
-        shareBtn.id = 'share-chat-btn';
-        shareBtn.className = 'btn-text';
-        shareBtn.title = 'Share this chat';
-        shareBtn.innerHTML = '<span class="material-icons-round">share</span>';
-        
-        shareBtn.addEventListener('click', () => {
-            if (!AuthSystem.isAuthenticated) {
-                showNotification('Please sign in to share chats', 'error');
-                AuthSystem.showAuthRequired();
-                return;
-            }
-            
-            const shareLink = generateShareableLink(currentChatId);
-            if (shareLink) {
-                if (navigator.share) {
-                    navigator.share({
-                        title: `Clover AI Chat: ${shareLink.title}`,
-                        text: `Check out this Clover AI chat: ${shareLink.title}`,
-                        url: shareLink.url
-                    });
+        // Initialize Reverbit Auth (already done by AuthSystem)
+        if (window.ReverbitAuth && window.ReverbitAuth.isAuthenticated && window.ReverbitAuth.isAuthenticated()) {
+            const user = window.ReverbitAuth.getUser();
+            if (user) {
+                // Initialize ChatManager with Firestore
+                chatManager = Object.create(ChatManager);
+                const firestoreAvailable = await chatManager.init();
+                
+                if (firestoreAvailable) {
+                    console.log('Firestore chat sync enabled');
+                    setupRealTimeSync();
                 } else {
-                    navigator.clipboard.writeText(shareLink.url).then(() => {
-                        showNotification('Chat link copied to clipboard!');
-                    }).catch(err => {
-                        console.error('Failed to copy:', err);
-                        showNotification('Failed to copy link', 'error');
-                    });
+                    console.log('Firestore not available, using local storage only');
                 }
+            } else {
+                console.log('User not authenticated in Reverbit, using local storage only');
             }
+        }
+        
+        // Initialize AI system
+        initializeAITrainingSystem();
+        
+        // Load user settings
+        loadUserSettings();
+        
+        // Initialize chat sessions (will use Firestore if available, otherwise local storage)
+        await initializeChatSessions();
+        
+        // Initialize other components
+        initializeSearch();
+        initializeSidebarResize();
+        initEnhancedLayout();
+        updateUIForMode();
+        sendBtn.disabled = true;
+        
+        // Show banner (if not seen before)
+        showBanner();
+        
+        // Force button text visibility
+        document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
+            btn.style.color = 'var(--md-on-surface-variant)';
         });
         
-        chatActions.insertBefore(shareBtn, chatActions.firstChild);
+        // Add cleanup for old chats every hour
+        setInterval(cleanupOldChats, 3600000);
+        
+        // Show welcome notification
+        if (AuthSystem.userData?.name) {
+            showNotification(`Welcome back, ${AuthSystem.userData.name}!`);
+        }
+        
+        // Add sign out button to customization panel
+        setTimeout(() => {
+            const customizationFooter = document.querySelector('.customization-footer');
+            if (customizationFooter) {
+                const signOutBtn = document.createElement('button');
+                signOutBtn.className = 'btn btn-text';
+                signOutBtn.style.width = '100%';
+                signOutBtn.style.marginTop = 'var(--md-spacing-md)';
+                signOutBtn.innerHTML = `
+                    <span class="material-icons-round">logout</span>
+                    <span>Sign Out</span>
+                `;
+                signOutBtn.addEventListener('click', async () => {
+                    if (confirm('Are you sure you want to sign out?')) {
+                        if (window.ReverbitAuth && window.ReverbitAuth.logout) {
+                            await window.ReverbitAuth.logout();
+                        } else {
+                            // Fallback: clear local storage and reload
+                            localStorage.removeItem('reverbit_user');
+                            localStorage.removeItem('cloverAIUserSettings');
+                            localStorage.removeItem('cloverAIChatSessions');
+                        }
+                        location.reload();
+                    }
+                });
+                customizationFooter.appendChild(signOutBtn);
+            }
+        }, 1000);
     }
+
+    // ========== OLD LOGIC (KEPT FOR REFERENCE) ==========
 
     // DOM Elements
     const chatWindow = document.getElementById('chat-window');
@@ -5455,7 +5337,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
     }
 
     // Initialize chat sessions with Firestore support
-    async function initializeChatSessions(urlChatId = null) {
+    async function initializeChatSessions() {
         // Try to load from Firestore first if chatManager is initialized
         if (chatManager && chatManager.initialized) {
             try {
@@ -5478,22 +5360,12 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         
         // If no sessions exist, create a default one
         if (Object.keys(chatSessions).length === 0) {
-            const newChatId = await createNewChat();
-            // Update URL with new chat ID
-            updateUrlWithChatId(newChatId);
+            await createNewChat();
         } else {
-            // Check if URL has a valid chat ID
-            if (urlChatId && chatSessions[urlChatId]) {
-                // Load the chat from URL
-                currentChatId = urlChatId;
-                loadChat(currentChatId);
-            } else {
-                // Load the most recent chat and update URL
-                const chatIds = Object.keys(chatSessions);
-                currentChatId = chatIds[chatIds.length - 1];
-                loadChat(currentChatId);
-                updateUrlWithChatId(currentChatId);
-            }
+            // Load the most recent chat
+            const chatIds = Object.keys(chatSessions);
+            currentChatId = chatIds[chatIds.length - 1];
+            loadChat(currentChatId);
         }
         
         renderChatSessions();
@@ -5509,7 +5381,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
 
     // Create a new chat session
     async function createNewChat() {
-        const chatId = 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        const chatId = 'chat_' + Date.now();
         const chatTitle = 'Chat ' + (Object.keys(chatSessions).length + 1);
         
         chatSessions[chatId] = {
@@ -5536,9 +5408,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         // Also save locally
         saveChatSessions();
         
-        // Update URL with new chat ID
-        updateUrlWithChatId(chatId);
-        
         renderChatSessions();
         loadChat(chatId);
         showNotification('New chat created');
@@ -5555,9 +5424,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         const chat = chatSessions[chatId];
         currentChatId = chatId;
         currentChatTitle.textContent = chat.title;
-        
-        // Update URL
-        updateUrlWithChatId(chatId);
         
         updateSystemMessageWithCurrentTime();
         chat.history[0] = systemMessage;
@@ -5589,11 +5455,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         setTimeout(() => {
             initFeedbackButtons();
             checkAndAddDateSeparator();
-        }, 100);
-        
-        // Add share button
-        setTimeout(() => {
-            addShareButton();
         }, 100);
         
         document.querySelectorAll('.suggestion-chip').forEach(chip => {
