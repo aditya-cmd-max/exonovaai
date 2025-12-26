@@ -7635,187 +7635,365 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
     window.copyCode = copyCode;
 
 
-// ========== PROFESSIONAL ROUTING SYSTEM ==========
-// Seamless URL handling - Completely transparent to users
+// ========== ROUTING SYSTEM FOR /cloverai/chat/ WITH /c/chat_id URLs ==========
 
-// 1. Initialize routing when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize routing after a small delay to ensure everything is loaded
-    setTimeout(initializeRouting, 500);
-});
+// 1. Configuration - IMPORTANT: Your app is at /cloverai/chat/
+const ROUTE_CONFIG = {
+    basePath: '/cloverai/chat/',  // Your app's base URL
+    chatRoute: 'c/',              // Chat URL pattern
+    homePath: '/cloverai/chat/'   // Home URL
+};
 
-// 2. Main routing initialization
-async function initializeRouting() {
-    try {
-        // Check for redirect from 404 page
-        const redirectChatId = sessionStorage.getItem('cloverai_redirect_chat');
-        if (redirectChatId) {
-            await handleRedirectChat(redirectChatId);
-            sessionStorage.removeItem('cloverai_redirect_chat');
-            return;
+// 2. Main Router Class
+class ChatRouter {
+    constructor() {
+        this.currentChatId = null;
+        this.isInitialized = false;
+        this.debug = false; // Set to true for debugging
+    }
+    
+    log(...args) {
+        if (this.debug) console.log('[Router]', ...args);
+    }
+    
+    // Initialize the router
+    async init() {
+        if (this.isInitialized) return;
+        
+        this.log('Initializing router...');
+        
+        // Check for redirect from 404
+        await this.handleRedirect();
+        
+        // Check current URL
+        await this.handleCurrentURL();
+        
+        // Setup interceptors
+        this.setupInterceptors();
+        
+        // Setup event listeners
+        this.setupEventListeners();
+        
+        this.isInitialized = true;
+        this.log('Router initialized successfully');
+    }
+    
+    // Handle redirect from 404 page
+    async handleRedirect() {
+        const chatId = sessionStorage.getItem('cloverai_chat_id');
+        const source = sessionStorage.getItem('cloverai_redirect_source');
+        
+        if (chatId && source === 'direct_url') {
+            this.log('Processing redirect for chat:', chatId);
+            
+            // Clear storage
+            sessionStorage.removeItem('cloverai_chat_id');
+            sessionStorage.removeItem('cloverai_redirect_source');
+            
+            // Load the chat
+            await this.loadAndUpdateChat(chatId, true); // true = replace URL
+        }
+    }
+    
+    // Handle current browser URL
+    async handleCurrentURL() {
+        const path = window.location.pathname;
+        this.log('Current path:', path);
+        
+        const chatId = this.extractChatIdFromPath(path);
+        
+        if (chatId) {
+            this.log('Found chat ID in URL:', chatId);
+            await this.loadAndUpdateChat(chatId, true); // true = replace URL
+        }
+    }
+    
+    // Extract chat ID from URL path
+    extractChatIdFromPath(path) {
+        // Remove base path
+        let relativePath = path;
+        if (path.startsWith(ROUTE_CONFIG.basePath)) {
+            relativePath = path.substring(ROUTE_CONFIG.basePath.length);
         }
         
-        // Check current URL for chat pattern
-        const currentPath = window.location.pathname;
-        if (currentPath.includes('/chat/c/')) {
-            const chatId = currentPath.split('/').pop();
+        this.log('Relative path:', relativePath);
+        
+        // Check for /c/chat_id pattern
+        if (relativePath.startsWith('c/')) {
+            const chatId = relativePath.substring(2); // Remove 'c/'
             if (chatId && chatId.startsWith('chat_')) {
-                await handleDirectChatURL(chatId);
+                return chatId;
             }
         }
         
-        // Set up URL change listeners
-        setupNavigationHandlers();
-        
-    } catch (error) {
-        console.warn('Routing initialization issue:', error);
-        // Silent fail - user won't notice
+        return null;
     }
-}
-
-// 3. Handle redirect from 404 page
-async function handleRedirectChat(chatId) {
-    // Wait for chat sessions to load
-    const maxWaitTime = 10000; // 10 seconds max
-    const startTime = Date.now();
     
-    while (!window.chatSessions || Object.keys(window.chatSessions).length === 0) {
-        if (Date.now() - startTime > maxWaitTime) {
-            console.warn('Timeout waiting for chat sessions');
+    // Load chat and update URL
+    async loadAndUpdateChat(chatId, replace = false) {
+        if (!chatId || !chatId.startsWith('chat_')) {
+            this.log('Invalid chat ID:', chatId);
             return;
         }
-        await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    
-    // Check if chat exists
-    if (chatSessions[chatId]) {
-        // Load the chat
-        loadChat(chatId);
         
-        // Update URL silently
-        updateBrowserURL(chatId, true); // replaceState to prevent history entry
+        this.currentChatId = chatId;
+        this.log('Setting current chat ID to:', chatId);
         
-        console.log('Seamlessly loaded chat from redirect:', chatId);
-    } else {
-        // Chat doesn't exist - silently create new chat
-        console.log('Chat not found, user will see default new chat');
-        // Don't update URL - let them stay on home page
-    }
-}
-
-// 4. Handle direct chat URLs
-async function handleDirectChatURL(chatId) {
-    // Similar to handleRedirectChat but for direct navigation
-    await handleRedirectChat(chatId);
-}
-
-// 5. Update browser URL (silently)
-function updateBrowserURL(chatId, replace = false) {
-    if (!chatId) {
-        // Root URL
-        if (replace) {
-            history.replaceState({ chatId: null }, '', '/cloverai/');
+        // Wait for app to be ready
+        const isReady = await this.waitForAppReady();
+        if (!isReady) {
+            this.log('App not ready, cannot load chat');
+            return;
+        }
+        
+        // Check if chat exists
+        if (window.chatSessions && window.chatSessions[chatId]) {
+            // Chat exists - load it
+            if (window.loadChat) {
+                this.log('Loading existing chat:', chatId);
+                window.loadChat(chatId);
+                this.updateBrowserURL(chatId, replace);
+            }
         } else {
-            history.pushState({ chatId: null }, '', '/cloverai/');
-        }
-    } else {
-        // Chat URL
-        const url = `/cloverai/chat/c/${chatId}`;
-        if (replace) {
-            history.replaceState({ chatId }, '', url);
-        } else {
-            history.pushState({ chatId }, '', url);
+            // Chat doesn't exist - wait a bit and retry
+            this.log('Chat not found, waiting...');
+            const exists = await this.waitForChatExistence(chatId);
+            
+            if (exists && window.loadChat) {
+                window.loadChat(chatId);
+                this.updateBrowserURL(chatId, replace);
+            } else {
+                this.log('Chat not found after waiting');
+                // If chat doesn't exist, user will see default chat
+                // Don't update URL if chat doesn't exist
+            }
         }
     }
-}
-
-// 6. Wrap the loadChat function to update URLs automatically
-(function() {
-    // Store original loadChat function
-    const originalLoadChat = window.loadChat;
     
-    // Override with enhanced version
-    window.loadChat = function(chatId) {
-        // Call original function
-        if (originalLoadChat) {
-            originalLoadChat.call(this, chatId);
-        }
+    // Wait for app to be ready
+    async waitForAppReady() {
+        const maxWait = 15000; // 15 seconds
+        const start = Date.now();
+        const checkInterval = 100;
         
-        // Update URL in background
-        if (chatId && chatId !== currentChatId) {
-            updateBrowserURL(chatId);
-        } else if (!chatId) {
-            updateBrowserURL(null);
+        while (true) {
+            // Check if chatSessions is loaded
+            if (window.chatSessions !== undefined) {
+                this.log('App ready after', Date.now() - start, 'ms');
+                return true;
+            }
+            
+            // Check timeout
+            if (Date.now() - start > maxWait) {
+                this.log('Timeout waiting for app to be ready');
+                return false;
+            }
+            
+            // Wait before next check
+            await new Promise(resolve => setTimeout(resolve, checkInterval));
         }
-    };
-})();
-
-// 7. Wrap the createNewChat function
-(function() {
-    const originalCreateNewChat = window.createNewChat;
+    }
     
-    window.createNewChat = async function() {
-        const chatId = originalCreateNewChat ? await originalCreateNewChat.call(this) : null;
+    // Wait for chat to exist
+    async waitForChatExistence(chatId) {
+        const maxWait = 5000; // 5 seconds
+        const start = Date.now();
+        const checkInterval = 100;
         
-        if (chatId) {
-            // Update URL for the new chat
-            setTimeout(() => updateBrowserURL(chatId), 100);
+        while (true) {
+            if (window.chatSessions && window.chatSessions[chatId]) {
+                return true;
+            }
+            
+            if (Date.now() - start > maxWait) {
+                return false;
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, checkInterval));
+        }
+    }
+    
+    // Update browser URL
+    updateBrowserURL(chatId, replace = false) {
+        if (!chatId) {
+            // Home URL
+            const url = ROUTE_CONFIG.homePath;
+            if (replace) {
+                history.replaceState({ chatId: null }, '', url);
+            } else {
+                history.pushState({ chatId: null }, '', url);
+            }
+            this.log('Updated URL to home');
+        } else {
+            // Chat URL: /cloverai/chat/c/chat_id
+            const url = `${ROUTE_CONFIG.basePath}${ROUTE_CONFIG.chatRoute}${chatId}`;
+            if (replace) {
+                history.replaceState({ chatId }, '', url);
+            } else {
+                history.pushState({ chatId }, '', url);
+            }
+            this.log('Updated URL to:', url);
+        }
+    }
+    
+    // Setup interceptors for chat functions
+    setupInterceptors() {
+        // Intercept loadChat
+        if (window.loadChat) {
+            const originalLoadChat = window.loadChat;
+            window.loadChat = (chatId) => {
+                this.log('Intercepted loadChat:', chatId);
+                
+                // Call original function
+                const result = originalLoadChat.call(this, chatId);
+                
+                // Update URL if chatId changed
+                if (chatId && chatId !== this.currentChatId) {
+                    this.currentChatId = chatId;
+                    setTimeout(() => {
+                        this.updateBrowserURL(chatId);
+                    }, 100);
+                } else if (!chatId && this.currentChatId) {
+                    this.currentChatId = null;
+                    setTimeout(() => {
+                        this.updateBrowserURL(null);
+                    }, 100);
+                }
+                
+                return result;
+            };
         }
         
-        return chatId;
-    };
-})();
-
-// 8. Handle browser back/forward buttons
-function setupNavigationHandlers() {
-    // Listen for back/forward navigation
-    window.addEventListener('popstate', function(event) {
-        // Wait a moment for any other processing
+        // Intercept createNewChat
+        if (window.createNewChat) {
+            const originalCreateNewChat = window.createNewChat;
+            window.createNewChat = async () => {
+                this.log('Intercepted createNewChat');
+                
+                const chatId = await originalCreateNewChat.call(this);
+                
+                if (chatId) {
+                    this.currentChatId = chatId;
+                    // Update URL after chat is created
+                    setTimeout(() => {
+                        this.updateBrowserURL(chatId);
+                    }, 300);
+                }
+                
+                return chatId;
+            };
+        }
+    }
+    
+    // Setup event listeners
+    setupEventListeners() {
+        // Handle browser back/forward
+        window.addEventListener('popstate', (event) => {
+            this.handlePopState(event);
+        });
+        
+        // Listen for chat session clicks
+        document.addEventListener('click', (e) => {
+            this.handleChatSessionClick(e);
+        });
+    }
+    
+    // Handle browser back/forward
+    handlePopState(event) {
+        this.log('Popstate event:', event.state);
+        
         setTimeout(() => {
             if (event.state && event.state.chatId) {
-                // Load the chat from history
-                if (chatSessions && chatSessions[event.state.chatId] && loadChat) {
-                    loadChat(event.state.chatId);
-                }
+                this.loadAndUpdateChat(event.state.chatId, true);
             } else if (event.state && event.state.chatId === null) {
                 // Go to home
-                if (currentChatId) {
-                    loadChat(null);
+                if (window.loadChat) {
+                    window.loadChat(null);
+                    this.currentChatId = null;
                 }
             }
         }, 50);
-    });
+    }
     
-    // Prevent accidental page reload with warning
-    window.addEventListener('beforeunload', function(e) {
-        // Only show warning if there are unsaved messages
-        if (isProcessing || messageInput.value.trim()) {
-            e.preventDefault();
-            e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-            return e.returnValue;
+    // Handle chat session clicks
+    handleChatSessionClick(e) {
+        // Find clicked chat session
+        let chatSession = e.target.closest('.chat-session');
+        if (!chatSession) {
+            // Try to find by parent
+            chatSession = e.target.closest('[data-chat-id]');
         }
-    });
+        
+        if (chatSession) {
+            // Try to get chat ID from various possible attributes
+            let chatId = chatSession.getAttribute('data-chat-id') || 
+                        chatSession.querySelector('[data-chat-id]')?.getAttribute('data-chat-id');
+            
+            // If still no ID, try to extract from text or other attributes
+            if (!chatId && chatSession.textContent) {
+                const match = chatSession.textContent.match(/chat_\d+/);
+                if (match) chatId = match[0];
+            }
+            
+            if (chatId && window.cloverAIRouter) {
+                this.log('Chat session clicked:', chatId);
+                // Update URL after chat loads (handled by loadChat interceptor)
+            }
+        }
+    }
 }
 
-// 9. Enhanced error handling for routing
-window.addEventListener('error', function(e) {
-    // Suppress routing-related errors from users
-    if (e.message && e.message.includes('routing') || 
-        e.message && e.message.includes('chat')) {
-        e.preventDefault();
-        console.debug('Routing handled internally:', e.message);
+// 3. Initialize the router
+function initializeRouter() {
+    // Create router instance
+    const router = new ChatRouter();
+    window.cloverAIRouter = router;
+    
+    // Start router initialization
+    // Wait a bit for the app to start loading
+    setTimeout(() => {
+        router.init().catch(error => {
+            console.error('Router initialization failed:', error);
+        });
+    }, 1000);
+}
+
+// 4. Start router when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeRouter);
+} else {
+    // DOM already loaded
+    setTimeout(initializeRouter, 500);
+}
+
+// 5. Also start on window load
+window.addEventListener('load', () => {
+    if (!window.cloverAIRouter || !window.cloverAIRouter.isInitialized) {
+        setTimeout(initializeRouter, 300);
     }
 });
 
-// 10. Initialize routing on page load
-// This ensures routing works even if DOMContentLoaded already fired
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeRouting);
-} else {
-    // DOM already loaded
-    setTimeout(initializeRouting, 1000);
+// 6. Helper functions for external use
+function getCurrentChatId() {
+    return window.cloverAIRouter ? window.cloverAIRouter.currentChatId : null;
 }
 
+function navigateToChatUrl(chatId) {
+    if (!chatId) return;
+    
+    if (window.cloverAIRouter) {
+        window.cloverAIRouter.updateBrowserURL(chatId);
+    } else {
+        // Fallback direct navigation
+        window.location.href = `${ROUTE_CONFIG.basePath}${ROUTE_CONFIG.chatRoute}${chatId}`;
+    }
+}
+
+// Make helpers available
+window.getCurrentChatId = getCurrentChatId;
+window.navigateToChatUrl = navigateToChatUrl;
+
+console.log('Chat router loaded for /cloverai/chat/ with /c/chat_id URLs');
 
 // ========== ENHANCED CHAT LOADING ==========
 // Add this to improve chat loading reliability
