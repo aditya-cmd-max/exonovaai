@@ -3,90 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clover AI - Loading...</title>
+    <title>Clover AI</title>
+    <script>
+        // Capture URL and redirect seamlessly
+        (function() {
+            const currentPath = window.location.pathname;
+            
+            // Handle /c/chat_id pattern
+            if (currentPath.includes('/c/')) {
+                const parts = currentPath.split('/');
+                const chatId = parts.pop();
+                
+                if (chatId && chatId.startsWith('chat_')) {
+                    // Store in sessionStorage for the main app
+                    sessionStorage.setItem('cloverai_chat_id', chatId);
+                    sessionStorage.setItem('cloverai_redirect_source', 'direct_url');
+                }
+            }
+            
+            // Always redirect to main app
+            setTimeout(() => {
+                window.location.replace('/cloverai/');
+            }, 50);
+        })();
+    </script>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a73e8, #0d8a72);
-            color: white;
             height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .loader {
+            color: white;
             text-align: center;
-            padding: 20px;
         }
         
-        .logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 24px;
-            animation: pulse 1.5s infinite;
-        }
-        
-        .loading-spinner {
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
             width: 40px;
             height: 40px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin: 24px auto;
-        }
-        
-        h1 {
-            font-size: 24px;
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-        
-        p {
-            opacity: 0.8;
-            max-width: 400px;
-            line-height: 1.5;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(0.95); }
-        }
     </style>
-    <script>
-        // Seamless redirect - No visible flash or URL change
-        (function() {
-            // Capture the current URL path
-            const currentPath = window.location.pathname;
-            
-            // If it's a chat URL, preserve it in session storage
-            if (currentPath.includes('/chat/c/')) {
-                const chatId = currentPath.split('/').pop();
-                if (chatId && chatId.startsWith('chat_')) {
-                    sessionStorage.setItem('cloverai_redirect_chat', chatId);
-                }
-            }
-            
-            // Always redirect to index.html (SPA entry point)
-            setTimeout(() => {
-                window.location.replace('/cloverai/');
-            }, 100);
-        })();
-    </script>
 </head>
 <body>
-    <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="Clover AI Logo" class="logo">
-    <div class="loading-spinner"></div>
-    <h1>Loading Clover AI</h1>
-    <p>Please wait while we prepare your chat experience...</p>
+    <div class="loader">
+        <div class="spinner"></div>
+        <div>Loading Clover AI...</div>
+    </div>
 </body>
 </html>
