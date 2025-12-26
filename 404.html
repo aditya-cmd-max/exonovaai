@@ -12,18 +12,22 @@
             // Handle /c/chat_id pattern
             if (currentPath.includes('/c/')) {
                 const parts = currentPath.split('/');
-                const chatId = parts.pop();
-                
-                if (chatId && chatId.startsWith('chat_')) {
-                    // Store in sessionStorage for the main app
-                    sessionStorage.setItem('cloverai_chat_id', chatId);
-                    sessionStorage.setItem('cloverai_redirect_source', 'direct_url');
+                // Find the chat ID (last part after /c/)
+                const chatIdIndex = parts.indexOf('c') + 1;
+                if (chatIdIndex < parts.length) {
+                    const chatId = parts[chatIdIndex];
+                    
+                    if (chatId && chatId.startsWith('chat_')) {
+                        // Store in sessionStorage for the main app
+                        sessionStorage.setItem('cloverai_chat_id', chatId);
+                        sessionStorage.setItem('cloverai_redirect_source', 'direct_url');
+                    }
                 }
             }
             
-            // Always redirect to main app
+            // Always redirect to main app (AT /cloverai/chat/)
             setTimeout(() => {
-                window.location.replace('/cloverai/');
+                window.location.replace('/cloverai/chat/');
             }, 50);
         })();
     </script>
