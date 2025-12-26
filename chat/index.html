@@ -24,15 +24,15 @@
 
     <meta name="google-site-verification" content="gVm_Dk4QJW6bhd3nyT3WJPIzHXt9SEgn8Z43IU2t27Y" />
     
-  <!-- Reverbit Auth -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
-<script src="https://aditya-cmd-max.github.io/js/auth.js"></script>
-  
-  
+    <!-- Reverbit Auth -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+    <script src="https://aditya-cmd-max.github.io/js/auth.js"></script>
+
     <style>
+        /* [All your existing CSS remains exactly the same] */
         /* Material Design 3 Color System - Reverbit Blue/Green Theme */
         :root {
             /* Primary Colors - Blue Theme */
@@ -1515,7 +1515,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        
         .message-content {
             line-height: 1.6;
             font-family: var(--md-font-body);
@@ -2850,7 +2849,7 @@
             border: 1px solid var(--md-outline);
             border-radius: var(--md-radius-medium);
             font-family: var(--md-font-heading);
-                    font-size: 1rem;
+            font-size: 1rem;
             color: var(--md-on-surface-variant);
             cursor: pointer;
             transition: var(--md-transition);
@@ -3388,204 +3387,202 @@
             }
         }
       
-      /* Reverbit Profile Styles */
-.reverbit-profile-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid var(--md-primary, #1a73e8);
-    cursor: pointer;
-    background: none;
-    padding: 0;
-    transition: transform 0.2s ease;
-    margin: 0 8px;
-}
+        /* Reverbit Profile Styles */
+        .reverbit-profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--md-primary, #1a73e8);
+            cursor: pointer;
+            background: none;
+            padding: 0;
+            transition: transform 0.2s ease;
+            margin: 0 8px;
+        }
 
-.reverbit-profile-avatar:hover {
-    transform: scale(1.1);
-    box-shadow: 0 2px 8px rgba(var(--md-primary-rgb, 26, 115, 232), 0.3);
-}
+        .reverbit-profile-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(var(--md-primary-rgb, 26, 115, 232), 0.3);
+        }
 
-.reverbit-profile-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+        .reverbit-profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.reverbit-profile-popup {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: var(--md-surface, #ffffff);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    border: 1px solid var(--md-outline, #e0e0e0);
-    padding: 16px;
-    min-width: 280px;
-    z-index: 1000;
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    backdrop-filter: blur(10px);
-    animation: slideDown 0.2s ease;
-}
+        .reverbit-profile-popup {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--md-surface, #ffffff);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            border: 1px solid var(--md-outline, #e0e0e0);
+            padding: 16px;
+            min-width: 280px;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+            animation: slideDown 0.2s ease;
+        }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.reverbit-profile-popup .profile-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--md-outline, #e0e0e0);
-}
+        .reverbit-profile-popup .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--md-outline, #e0e0e0);
+        }
 
-.reverbit-profile-popup .profile-info {
-    flex: 1;
-}
+        .reverbit-profile-popup .profile-info {
+            flex: 1;
+        }
 
-.reverbit-profile-popup .profile-name {
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--md-on-surface, #202124);
-    margin-bottom: 2px;
-}
+        .reverbit-profile-popup .profile-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--md-on-surface, #202124);
+            margin-bottom: 2px;
+        }
 
-.reverbit-profile-popup .profile-email {
-    font-size: 14px;
-    color: var(--md-on-surface-variant, #5f6368);
-}
+        .reverbit-profile-popup .profile-email {
+            font-size: 14px;
+            color: var(--md-on-surface-variant, #5f6368);
+        }
 
-.reverbit-profile-popup .profile-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+        .reverbit-profile-popup .profile-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-.reverbit-profile-popup .profile-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: none;
-    border: none;
-    padding: 10px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    color: var(--md-on-surface, #202124);
-    text-align: left;
-    width: 100%;
-    transition: background 0.2s ease;
-    font-size: 14px;
-}
+        .reverbit-profile-popup .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: none;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--md-on-surface, #202124);
+            text-align: left;
+            width: 100%;
+            transition: background 0.2s ease;
+            font-size: 14px;
+        }
 
-.reverbit-profile-popup .profile-menu-item:hover {
-    background: var(--md-surface-variant, #f8f9fa);
-}
+        .reverbit-profile-popup .profile-menu-item:hover {
+            background: var(--md-surface-variant, #f8f9fa);
+        }
 
-.reverbit-profile-popup .profile-menu-item .material-icons-round {
-    font-size: 20px;
-    color: var(--md-primary, #1a73e8);
-}
+        .reverbit-profile-popup .profile-menu-item .material-icons-round {
+            font-size: 20px;
+            color: var(--md-primary, #1a73e8);
+        }
 
-.reverbit-profile-popup .profile-menu-item.logout {
-    color: var(--md-error, #d93025);
-}
+        .reverbit-profile-popup .profile-menu-item.logout {
+            color: var(--md-error, #d93025);
+        }
 
-.reverbit-profile-popup .profile-menu-item.logout .material-icons-round {
-    color: var(--md-error, #d93025);
-}
+        .reverbit-profile-popup .profile-menu-item.logout .material-icons-round {
+            color: var(--md-error, #d93025);
+        }
 
-/* Dark theme adjustments */
-.dark-theme .reverbit-profile-popup {
-    background: var(--md-surface, #202124);
-    border-color: var(--md-outline, #3c4043);
-}
+        /* Dark theme adjustments */
+        .dark-theme .reverbit-profile-popup {
+            background: var(--md-surface, #202124);
+            border-color: var(--md-outline, #3c4043);
+        }
 
-.dark-theme .reverbit-profile-popup .profile-name {
-    color: var(--md-on-surface, #ffffff);
-}
+        .dark-theme .reverbit-profile-popup .profile-name {
+            color: var(--md-on-surface, #ffffff);
+        }
 
-.dark-theme .reverbit-profile-popup .profile-email {
-    color: var(--md-on-surface-variant, #e8eaed);
-}
+        .dark-theme .reverbit-profile-popup .profile-email {
+            color: var(--md-on-surface-variant, #e8eaed);
+        }
 
-.dark-theme .reverbit-profile-popup .profile-menu-item:hover {
-    background: var(--md-surface-variant, #303134);
-}
+        .dark-theme .reverbit-profile-popup .profile-menu-item:hover {
+            background: var(--md-surface-variant, #303134);
+        }
 
-/* Responsive styles */
-@media (max-width: 768px) {
-    .reverbit-profile-avatar {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .reverbit-profile-popup {
-        position: fixed;
-        top: 70px;
-        right: 16px;
-        left: 16px;
-        min-width: auto;
-        max-width: 320px;
-        margin: 0 auto;
-    }
-}
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .reverbit-profile-avatar {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .reverbit-profile-popup {
+                position: fixed;
+                top: 70px;
+                right: 16px;
+                left: 16px;
+                min-width: auto;
+                max-width: 320px;
+                margin: 0 auto;
+            }
+        }
       
-      
-      /* Update the sidebar-section layout */
-.sidebar-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--md-spacing-md);
-    min-height: 0;
-    flex-shrink: 0;
-    flex: 1; /* Add this */
-}
+        /* Update the sidebar-section layout */
+        .sidebar-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-md);
+            min-height: 0;
+            flex-shrink: 0;
+            flex: 1; /* Add this */
+        }
 
-/* First section: Chat Sessions - takes available space */
-.sidebar-section:first-child {
-    flex: 1;
-    min-height: 0;
-    overflow: hidden; /* Add this */
-}
+        /* First section: Chat Sessions - takes available space */
+        .sidebar-section:first-child {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden; /* Add this */
+        }
 
-/* Second section: Feature buttons - fixed at bottom */
-.sidebar-section:nth-child(2) {
-    flex: 0 0 auto; /* Don't grow, don't shrink */
-    margin-top: auto; /* Push to bottom */
-    padding-top: var(--md-spacing-md);
-    border-top: 1px solid var(--md-outline-variant);
-}
+        /* Second section: Feature buttons - fixed at bottom */
+        .sidebar-section:nth-child(2) {
+            flex: 0 0 auto; /* Don't grow, don't shrink */
+            margin-top: auto; /* Push to bottom */
+            padding-top: var(--md-spacing-md);
+            border-top: 1px solid var(--md-outline-variant);
+        }
 
-/* Chat sessions container - scrollable area */
-.chat-sessions-container {
-    flex: 1;
-    min-height: 200px;
-    max-height: 400px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
+        /* Chat sessions container - scrollable area */
+        .chat-sessions-container {
+            flex: 1;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
 
-/* Chat sessions list */
-.chat-sessions {
-    display: flex;
-    flex-direction: column;
-    gap: var(--md-spacing-sm);
-    flex: 1;
-    overflow-y: auto;
-}
-      
+        /* Chat sessions list */
+        .chat-sessions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-sm);
+            flex: 1;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body class="dark-theme">
@@ -4107,25 +4104,7 @@
     </div>
 
     <script>
-      
-      
-      // Check if user is authenticated
-document.addEventListener('DOMContentLoaded', async () => {
-    await window.ReverbitAuth.init();
-    
-    if (!window.ReverbitAuth.isAuthenticated()) {
-        // Redirect to sign in page or show auth modal
-        const continueAnyway = confirm('You need to be signed in to use this app. Would you like to sign in?');
-        if (continueAnyway) {
-            window.location.href = 'https://aditya-cmd-max.github.io/signin'; // Your sign in page
-        }
-    }
-});
-      
-      
-      
-      
-      // Enhanced splash screen functionality
+        // Enhanced splash screen functionality
         document.addEventListener('DOMContentLoaded', function() {
             const splash = document.getElementById('splash-screen');
             
@@ -4249,7 +4228,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         let chatToDelete = null;
         let isSidebarCollapsed = false;
         let feedbackButtonsInitialized = false;
-        let webSearchIndicator = null; // NEW: Web search indicator element
+        let webSearchIndicator = null;
+        let saveTimeout = null;
+        let realTimeUnsubscribe = null;
         
         // Customization state
         let userSettings = {
@@ -4272,25 +4253,253 @@ document.addEventListener('DOMContentLoaded', async () => {
             parts: [{ text: "" }]
         };
 
-      
-      // Function to update system message with current date/time - FIXED VERSION
-function updateSystemMessageWithCurrentTime() {
-    const now = new Date();
-    const currentDate = now.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-    const currentTime = now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-    });
-    const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        // ========== FIREBASE FIRESTORE CHAT MANAGER ==========
+        const ChatManager = {
+            userId: null,
+            chatsRef: null,
+            initialized: false,
             
-            // Enhanced system prompt with real-time date/time
+            // Initialize Firestore
+            async init() {
+                try {
+                    // Check if user is authenticated
+                    const user = window.ReverbitAuth ? window.ReverbitAuth.getUser() : null;
+                    if (!user) {
+                        console.warn('User not authenticated, chats will be stored locally only');
+                        return false;
+                    }
+                    
+                    this.userId = user.uid;
+                    
+                    // Initialize Firestore if not already done
+                    if (!firebase.apps.length) {
+                        console.warn('Firebase not initialized');
+                        return false;
+                    }
+                    
+                    const firestore = firebase.firestore();
+                    this.chatsRef = firestore.collection('chats').where('userId', '==', this.userId);
+                    this.initialized = true;
+                    
+                    console.log('ChatManager initialized for user:', this.userId);
+                    return true;
+                } catch (error) {
+                    console.error('Failed to initialize ChatManager:', error);
+                    return false;
+                }
+            },
+            
+            // Save a chat to Firestore
+            async saveChat(chatId, chatData) {
+                if (!this.initialized) {
+                    console.log('ChatManager not initialized, skipping Firestore save');
+                    return false;
+                }
+                
+                try {
+                    const firestore = firebase.firestore();
+                    const chatRef = firestore.collection('chats').doc(chatId);
+                    const messagesRef = chatRef.collection('messages');
+                    
+                    // Prepare chat data
+                    const chatDoc = {
+                        userId: this.userId,
+                        title: chatData.title,
+                        createdAt: chatData.createdAt || new Date().toISOString(),
+                        updatedAt: chatData.updatedAt || new Date().toISOString(),
+                        pinned: chatData.pinned || false,
+                        settings: chatData.settings || {}
+                    };
+                    
+                    // Save chat document
+                    await chatRef.set(chatDoc, { merge: true });
+                    
+                    // Save messages (skip system message)
+                    if (chatData.history && chatData.history.length > 0) {
+                        const messagesToSave = chatData.history.slice(1); // Skip system message
+                        
+                        // Clear existing messages first
+                        const existingMessages = await messagesRef.get();
+                        const batch = firestore.batch();
+                        existingMessages.docs.forEach(doc => {
+                            batch.delete(doc.ref);
+                        });
+                        await batch.commit();
+                        
+                        // Save new messages
+                        for (let i = 0; i < messagesToSave.length; i++) {
+                            const message = messagesToSave[i];
+                            const messageId = `msg_${Date.now()}_${i}_${Math.random().toString(36).substr(2, 9)}`;
+                            await messagesRef.doc(messageId).set({
+                                userId: this.userId,
+                                chatId: chatId,
+                                role: message.role,
+                                content: message.parts[0].text || '',
+                                timestamp: new Date().toISOString(),
+                                order: i,
+                                createdAt: new Date().toISOString()
+                            });
+                        }
+                    }
+                    
+                    console.log('Chat saved to Firestore:', chatId);
+                    return true;
+                } catch (error) {
+                    console.error('Error saving chat to Firestore:', error);
+                    return false;
+                }
+            },
+            
+            // Load all chats for current user
+            async loadAllChats() {
+                if (!this.initialized) {
+                    console.log('ChatManager not initialized, cannot load from Firestore');
+                    return {};
+                }
+                
+                try {
+                    const firestore = firebase.firestore();
+                    const snapshot = await this.chatsRef.get();
+                    const chats = {};
+                    
+                    for (const doc of snapshot.docs) {
+                        const chatData = doc.data();
+                        const messagesRef = firestore.collection('chats').doc(doc.id).collection('messages');
+                        const messagesSnapshot = await messagesRef.orderBy('order', 'asc').get();
+                        
+                        // Build chat history
+                        const history = [systemMessage]; // Start with system message
+                        
+                        messagesSnapshot.docs.forEach(msgDoc => {
+                            const msgData = msgDoc.data();
+                            history.push({
+                                role: msgData.role,
+                                parts: [{ text: msgData.content || '' }]
+                            });
+                        });
+                        
+                        chats[doc.id] = {
+                            id: doc.id,
+                            title: chatData.title,
+                            history: history,
+                            createdAt: chatData.createdAt,
+                            updatedAt: chatData.updatedAt,
+                            pinned: chatData.pinned || false,
+                            settings: chatData.settings || {}
+                        };
+                    }
+                    
+                    console.log('Loaded chats from Firestore:', Object.keys(chats).length);
+                    return chats;
+                } catch (error) {
+                    console.error('Error loading chats from Firestore:', error);
+                    return {};
+                }
+            },
+            
+            // Delete a chat from Firestore
+            async deleteChat(chatId) {
+                if (!this.initialized) {
+                    console.log('ChatManager not initialized, cannot delete from Firestore');
+                    return false;
+                }
+                
+                try {
+                    const firestore = firebase.firestore();
+                    const chatRef = firestore.collection('chats').doc(chatId);
+                    await chatRef.delete();
+                    console.log('Chat deleted from Firestore:', chatId);
+                    return true;
+                } catch (error) {
+                    console.error('Error deleting chat from Firestore:', error);
+                    return false;
+                }
+            },
+            
+            // Update chat title
+            async updateChatTitle(chatId, newTitle) {
+                if (!this.initialized) return false;
+                
+                try {
+                    const firestore = firebase.firestore();
+                    const chatRef = firestore.collection('chats').doc(chatId);
+                    await chatRef.update({
+                        title: newTitle,
+                        updatedAt: new Date().toISOString()
+                    });
+                    return true;
+                } catch (error) {
+                    console.error('Error updating chat title:', error);
+                    return false;
+                }
+            },
+            
+            // Toggle pin status
+            async toggleChatPin(chatId, pinned) {
+                if (!this.initialized) return false;
+                
+                try {
+                    const firestore = firebase.firestore();
+                    const chatRef = firestore.collection('chats').doc(chatId);
+                    await chatRef.update({
+                        pinned: pinned,
+                        updatedAt: new Date().toISOString()
+                    });
+                    return true;
+                } catch (error) {
+                    console.error('Error toggling chat pin:', error);
+                    return false;
+                }
+            },
+            
+            // Setup real-time sync
+            setupRealTimeSync(callback) {
+                if (!this.initialized) return null;
+                
+                try {
+                    const firestore = firebase.firestore();
+                    const unsubscribe = firestore.collection('chats')
+                        .where('userId', '==', this.userId)
+                        .onSnapshot((snapshot) => {
+                            snapshot.docChanges().forEach((change) => {
+                                if (change.type === 'modified' && callback) {
+                                    callback('modified', change.doc.id, change.doc.data());
+                                } else if (change.type === 'removed' && callback) {
+                                    callback('removed', change.doc.id);
+                                }
+                            });
+                        }, (error) => {
+                            console.error('Real-time sync error:', error);
+                        });
+                    
+                    return unsubscribe;
+                } catch (error) {
+                    console.error('Error setting up real-time sync:', error);
+                    return null;
+                }
+            }
+        };
+
+        // Initialize chat manager
+        let chatManager = null;
+
+        // Function to update system message with current date/time
+        function updateSystemMessageWithCurrentTime() {
+            const now = new Date();
+            const currentDate = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const currentTime = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
             let systemPrompt = `You are Clover AI, an advanced AI assistant created under a project- 'Reverbit' https://aditya-cmd-max.github.io/reverbit/. Your creator is Aditya Jha. Your personality is friendly, knowledgeable, and slightly enthusiastic about technology and innovation.
 
 IMPORTANT FORMATTING RULES:
@@ -4330,7 +4539,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             try {
                 if (typeof AITrainingSystem !== 'undefined') {
                     aiTrainingSystem = new AITrainingSystem();
-                    // Update system message with enhanced prompt
                     updateSystemMessageWithCurrentTime();
                     console.log('AI Training System initialized successfully');
                 } else {
@@ -4360,12 +4568,10 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             const randomIndex = Math.floor(Math.random() * welcomeMessages.length);
             let message = welcomeMessages[randomIndex];
             
-            // Replace {username} with actual username or default text
             if (userSettings.userName && userSettings.userName.trim() !== '') {
                 message = message.replace(/{username}/g, `<span class="gradient-username">${userSettings.userName}</span>`);
             } else {
                 message = message.replace(/{username}/g, '');
-                // Clean up any awkward spacing if username is empty
                 message = message.replace('  ', ' ').trim();
             }
             
@@ -4383,13 +4589,9 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         function playAIResponseSound() {
             if (userSettings.soundEnabled) {
                 try {
-                    // Reset the audio to start from beginning
                     aiResponseSound.currentTime = 0;
-                    
-                    // Play the sound
                     aiResponseSound.play().catch(error => {
                         console.log('Audio play failed:', error);
-                        // This is normal - browsers require user interaction first
                     });
                 } catch (error) {
                     console.log('Error playing sound:', error);
@@ -4397,15 +4599,13 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
         }
 
-        // Back to Down Functionality - Updated
+        // Back to Down Functionality
         function initBackToTop() {
             function toggleBackToTop() {
-                // Show button when scrolled up from bottom
                 const scrollTop = chatWindow.scrollTop;
                 const scrollHeight = chatWindow.scrollHeight;
                 const clientHeight = chatWindow.clientHeight;
                 
-                // Show button when not at the bottom
                 if (scrollHeight - scrollTop - clientHeight > 100) {
                     backToTopBtn.classList.add('visible');
                 } else {
@@ -4422,8 +4622,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             chatWindow.addEventListener('scroll', toggleBackToTop);
             backToTopBtn.addEventListener('click', scrollToBottom);
-            
-            // Initialize button state
             toggleBackToTop();
         }
 
@@ -4442,10 +4640,8 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 toggleDropdown();
             });
             
-            // Close dropdown when clicking outside
             document.addEventListener('click', closeDropdown);
             
-            // Handle tool selections
             const toolItems = document.querySelectorAll('.tools-dropdown-item');
             toolItems.forEach(item => {
                 item.addEventListener('click', function() {
@@ -4456,12 +4652,10 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             });
         }
 
-        // NEW: Web Search Indicator Functions
+        // Web Search Indicator Functions
         function showWebSearchIndicator() {
-            // Remove existing indicator if any
             hideWebSearchIndicator();
             
-            // Create web search indicator
             webSearchIndicator = document.createElement('div');
             webSearchIndicator.className = 'web-search-indicator';
             webSearchIndicator.innerHTML = `
@@ -4472,11 +4666,9 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 </button>
             `;
             
-            // Insert the indicator before the input container
             const inputContainer = document.querySelector('.input-container');
             inputContainer.parentNode.insertBefore(webSearchIndicator, inputContainer);
             
-            // Add event listener to close button
             const closeBtn = document.getElementById('web-search-close-btn');
             if (closeBtn) {
                 closeBtn.addEventListener('click', toggleWebSearch);
@@ -4501,7 +4693,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 showNotification('Web search disabled');
             }
             
-            // Close mobile sidebar if open
             closeMobileSidebar();
         }
 
@@ -4528,17 +4719,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     break;
             }
             
-            // Focus on input after selecting tool
             messageInput.focus();
         }
 
         // Banner Management Functions
         function showBanner() {
-            // Check if banner has been shown before on this device
             const hasSeenBanner = localStorage.getItem('cloverAIBannerSeen');
             
             if (!hasSeenBanner) {
-                // Show banner with delay for better UX
                 setTimeout(() => {
                     announcementBanner.classList.add('show');
                     bannerOverlay.classList.add('show');
@@ -4551,8 +4739,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             announcementBanner.classList.remove('show');
             bannerOverlay.classList.remove('show');
             document.body.style.overflow = '';
-            
-            // Mark banner as seen
             localStorage.setItem('cloverAIBannerSeen', 'true');
         }
 
@@ -4578,13 +4764,12 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Date management functions - UPDATED FIX
+        // Date management functions
         function getFormattedDate(date) {
             const today = new Date();
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
             
-            // Compare dates (ignore time)
             const inputDate = new Date(date);
             inputDate.setHours(0, 0, 0, 0);
             const todayDate = new Date(today);
@@ -4597,7 +4782,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             } else if (inputDate.getTime() === yesterdayDate.getTime()) {
                 return 'Yesterday';
             } else {
-                // Format as DD/MM/YYYY
                 const day = String(inputDate.getDate()).padStart(2, '0');
                 const month = String(inputDate.getMonth() + 1).padStart(2, '0');
                 const year = inputDate.getFullYear();
@@ -4609,17 +4793,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             const messages = chatWindow.querySelectorAll('.message:not(.date-separator)');
             const dateSeparators = chatWindow.querySelectorAll('.date-separator');
             
-            // Remove existing date separators
             dateSeparators.forEach(separator => separator.remove());
             
             let lastDate = null;
             
             messages.forEach((message, index) => {
-                // Get message timestamp from data attribute or use current time
                 const messageTime = message.getAttribute('data-timestamp') ? 
                     new Date(message.getAttribute('data-timestamp')) : new Date();
                 
-                // Get just the date part (ignoring time)
                 const messageDate = new Date(messageTime);
                 messageDate.setHours(0, 0, 0, 0);
                 const dateString = messageDate.toISOString().split('T')[0];
@@ -4628,7 +4809,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     lastDate = dateString;
                     const dateSeparator = createDateSeparator(messageTime);
                     
-                    // Insert date separator before the current message
                     if (message.parentNode) {
                         message.parentNode.insertBefore(dateSeparator, message);
                     }
@@ -4654,21 +4834,17 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             if (savedSettings) {
                 userSettings = JSON.parse(savedSettings);
                 
-                // Apply settings to UI
                 userNameInput.value = userSettings.userName || '';
                 
-                // Set profile picture
                 if (userSettings.profilePicture) {
                     profilePicturePreview.innerHTML = `<img src="${userSettings.profilePicture}" alt="Profile Picture">`;
                 }
                 
-                // Set theme
                 document.body.classList.remove('theme-blue', 'theme-green', 'theme-orange', 'theme-pink', 'theme-teal', 'theme-gradient');
                 if (userSettings.theme !== 'default') {
                     document.body.classList.add(`theme-${userSettings.theme}`);
                 }
                 
-                // Update active theme color
                 themeColors.forEach(color => {
                     color.classList.remove('active');
                     if (color.getAttribute('data-theme') === userSettings.theme) {
@@ -4676,7 +4852,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     }
                 });
                 
-                // Set dark mode
                 if (userSettings.darkMode) {
                     document.body.classList.add('dark-theme');
                     document.body.classList.remove('light-theme');
@@ -4689,14 +4864,11 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     darkModeToggle.checked = false;
                 }
                 
-                // Set other toggles
                 soundToggle.checked = userSettings.soundEnabled;
                 typingAnimationToggle.checked = userSettings.typingAnimation;
                 timestampToggle.checked = userSettings.timestamps;
                 
-                // NEW: Set chat font
                 if (userSettings.chatFont) {
-                    // Update font options UI
                     fontOptions.forEach(option => {
                         option.classList.remove('active');
                         if (option.getAttribute('data-font') === userSettings.chatFont) {
@@ -4704,14 +4876,10 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                         }
                     });
                     
-                    // Apply the font
                     applyChatFont(userSettings.chatFont);
                 }
                 
-                // Update system message with user name
                 updateSystemMessageWithCurrentTime();
-                
-                // Update welcome message
                 updateWelcomeMessage();
             }
         }
@@ -4721,46 +4889,54 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             localStorage.setItem('cloverAIUserSettings', JSON.stringify(userSettings));
         }
 
-        // NEW: Function to apply chat font
+        // Function to apply chat font
         function applyChatFont(fontName) {
-            // Remove all font classes
             document.body.classList.remove(
                 'font-lora', 'font-inter', 'font-roboto', 
                 'font-opensans', 'font-montserrat', 'font-sourcesanspro'
             );
             
-            // Add selected font class
             const fontClass = `font-${fontName.toLowerCase().replace(' ', '')}`;
             document.body.classList.add(fontClass);
             
-            // Update CSS variable for future messages
             document.documentElement.style.setProperty('--md-font-body', fontName);
             
-            // Apply font to all existing bot messages
             const botMessages = document.querySelectorAll('.message.bot .message-content');
             botMessages.forEach(message => {
                 message.style.fontFamily = fontName;
             });
             
-            // Apply font to welcome section
             const welcomeSubtitle = document.querySelector('.welcome-subtitle');
             if (welcomeSubtitle) {
                 welcomeSubtitle.style.fontFamily = fontName;
             }
-            
-            console.log('Applied font:', fontName);
         }
 
-        // Initialize chat sessions from localStorage
-        function initializeChatSessions() {
-            const savedSessions = localStorage.getItem('cloverAIChatSessions');
-            if (savedSessions) {
-                chatSessions = JSON.parse(savedSessions);
+        // Initialize chat sessions with Firestore support
+        async function initializeChatSessions() {
+            // Try to load from Firestore first if chatManager is initialized
+            if (chatManager && chatManager.initialized) {
+                try {
+                    const firestoreChats = await chatManager.loadAllChats();
+                    if (Object.keys(firestoreChats).length > 0) {
+                        chatSessions = firestoreChats;
+                        showNotification('Chats loaded from cloud');
+                    } else {
+                        // No chats in Firestore, check local storage
+                        loadLocalChats();
+                    }
+                } catch (error) {
+                    console.error('Error loading from Firestore, falling back to local:', error);
+                    loadLocalChats();
+                }
+            } else {
+                // ChatManager not initialized, use local storage only
+                loadLocalChats();
             }
             
             // If no sessions exist, create a default one
             if (Object.keys(chatSessions).length === 0) {
-                createNewChat();
+                await createNewChat();
             } else {
                 // Load the most recent chat
                 const chatIds = Object.keys(chatSessions);
@@ -4771,8 +4947,16 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             renderChatSessions();
         }
 
+        // Load chats from local storage
+        function loadLocalChats() {
+            const savedSessions = localStorage.getItem('cloverAIChatSessions');
+            if (savedSessions) {
+                chatSessions = JSON.parse(savedSessions);
+            }
+        }
+
         // Create a new chat session
-        function createNewChat() {
+        async function createNewChat() {
             const chatId = 'chat_' + Date.now();
             const chatTitle = 'Chat ' + (Object.keys(chatSessions).length + 1);
             
@@ -4782,23 +4966,34 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 history: [systemMessage],
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
-                pinned: false
+                pinned: false,
+                settings: {}
             };
             
             currentChatId = chatId;
+            
+            // Save to Firestore if available
+            if (chatManager && chatManager.initialized) {
+                try {
+                    await chatManager.saveChat(chatId, chatSessions[chatId]);
+                } catch (error) {
+                    console.error('Error saving new chat to Firestore:', error);
+                }
+            }
+            
+            // Also save locally
             saveChatSessions();
+            
             renderChatSessions();
             loadChat(chatId);
             showNotification('New chat created');
-            
-            // Update welcome message for new chat
             updateWelcomeMessage();
-            
-            // Close mobile sidebar if open
             closeMobileSidebar();
+            
+            return chatId;
         }
 
-        // Load a specific chat - UPDATED with proper timestamp handling
+        // Load a specific chat
         function loadChat(chatId) {
             if (!chatSessions[chatId]) return;
             
@@ -4806,29 +5001,22 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             currentChatId = chatId;
             currentChatTitle.textContent = chat.title;
             
-            // Update system message with current time before loading
             updateSystemMessageWithCurrentTime();
-            
-            // Update the first message (system message) with current time
             chat.history[0] = systemMessage;
             
-            // Clear chat window and rebuild from history
             const welcomeSection = chatWindow.querySelector('.welcome-section');
             chatWindow.innerHTML = '';
             
-            // Only show welcome if it's a new chat
             if (chat.history.length <= 1) {
                 if (welcomeSection) {
                     chatWindow.appendChild(welcomeSection.cloneNode(true));
                     updateWelcomeMessage();
                 }
             } else {
-                // Recreate messages from history with proper timestamps
                 for (let i = 1; i < chat.history.length; i++) {
                     const message = chat.history[i];
-                    // Create a timestamp based on message order (older messages first)
                     const timestamp = new Date(chat.createdAt);
-                    timestamp.setMinutes(timestamp.getMinutes() + i); // Increment for each message
+                    timestamp.setMinutes(timestamp.getMinutes() + i);
                     
                     if (message.role === "user") {
                         const messageElement = createMessageElement(message.parts[0].text, 'user', timestamp);
@@ -4840,17 +5028,11 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 }
             }
             
-            // Initialize feedback buttons after loading chat
             setTimeout(() => {
                 initFeedbackButtons();
-            }, 100);
-            
-            // Check and add date separators after loading chat
-            setTimeout(() => {
                 checkAndAddDateSeparator();
             }, 100);
             
-            // Reattach event listeners to suggestion chips
             document.querySelectorAll('.suggestion-chip').forEach(chip => {
                 chip.addEventListener('click', () => {
                     const prompt = chip.getAttribute('data-prompt');
@@ -4861,8 +5043,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             });
             
             chatWindow.scrollTop = chatWindow.scrollHeight;
-            
-            // Close mobile sidebar if open
             closeMobileSidebar();
         }
 
@@ -4903,7 +5083,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 `;
             }
             
-            // Store the timestamp
             messageElement.setAttribute('data-timestamp', messageTime.toISOString());
             return messageElement;
         }
@@ -4920,7 +5099,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             let titleHTML = chat.title;
             
-            // Highlight matching text if search term exists
             if (highlightTerm && highlightTerm.length > 0) {
                 const regex = new RegExp(`(${escapeRegExp(highlightTerm)})`, 'gi');
                 titleHTML = chat.title.replace(regex, '<span class="highlight-match">$1</span>');
@@ -4939,21 +5117,18 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 </button>
             `;
             
-            // Chat click event
             sessionElement.addEventListener('click', () => {
                 if (chat.id !== currentChatId) {
                     loadChat(chat.id);
                 }
             });
             
-            // Pin button event
             const pinBtn = sessionElement.querySelector('.chat-session-pin');
             pinBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 togglePinChat(chat.id);
             });
             
-            // Delete button event
             const deleteBtn = sessionElement.querySelector('.chat-session-delete');
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -4964,11 +5139,17 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         }
 
         // Toggle pin status for a chat
-        function togglePinChat(chatId) {
+        async function togglePinChat(chatId) {
             const chat = chatSessions[chatId];
             if (chat) {
                 chat.pinned = !chat.pinned;
                 chat.updatedAt = new Date().toISOString();
+                
+                // Update Firestore
+                if (chatManager && chatManager.initialized) {
+                    await chatManager.toggleChatPin(chatId, chat.pinned);
+                }
+                
                 saveChatSessions();
                 renderChatSessions();
                 showNotification(chat.pinned ? 'Chat pinned' : 'Chat unpinned');
@@ -4985,58 +5166,60 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         }
 
         // Delete a chat session
-        function deleteChatConfirmed(chatId) {
-            // Check if chat exists
+        async function deleteChatConfirmed(chatId) {
             if (!chatSessions[chatId]) {
                 showNotification('Chat not found', 'error');
                 return;
             }
             
-            // Prevent deleting the only chat
             if (Object.keys(chatSessions).length <= 1) {
                 showNotification('Cannot delete the only chat', 'error');
                 return;
             }
             
             const chatTitle = chatSessions[chatId].title;
+            const wasCurrentChat = currentChatId === chatId;
             
-            try {
-                const wasCurrentChat = currentChatId === chatId;
-                
-                // Delete the chat
-                delete chatSessions[chatId];
-                saveChatSessions();
-                
-                // Handle current chat deletion
-                if (wasCurrentChat) {
-                    const remainingChats = Object.keys(chatSessions);
-                    // Switch to the most recent chat (last in the array after sorting)
-                    const sortedChats = remainingChats.sort((a, b) => 
-                        new Date(chatSessions[b].updatedAt) - new Date(chatSessions[a].updatedAt)
-                    );
-                    currentChatId = sortedChats[0];
-                    loadChat(currentChatId);
-                }
-                
-                // Update UI
-                renderChatSessions();
-                showNotification(`"${chatTitle}" has been deleted`);
-                
-            } catch (error) {
-                console.error('Error deleting chat:', error);
-                showNotification('Error deleting chat. Please try again.', 'error');
+            // Delete from Firestore
+            if (chatManager && chatManager.initialized) {
+                await chatManager.deleteChat(chatId);
             }
+            
+            // Delete locally
+            delete chatSessions[chatId];
+            saveChatSessions();
+            
+            if (wasCurrentChat) {
+                const remainingChats = Object.keys(chatSessions);
+                const sortedChats = remainingChats.sort((a, b) => 
+                    new Date(chatSessions[b].updatedAt) - new Date(chatSessions[a].updatedAt)
+                );
+                currentChatId = sortedChats[0];
+                loadChat(currentChatId);
+            }
+            
+            renderChatSessions();
+            showNotification(`"${chatTitle}" has been deleted`);
         }
 
-        // Save chat sessions to localStorage
+        // Save chat sessions to localStorage and Firestore
         function saveChatSessions() {
             try {
                 localStorage.setItem('cloverAIChatSessions', JSON.stringify(chatSessions));
+                
+                // Also sync current chat to Firestore with debouncing
+                if (chatManager && chatManager.initialized && currentChatId && chatSessions[currentChatId]) {
+                    clearTimeout(saveTimeout);
+                    saveTimeout = setTimeout(async () => {
+                        try {
+                            await chatManager.saveChat(currentChatId, chatSessions[currentChatId]);
+                        } catch (error) {
+                            console.error('Error syncing to Firestore:', error);
+                        }
+                    }, 2000);
+                }
             } catch (e) {
                 console.error("Error saving chat sessions:", e);
-                if (e.name === 'QuotaExceededError') {
-                    showNotification('Storage limit reached. Some chats may not be saved.', 'error');
-                }
             }
         }
 
@@ -5082,7 +5265,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             const file = event.target.files[0];
             if (!file) return;
             
-            // Check file size (increase limit to 10MB for various file types)
             if (file.size > 10 * 1024 * 1024) {
                 showNotification('File size should be less than 10MB', 'error');
                 event.target.value = '';
@@ -5103,7 +5285,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                         <img src="${e.target.result}" alt="Uploaded image" class="image-preview">
                     `;
                     
-                    // Store image data for AI processing
                     currentFileData = {
                         mime_type: file.type,
                         data: e.target.result.split(',')[1]
@@ -5120,7 +5301,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                         <p style="margin-top: 8px; font-size: 0.9em;">I've uploaded a file for analysis</p>
                     `;
                     
-                    // For non-image files, we'll just send the filename and type to the AI
                     currentFileData = null;
                 }
                 
@@ -5134,16 +5314,13 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     </div>
                 `;
                 
-                // Add timestamp to message element
                 addTimestampToMessage(messageElement);
                 
                 chatWindow.appendChild(messageElement);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
                 
-                // Check and add date separators
                 checkAndAddDateSeparator();
                 
-                // Auto-submit the form for AI processing
                 chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
             };
             
@@ -5165,31 +5342,20 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         }
 
         function saveCustomizationSettings() {
-            // Update user settings
             userSettings.userName = userNameInput.value.trim();
             userSettings.soundEnabled = soundToggle.checked;
             userSettings.typingAnimation = typingAnimationToggle.checked;
             userSettings.timestamps = timestampToggle.checked;
-            // Font is already updated in the click handler
             
-            // Save settings
             saveUserSettings();
-            
-            // Update system message with new user name and current time
             updateSystemMessageWithCurrentTime();
-            
-            // Update welcome message
             updateWelcomeMessage();
             
-            // Refresh timestamps if setting changed
             if (userSettings.timestamps) {
                 checkAndAddDateSeparator();
             }
             
-            // Show notification
             showNotification('Customization settings saved');
-            
-            // Close panel
             closeCustomizationPanel();
         }
 
@@ -5210,25 +5376,21 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
 
         // Search functionality
         function initializeSearch() {
-            // Desktop search
             searchChatInput.addEventListener('input', (e) => {
                 searchTerm = e.target.value.trim().toLowerCase();
                 updateClearButtonVisibility();
                 filterChatSessions();
             });
 
-            // Mobile search
             mobileSearchChatInput.addEventListener('input', (e) => {
                 searchTerm = e.target.value.trim().toLowerCase();
                 updateClearButtonVisibility();
                 filterChatSessions();
             });
 
-            // Clear search buttons
             clearSearchBtn.addEventListener('click', clearSearch);
             mobileClearSearchBtn.addEventListener('click', clearSearch);
 
-            // Close mobile sidebar when searching (optional)
             searchChatInput.addEventListener('focus', () => {
                 if (window.innerWidth <= 768) {
                     closeMobileSidebar();
@@ -5257,22 +5419,17 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             const allChats = Object.values(chatSessions);
             let filteredChats = allChats;
 
-            // Apply pin filter
             if (showPinnedOnly) {
                 filteredChats = filteredChats.filter(chat => chat.pinned);
             }
 
-            // Apply search filter
             if (searchTerm) {
                 filteredChats = filteredChats.filter(chat => 
                     chat.title.toLowerCase().includes(searchTerm)
                 );
             }
 
-            // Update desktop sidebar
             renderFilteredChatSessions(filteredChats, chatSessionsContainer, noChatsFound);
-            
-            // Update mobile sidebar
             renderFilteredChatSessions(filteredChats, mobileChatSessionsContainer, mobileNoChatsFound);
         }
 
@@ -5323,13 +5480,19 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             chatToDelete = null;
         }
 
-        function handleRenameConfirm() {
+        async function handleRenameConfirm() {
             const newTitle = renameChatInput.value.trim();
             if (newTitle && newTitle !== '') {
                 const chat = chatSessions[currentChatId];
                 chat.title = newTitle;
                 chat.updatedAt = new Date().toISOString();
                 currentChatTitle.textContent = chat.title;
+                
+                // Update Firestore
+                if (chatManager && chatManager.initialized) {
+                    await chatManager.updateChatTitle(currentChatId, newTitle);
+                }
+                
                 saveChatSessions();
                 renderChatSessions();
                 showNotification('Chat renamed');
@@ -5344,13 +5507,10 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
         }
 
-        // Sidebar Resize and Toggle Functions - FIXED
+        // Sidebar Resize and Toggle Functions
         function initializeSidebarResize() {
             const sidebar = document.getElementById('sidebar');
-            let isResizing = false;
-            let startX, startWidth;
-
-            // Toggle sidebar collapse/expand
+            
             sidebarToggle.addEventListener('click', function() {
                 isSidebarCollapsed = !isSidebarCollapsed;
                 
@@ -5362,24 +5522,18 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 } else {
                     sidebar.classList.remove('collapsed');
                     sidebarToggleIcon.textContent = 'chevron_left';
-                    // Restore previous width or use default
                     const savedWidth = localStorage.getItem('cloverAISidebarWidth');
                     const width = savedWidth ? savedWidth : '320px';
                     sidebar.style.width = width;
                     document.documentElement.style.setProperty('--sidebar-width', width);
                 }
                 
-                // Update sticky position
                 updateSidebarStickyPosition();
-                
-                // Save sidebar state
                 localStorage.setItem('cloverAISidebarCollapsed', isSidebarCollapsed);
             });
 
-            // Update sidebar sticky position on window resize
             window.addEventListener('resize', updateSidebarStickyPosition);
 
-            // Load sidebar state
             const savedSidebarState = localStorage.getItem('cloverAISidebarCollapsed');
             const savedSidebarWidth = localStorage.getItem('cloverAISidebarWidth');
             
@@ -5390,34 +5544,25 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 sidebar.style.width = 'var(--sidebar-min-width)';
                 document.documentElement.style.setProperty('--sidebar-width', 'var(--sidebar-min-width)');
             } else if (savedSidebarWidth) {
-                // Apply saved width if not collapsed
                 sidebar.style.width = savedSidebarWidth;
                 document.documentElement.style.setProperty('--sidebar-width', savedSidebarWidth);
             } else {
-                // Default width
                 sidebar.style.width = 'var(--sidebar-width)';
             }
             
-            // Initial position update
             setTimeout(updateSidebarStickyPosition, 100);
         }
 
-        // Function to update sidebar sticky position - FIXED
+        // Function to update sidebar sticky position
         function updateSidebarStickyPosition() {
             const sidebar = document.getElementById('sidebar');
-            const headerHeight = 80; // Height of app-header
-            const padding = 24; // var(--md-spacing-lg)
+            const headerHeight = 80;
+            const padding = 24;
             
-            // Calculate top position based on header height and padding
             const topPosition = headerHeight + padding;
-            
-            // Update CSS custom property
             document.documentElement.style.setProperty('--sidebar-sticky-top', `${topPosition}px`);
-            
-            // Also update the sidebar's top value directly
             sidebar.style.top = `${topPosition}px`;
             
-            // Calculate and update height
             const windowHeight = window.innerHeight;
             const sidebarHeight = windowHeight - topPosition - padding;
             sidebar.style.height = `${sidebarHeight}px`;
@@ -5433,18 +5578,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             const currentChat = chatSessions[currentChatId];
             let modifiedHistory = [...currentChat.history];
             
-            // Update system message with current time
             updateSystemMessageWithCurrentTime();
             modifiedHistory[0] = systemMessage;
             
-            // Apply AI training and web search enhancements
             applyRequestEnhancements(modifiedHistory);
             
-            // Add web search context if enabled
             if (webSearchEnabled) {
                 const lastMessage = modifiedHistory[modifiedHistory.length - 1];
                 if (lastMessage && lastMessage.role === "user") {
-                    // Add web search instruction to the user message
                     lastMessage.parts[0].text = `[Web Search Enabled] Please search for the most up-to-date information about: ${lastMessage.parts[0].text}`;
                 }
             }
@@ -5453,7 +5594,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             abortController = new AbortController();
 
             try {
-                // Use your Cloudflare Worker URL
                 const workerUrl = 'https://clover-ai-proxy.exonova1104.workers.dev/';
                 
                 const response = await fetch(workerUrl, {
@@ -5488,12 +5628,10 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 return;
             }
 
-            // Check if user is asking about time/date
             const userMessage = lastUserMessage.parts[0].text.toLowerCase();
             const timeKeywords = ['time', 'date', 'today', 'now', 'current', 'what day', 'what time'];
             const isTimeQuery = timeKeywords.some(keyword => userMessage.includes(keyword));
             
-            // Apply AI training enhancements
             if (aiTrainingSystem) {
                 const enhancements = aiTrainingSystem.enhanceResponseQuality(
                     lastUserMessage.parts[0].text,
@@ -5503,12 +5641,10 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 console.log('AI Training Enhancements:', enhancements);
             }
 
-            // Apply web search enhancement
             if (webSearchEnabled) {
                 lastUserMessage.parts[0].text += " (Please perform a web search to provide the most up-to-date information)";
             }
             
-            // If it's a time query, ensure the AI knows to use current time
             if (isTimeQuery) {
                 lastUserMessage.parts[0].text += " (Please provide accurate current date and time information based on the context provided)";
             }
@@ -5522,28 +5658,21 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
 
             if (result.candidates?.length > 0) {
                 const botMessage = result.candidates[0].content.parts[0].text;
-                
-                // Clean the bot message - remove markdown symbols and weird formatting
                 const cleanedMessage = cleanBotMessage(botMessage);
                 
-                // Display the bot message
                 displayBotMessage(cleanedMessage);
                 
-                // Update chat history with cleaned message
                 currentChat.history.push({ role: "model", parts: [{ text: cleanedMessage }] });
                 currentChat.updatedAt = new Date().toISOString();
                 saveChatSessions();
                 renderChatSessions();
                 
-                // Update AI training system
                 updateAITrainingSystem(modifiedHistory, cleanedMessage);
                 
-                // Initialize feedback buttons after displaying message
                 setTimeout(() => {
                     initFeedbackButtons();
                 }, 100);
                 
-                // Update UI
                 setTimeout(() => {
                     checkAndAddDateSeparator();
                 }, 100);
@@ -5553,35 +5682,18 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }
         }
 
-        // Helper function: Clean bot message - remove weird symbols and format properly
+        // Helper function: Clean bot message
         function cleanBotMessage(message) {
-            // Remove markdown headers (###, ##, #)
             let cleaned = message.replace(/^#+\s+/gm, '');
-            
-            // Remove horizontal rules (---, ***, ___)
             cleaned = cleaned.replace(/^[-*_]{3,}$/gm, '');
-            
-            // Remove excessive newlines (more than 2 consecutive)
             cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
-            
-            // Convert markdown bold to HTML bold
             cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            
-            // Convert markdown italic to HTML italic
             cleaned = cleaned.replace(/\*(.*?)\*/g, '<i>$1</i>');
-            
-            // REMOVE MARKDOWN UNDERLINE SYNTAX
-            cleaned = cleaned.replace(/__(.*?)__/g, '$1'); // Remove double underscore underline
-            cleaned = cleaned.replace(/_(.*?)_/g, '$1'); // Remove single underscore underline
-            
-            // Remove any remaining markdown symbols
-            cleaned = cleaned.replace(/\[.*?\]\(.*?\)/g, ''); // Remove links
-            cleaned = cleaned.replace(/`{1,3}/g, ''); // Remove inline code ticks
-            
-            // Also remove HTML underline tags if present
+            cleaned = cleaned.replace(/__(.*?)__/g, '$1');
+            cleaned = cleaned.replace(/_(.*?)_/g, '$1');
+            cleaned = cleaned.replace(/\[.*?\]\(.*?\)/g, '');
+            cleaned = cleaned.replace(/`{1,3}/g, '');
             cleaned = cleaned.replace(/<u>(.*?)<\/u>/gi, '$1');
-            
-            // Ensure proper spacing
             cleaned = cleaned.replace(/\s+\./g, '.');
             cleaned = cleaned.replace(/\s+,/g, ',');
             cleaned = cleaned.replace(/\s+!/g, '!');
@@ -5619,7 +5731,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             console.error('API Request Failed:', error);
             
-            // User-friendly error messages
             let userMessage = 'Sorry, the service is temporarily unavailable. Please try again later.';
             
             if (error.message.includes('500') || error.message.includes('All API keys failed')) {
@@ -5654,7 +5765,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             }, 500);
         });
 
-        // Add keyboard escape to close banner
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && announcementBanner.classList.contains('show')) {
                 hideBanner();
@@ -5694,17 +5804,12 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         // Theme color selection
         themeColors.forEach(color => {
             color.addEventListener('click', () => {
-                // Remove active class from all colors
                 themeColors.forEach(c => c.classList.remove('active'));
-                
-                // Add active class to clicked color
                 color.classList.add('active');
                 
-                // Update theme
                 const theme = color.getAttribute('data-theme');
                 userSettings.theme = theme;
                 
-                // Apply theme
                 document.body.classList.remove('theme-blue', 'theme-green', 'theme-orange', 'theme-pink', 'theme-teal', 'theme-gradient');
                 if (theme !== 'default') {
                     document.body.classList.add(`theme-${theme}`);
@@ -5712,20 +5817,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             });
         });
         
-        // NEW: Font selection event listeners
+        // Font selection event listeners
         fontOptions.forEach(option => {
             option.addEventListener('click', () => {
-                // Remove active class from all font options
                 fontOptions.forEach(opt => opt.classList.remove('active'));
-                
-                // Add active class to clicked font
                 option.classList.add('active');
                 
-                // Update user settings
                 const selectedFont = option.getAttribute('data-font');
                 userSettings.chatFont = selectedFont;
-                
-                // Apply font preview
                 applyChatFont(selectedFont);
             });
         });
@@ -5796,18 +5895,15 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 if (e.shiftKey) {
-                    // Shift + Enter: Insert new line
                     setTimeout(() => {
                         const newHeight = Math.min(messageInput.scrollHeight, window.innerWidth <= 768 ? 200 : 120);
                         messageInput.style.height = 'auto';
                         messageInput.style.height = newHeight + 'px';
                     }, 0);
                 } else {
-                    // Enter alone: Send message
                     e.preventDefault();
                     
                     if (!isProcessing && messageInput.value.trim() !== '') {
-                        // Visual feedback
                         const inputContainer = document.querySelector('.input-container');
                         const originalBorderColor = inputContainer.style.borderColor;
                         inputContainer.style.borderColor = 'var(--md-primary)';
@@ -5827,7 +5923,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         // Improved mobile input handling
         messageInput.addEventListener('focus', function() {
             if (window.innerWidth <= 768) {
-                // Add a small delay to ensure keyboard is fully open
                 setTimeout(() => {
                     const inputArea = document.querySelector('.input-area');
                     if (inputArea) {
@@ -5866,7 +5961,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 displayUserMessage(userMessage);
                 let apiPrompt = userMessage;
                 
-                // Apply mode-specific formatting
                 if (currentMode === 'brainstorm') {
                     apiPrompt = `Brainstorm a list of creative, innovative ideas about: "${userMessage}". Provide a diverse and interesting list with at least 5 unique ideas. Format each idea clearly with a brief explanation.`;
                 } else if (currentMode === 'explain') {
@@ -5877,12 +5971,10 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     apiPrompt = `Translate the following text to English. If it's already in English, provide a more polished version:\n\n${userMessage}`;
                 }
                 
-                // Clear the input field
                 messageInput.value = '';
                 messageInput.style.height = 'auto';
                 sendBtn.disabled = true;
                 
-                // Add to current chat history
                 const currentChat = chatSessions[currentChatId];
                 if (currentFileData) {
                     currentChat.history.push({ 
@@ -5901,7 +5993,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 saveChatSessions();
                 renderChatSessions();
                 
-                // Get response
                 await getBotResponse();
                 setMode('chat');
             }
@@ -5929,8 +6020,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
         function setMode(newMode) {
             currentMode = currentMode === newMode ? 'chat' : newMode;
             updateUIForMode();
-            
-            // Close mobile sidebar if open
             closeMobileSidebar();
         }
 
@@ -5989,17 +6078,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             if (welcomeSection) {
                 chatWindow.appendChild(welcomeSection);
-                // Update welcome message when clearing chat
                 updateWelcomeMessage();
             }
             
-            // Reset chat history to just system message
             currentChat.history = [systemMessage];
             currentChat.updatedAt = new Date().toISOString();
             currentFileData = null;
             saveChatSessions();
             
-            // Reattach event listeners
             document.querySelectorAll('.suggestion-chip').forEach(chip => {
                 chip.addEventListener('click', () => {
                     const prompt = chip.getAttribute('data-prompt');
@@ -6010,17 +6096,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             });
             
             showNotification('Chat cleared successfully');
-            
-            // Close mobile sidebar if open
             closeMobileSidebar();
         }
 
         function exportCurrentChat() {
             const currentChat = chatSessions[currentChatId];
             
-            // Filter out the system message (first message in history)
             const chatText = currentChat.history
-                .filter((entry, index) => index > 0) // Skip the first message (system message)
+                .filter((entry, index) => index > 0)
                 .map(entry => {
                     if (entry.role === 'user') {
                         return `You: ${entry.parts[0].text}`;
@@ -6043,8 +6126,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             URL.revokeObjectURL(url);
             
             showNotification('Chat exported successfully');
-            
-            // Close mobile sidebar if open
             closeMobileSidebar();
         }
 
@@ -6057,10 +6138,8 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 messageContent = `<div class="message-content">${escapeHtml(message)}</div>`;
             }
             
-            // Add timestamp
             const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
-            // Use profile picture if available, otherwise use default avatar
             let avatarHTML = '';
             if (userSettings.profilePicture) {
                 avatarHTML = `<img src="${userSettings.profilePicture}" alt="User Profile">`;
@@ -6078,28 +6157,23 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 </div>
             `;
             
-            // Add timestamp to message element
             addTimestampToMessage(messageElement);
             
             chatWindow.appendChild(messageElement);
             chatWindow.scrollTop = chatWindow.scrollHeight;
             
-            // Check and add date separators
             checkAndAddDateSeparator();
         }
 
-        // FIXED: displayBotMessage function - prevents typing animation for loaded chats
+        // FIXED: displayBotMessage function
         function displayBotMessage(message, typewriterEffect = true) {
             const messageElement = document.createElement('div');
             messageElement.className = 'message bot';
             
-            // Always use non-animated display for loaded chats (when typewriterEffect is false)
             if (!typewriterEffect) {
-                // Loaded chat - display immediately without animation
                 const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 const botMessageContent = createBotMessageContent(message, messageId);
                 
-                // Add timestamp
                 const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
                 messageElement.innerHTML = `
@@ -6112,28 +6186,20 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     </div>
                 `;
                 
-                // Add timestamp to message element
                 addTimestampToMessage(messageElement);
-                
                 chatWindow.appendChild(messageElement);
-                
-                // Don't play sound for loaded chats
                 
                 setTimeout(() => {
                     applyHighlighting(messageElement);
                 }, 100);
                 
-                // Check and add date separators
                 checkAndAddDateSeparator();
-                
                 messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
             }
             
-            // NEW CHAT RESPONSES - with rotating logo
             const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
             
-            // Create message with rotating logo
             messageElement.innerHTML = `
                 <div class="message-avatar">
                     <img src="https://aditya-cmd-max.github.io/cloverai/logo.png" alt="AI Logo" class="ai-logo-rotating">
@@ -6149,16 +6215,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             addTimestampToMessage(messageElement);
             chatWindow.appendChild(messageElement);
             
-            // Start typing animation
             startTypingAnimation(messageId, message);
             
             checkAndAddDateSeparator();
             messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Helper function to create bot message content (for non-animated display)
+        // Helper function to create bot message content
         function createBotMessageContent(message, messageId) {
-            // First clean the message
             const cleanedMessage = cleanBotMessage(message);
             
             let botMessageContent = '';
@@ -6192,7 +6256,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 if (textPart) botMessageContent += `<div class="message-content">${formatTextWithLineBreaks(textPart)}</div>`;
             }
 
-            // Add feedback buttons with only icons - FIXED
             botMessageContent += `
                 <div class="feedback-buttons" id="feedback-${messageId}">
                     <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
@@ -6213,17 +6276,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             return botMessageContent;
         }
 
-        // Initialize feedback buttons - UPDATED FIX
+        // Initialize feedback buttons
         function initFeedbackButtons() {
-            // Remove existing event listeners first
             const feedbackButtons = document.querySelectorAll('.feedback-btn');
             feedbackButtons.forEach(button => {
-                // Clone and replace to remove old event listeners
                 const newButton = button.cloneNode(true);
                 button.parentNode.replaceChild(newButton, button);
             });
             
-            // Add new event listeners
             document.querySelectorAll('.feedback-btn').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -6240,21 +6300,17 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             let formatted = text;
             
-            // Convert markdown-style headings to proper HTML headings
             formatted = formatted.replace(/^###\s+(.*?)$/gm, '<h3 class="ai-heading ai-heading-3">$1</h3>');
             formatted = formatted.replace(/^##\s+(.*?)$/gm, '<h2 class="ai-heading ai-heading-2">$1</h2>');
             formatted = formatted.replace(/^#\s+(.*?)$/gm, '<h1 class="ai-heading ai-heading-1">$1</h1>');
             
-            // Convert bullet lists
             formatted = formatted.replace(/^\s*[-*•]\s+(.*)$/gm, '<li class="ai-list-item">$1</li>');
             
-            // Convert numbered lists
             let listCounter = 1;
             formatted = formatted.replace(/^\s*\d+\.\s+(.*)$/gm, (match, content) => {
                 return `<li class="ai-list-item ai-numbered-item">${content}</li>`;
             });
             
-            // Convert simple tables (basic markdown table support)
             const tableRegex = /\|(.+)\|\n\|[-:|]+\|\n((?:\|.+\|\n?)+)/g;
             formatted = formatted.replace(tableRegex, (match, headers, rows) => {
                 const headerCells = headers.split('|').filter(cell => cell.trim()).map(cell => 
@@ -6272,7 +6328,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 return `<div class="ai-table-container"><table class="ai-table"><thead><tr>${headerCells}</tr></thead><tbody>${tableRows}</tbody></table></div>`;
             });
             
-            // Convert code blocks (already handled separately, but keep as fallback)
             formatted = formatted.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
                 const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 return `<div class="code-block">
@@ -6287,7 +6342,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 </div>`;
             });
             
-            // Convert paragraphs
             const lines = formatted.split('\n\n');
             let result = '';
             let inList = false;
@@ -6296,7 +6350,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 const line = lines[i].trim();
                 if (!line) continue;
                 
-                // Check if this line contains list items
                 if (line.includes('<li class="ai-list-item">')) {
                     if (!inList) {
                         result += '<ul class="ai-list">';
@@ -6309,13 +6362,11 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                         inList = false;
                     }
                     
-                    // Check if it's already a heading or table
                     if (line.startsWith('<h1') || line.startsWith('<h2') || line.startsWith('<h3') || 
                         line.startsWith('<div class="ai-table-container">') || 
                         line.startsWith('<div class="code-block">')) {
                         result += line;
                     } else {
-                        // Regular paragraph
                         result += `<p class="ai-paragraph">${line.replace(/\n/g, '<br>')}</p>`;
                     }
                 }
@@ -6325,7 +6376,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 result += '</ul>';
             }
             
-            // Convert remaining line breaks within paragraphs
             result = result.replace(/<p class="ai-paragraph">(.*?)<\/p>/g, (match, content) => {
                 return `<p class="ai-paragraph">${content.replace(/\n/g, '<br>')}</p>`;
             });
@@ -6333,7 +6383,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             return result;
         }
 
-        // Typing animation function - only for new responses
+        // Typing animation function
         function startTypingAnimation(messageId, fullMessage) {
             const typingElement = document.getElementById(`typing-content-${messageId}`);
             const timestampElement = document.getElementById(`timestamp-${messageId}`);
@@ -6342,19 +6392,16 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             if (!typingElement) return;
             
-            // Add active class to start animation
             typingElement.classList.add('typing-active');
             
             let charIndex = 0;
             let htmlContent = '';
             
-            // Process code blocks first
             const codeBlocks = [];
             const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
             let processedMessage = fullMessage;
             let codeIndex = 0;
             
-            // Replace code blocks with placeholders
             processedMessage = processedMessage.replace(codeBlockRegex, (match, language, code) => {
                 const placeholder = `__CODEBLOCK_${codeIndex}__`;
                 codeBlocks.push({ language, code, placeholder });
@@ -6362,19 +6409,14 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 return placeholder;
             });
             
-            // Function to scroll chat window to bottom
             function scrollToBottom() {
-                // Direct scroll without animation - this prevents shaking
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             }
             
-            // Function to type characters one by one
             function typeCharacter() {
                 if (charIndex >= processedMessage.length) {
-                    // Typing complete - replace placeholders with actual code blocks
                     let finalHtml = htmlContent;
                     
-                    // Replace code block placeholders
                     codeBlocks.forEach(block => {
                         const uniqueId = `code-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                         const codeBlockHtml = `
@@ -6392,21 +6434,17 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                         finalHtml = finalHtml.replace(block.placeholder, codeBlockHtml);
                     });
                     
-                    // Update the element with final content
                     typingElement.innerHTML = finalHtml;
                     
-                    // Remove rotating class from logo
                     if (logoElement) {
                         logoElement.classList.remove('ai-logo-rotating');
                     }
                     
-                    // Add timestamp
                     if (timestampElement) {
                         const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                         timestampElement.textContent = timestamp;
                     }
                     
-                    // Add feedback buttons
                     const feedbackHtml = `
                         <div class="feedback-buttons" id="feedback-${messageId}">
                             <button class="feedback-btn like-btn" data-action="like" data-message-id="${messageId}">
@@ -6426,29 +6464,24 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     
                     typingElement.insertAdjacentHTML('beforeend', feedbackHtml);
                     
-                    // Initialize feedback buttons
                     setTimeout(() => {
                         initFeedbackButtons();
                     }, 50);
                     
-                    // Final scroll to show complete message
                     setTimeout(() => {
                         scrollToBottom();
                     }, 50);
                     
-                    // Apply highlighting
                     setTimeout(() => {
                         applyHighlighting(typingElement.closest('.message'));
                     }, 100);
                     
-                    // Play AI response sound when typing is complete
                     playAIResponseSound();
                     return;
                 }
                 
                 const currentChar = processedMessage.charAt(charIndex);
                 
-                // Handle special cases
                 if (currentChar === '\n') {
                     htmlContent += '<br>';
                 } else if (currentChar === ' ' && processedMessage.charAt(charIndex + 1) === ' ') {
@@ -6457,48 +6490,38 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     htmlContent += currentChar;
                 }
                 
-                // Update the element with current content and cursor
                 typingElement.innerHTML = formatTextWithLineBreaks(htmlContent) + '<span class="typing-cursor"></span>';
                 
                 charIndex++;
                 
-                // FASTER typing speed
                 const typingSpeed = getTypingSpeed(currentChar);
                 
-                // Only scroll occasionally (every 15-20 characters) and only if user is near bottom
                 if (charIndex % 20 === 0) {
                     const scrollBottom = chatWindow.scrollHeight - chatWindow.scrollTop - chatWindow.clientHeight;
-                    if (scrollBottom < 500) { // If user is within 500px of bottom
+                    if (scrollBottom < 500) {
                         scrollToBottom();
                     }
                 }
                 
-                // Continue typing
                 setTimeout(typeCharacter, typingSpeed);
             }
             
-            // Start typing animation after a small delay
             setTimeout(() => {
-                // Initial scroll to show typing indicator
                 scrollToBottom();
                 typeCharacter();
             }, 50);
         }
 
-        // Helper function to determine typing speed based on character - ULTRA FAST VERSION
+        // Helper function to determine typing speed
         function getTypingSpeed(char) {
             if (char.match(/[.,;:!?]/)) {
-                // Ultra short pause for punctuation
-                return Math.random() * 5 + 5;      // 5-10ms
+                return Math.random() * 5 + 5;
             } else if (char === ' ') {
-                // Almost no pause for spaces
-                return Math.random() * 3 + 1;      // 1-4ms
+                return Math.random() * 3 + 1;
             } else if (char === '\n') {
-                // Short pause for new lines
-                return Math.random() * 10 + 10;    // 10-20ms
+                return Math.random() * 10 + 10;
             } else {
-                // Lightning fast normal typing
-                return Math.random() * 3 + 2;      // 2-5ms
+                return Math.random() * 3 + 2;
             }
         }
 
@@ -6681,7 +6704,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             return terms;
         }
 
-        // NEW: Updated showTypingIndicator function to use rotating logo
+        // Updated showTypingIndicator function to use rotating logo
         function showTypingIndicator() {
             if (userSettings.typingAnimation) {
                 const typingElement = document.createElement('div');
@@ -6739,7 +6762,7 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             });
         }
 
-        // UPDATED: handleFeedback function - FIXED
+        // Updated: handleFeedback function
         function handleFeedback(messageId, action) {
             const feedbackContainer = document.getElementById(`feedback-${messageId}`);
             if (!feedbackContainer) return;
@@ -6748,7 +6771,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             const dislikeBtn = feedbackContainer.querySelector('.dislike-btn');
             const retryBtn = feedbackContainer.querySelector('.retry-btn');
             
-            // Reset all buttons
             likeBtn.classList.remove('liked');
             dislikeBtn.classList.remove('disliked');
             
@@ -6761,24 +6783,18 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             } else if (action === 'retry') {
                 showNotification('Retrying response...');
                 
-                // Find the user message that came before this bot message
                 const messageElements = document.querySelectorAll('.message');
                 let userMessage = '';
                 
-                // Find the bot message with this feedback ID
                 for (let i = 0; i < messageElements.length; i++) {
                     if (messageElements[i].querySelector(`#feedback-${messageId}`)) {
-                        // Remove the bot message
                         messageElements[i].remove();
                         
-                        // Find the previous user message
                         for (let j = i - 1; j >= 0; j--) {
                             if (messageElements[j].classList.contains('user')) {
                                 const userBubble = messageElements[j].querySelector('.message-bubble .message-content');
                                 if (userBubble) {
                                     userMessage = userBubble.textContent || userBubble.innerText;
-                                    
-                                    // Remove the user message too for clean retry
                                     messageElements[j].remove();
                                     break;
                                 }
@@ -6789,7 +6805,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 }
                 
                 if (userMessage) {
-                    // Set the message in input and resend
                     setTimeout(() => {
                         messageInput.value = userMessage;
                         chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
@@ -6800,7 +6815,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 return;
             }
             
-            // Save feedback to localStorage
             const feedbackData = {
                 messageId,
                 action,
@@ -6868,26 +6882,95 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             initToolsDropdown();
         }
 
+        // Setup real-time sync
+        function setupRealTimeSync() {
+            if (!chatManager || !chatManager.initialized) return;
+            
+            realTimeUnsubscribe = chatManager.setupRealTimeSync((type, chatId, data) => {
+                if (type === 'modified') {
+                    // Chat was updated on another device
+                    if (chatSessions[chatId]) {
+                        chatSessions[chatId].title = data.title;
+                        chatSessions[chatId].pinned = data.pinned || false;
+                        chatSessions[chatId].updatedAt = data.updatedAt;
+                        chatSessions[chatId].settings = data.settings || {};
+                        
+                        if (currentChatId === chatId) {
+                            currentChatTitle.textContent = data.title;
+                        }
+                        
+                        renderChatSessions();
+                        showNotification('Chat updated from another device');
+                    }
+                } else if (type === 'removed') {
+                    // Chat was deleted on another device
+                    if (chatSessions[chatId]) {
+                        delete chatSessions[chatId];
+                        
+                        if (currentChatId === chatId && Object.keys(chatSessions).length > 0) {
+                            const remainingChats = Object.keys(chatSessions);
+                            currentChatId = remainingChats[remainingChats.length - 1];
+                            loadChat(currentChatId);
+                        }
+                        
+                        renderChatSessions();
+                        showNotification('Chat deleted from another device');
+                    }
+                }
+            });
+        }
+
         // Initialize the app
-        initializeAITrainingSystem();
-        loadUserSettings();
-        initializeChatSessions();
-        initializeSearch();
-        initializeSidebarResize();
-        initEnhancedLayout();
-        updateUIForMode();
-        sendBtn.disabled = true;
-        
-        // Show banner (if not seen before)
-        showBanner();
-
-        // Force button text visibility
-        document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
-            btn.style.color = 'var(--md-on-surface-variant)';
-        });
-
-        // Add cleanup for old chats every hour
-        setInterval(cleanupOldChats, 3600000); // 1 hour
+        async function initializeApp() {
+            // Initialize Reverbit Auth
+            if (window.ReverbitAuth) {
+                await window.ReverbitAuth.init();
+                
+                // Check if user is authenticated
+                const user = window.ReverbitAuth.getUser();
+                if (user) {
+                    // Initialize ChatManager with Firestore
+                    chatManager = Object.create(ChatManager);
+                    const firestoreAvailable = await chatManager.init();
+                    
+                    if (firestoreAvailable) {
+                        console.log('Firestore chat sync enabled');
+                        setupRealTimeSync();
+                    } else {
+                        console.log('Firestore not available, using local storage only');
+                    }
+                } else {
+                    console.log('User not authenticated, using local storage only');
+                }
+            }
+            
+            // Initialize AI system
+            initializeAITrainingSystem();
+            
+            // Load user settings
+            loadUserSettings();
+            
+            // Initialize chat sessions (will use Firestore if available, otherwise local storage)
+            await initializeChatSessions();
+            
+            // Initialize other components
+            initializeSearch();
+            initializeSidebarResize();
+            initEnhancedLayout();
+            updateUIForMode();
+            sendBtn.disabled = true;
+            
+            // Show banner (if not seen before)
+            showBanner();
+            
+            // Force button text visibility
+            document.querySelectorAll('.feature-btn, .suggestion-chip').forEach(btn => {
+                btn.style.color = 'var(--md-on-surface-variant)';
+            });
+            
+            // Add cleanup for old chats every hour
+            setInterval(cleanupOldChats, 3600000);
+        }
 
         function cleanupOldChats() {
             const maxChats = 50;
@@ -6896,7 +6979,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             const now = new Date();
             const chatIds = Object.keys(chatSessions);
             
-            // If too many chats, delete oldest unpinned ones
             if (chatIds.length > maxChats) {
                 const sortedChats = chatIds
                     .filter(id => !chatSessions[id].pinned)
@@ -6908,11 +6990,9 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                 const chatsToDelete = sortedChats.slice(0, chatIds.length - maxChats);
                 chatsToDelete.forEach(id => {
                     delete chatSessions[id];
-                    showNotification(`Deleted old chat: ${chatSessions[id]?.title || 'Unnamed chat'}`);
                 });
             }
             
-            // Delete chats older than maxAgeDays (unless pinned)
             chatIds.forEach(id => {
                 if (!chatSessions[id].pinned) {
                     const chatDate = new Date(chatSessions[id].updatedAt);
@@ -6920,7 +7000,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
                     
                     if (daysOld > maxAgeDays) {
                         delete chatSessions[id];
-                        showNotification(`Deleted old chat: ${chatSessions[id]?.title || 'Unnamed chat'}`);
                     }
                 }
             });
@@ -6960,7 +7039,6 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             
             console.log('Analytics:', analytics);
             
-            // Save locally for batch processing
             let analyticsLog = JSON.parse(localStorage.getItem('cloverAIAnalytics') || '[]');
             analyticsLog.push(analytics);
             localStorage.setItem('cloverAIAnalytics', JSON.stringify(analyticsLog.slice(-1000)));
@@ -6982,6 +7060,11 @@ IMPORTANT: When users ask about time, date, or current information, you MUST pro
             trackEvent('theme_toggled', { 
                 newTheme: document.body.classList.contains('dark-theme') ? 'dark' : 'light' 
             });
+        });
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
         });
 
         // Make functions available globally
